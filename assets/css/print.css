@@ -1,0 +1,44 @@
+body {
+    -webkit-print-color-adjust: exact; font-family: Arial;
+}
+
+body.final, body {
+    background-image: none;
+}
+
+.print-container {
+    width: 100%;
+}
+
+#coupon .p-merci {
+    color: #000;
+}
+
+#coupon .coupon-bot .right .or, .pop_conf {
+    width: auto; display: none;
+}
+
+#or-print {
+    display: block !important; width: 300px; margin: 10px auto;
+}
+
+#coupon .coupon-bot .right .code {
+    margin-top: 5px;
+}
+
+#coupon .coupon-top .right {
+    padding: 20px !important;
+}
+
+#geoloc .inner {
+    padding-top: 0px;
+}
+
+#geoloc p, #geoloc p span {
+    font-size: 11px;
+}
+
+/* HIDES */
+.landing-banner, #coupon-cta, .coupon-cta,footer, .geoloc-bot, #geoloc-map, #idees, #section-cta-bot {
+    display: none;
+}
