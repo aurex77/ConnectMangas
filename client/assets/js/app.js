@@ -5,7 +5,7 @@
 
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
-    const PATH_MAC = "http://localhost:8888/connectmangas/server/";
+    const PATH_MAC = "http://localhost:8888/connectmangas/";
 
     /*
      * Gestion des routes
@@ -193,7 +193,7 @@
 
     });
 
-    app.factory('authenticationService', function($http, sAlert, $location) {
+    app.factory('authenticationService', function($http, sAlert) {
         return {
             register: function(username, password, email){
                 return $http({
