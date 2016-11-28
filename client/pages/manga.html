@@ -9,10 +9,10 @@
 
         <md-card-content>
           <div ng-if="manga.img_tome_fr">
-            <img src="medias/tomes/{{ manga.img_tome_fr }}">
+            <img ng-src="client/medias/tomes/{{ manga.img_tome_fr }}">
           </div>
           <div ng-if="!manga.img_tome_fr && manga.img_tome_jp">
-            <img src="medias/tomes/{{ manga.img_tome_jp }}">
+            <img ng-src="client/medias/tomes/{{ manga.img_tome_jp }}">
           </div>
           <div ng-if="manga.genres">
             <p>Genres : {{ manga.genres | prettycomma }}</p>
@@ -56,7 +56,7 @@
           <md-button class="md-raised md-primary" ng-click="removeManga(manga.id_manga)" ng-if="userCookie != undefined">Retirer de ma collection</md-button>
         </md-card-actions>
         <span ng-if="manga.img_banniere">
-          <img src="medias/mangas/{{ manga.img_banniere }}" width="100%">
+          <img ng-src="client/medias/mangas/{{ manga.img_banniere }}" width="100%">
         </span>
       </md-card>
     </div>

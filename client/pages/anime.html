@@ -8,8 +8,8 @@
         </md-card-title>
 
         <md-card-content>
-          <div ng-if="anime.img_affiche">
-            <img src="medias/animes/{{ anime.img_affiche }}">
+          <div ng-ng-if="anime.img_affiche">
+            <img src="client/medias/animes/{{ anime.img_affiche }}">
           </div>
           <div ng-if="anime.genres">
             <p>Genres : {{ anime.genres | prettycomma }}</p>
@@ -56,7 +56,7 @@
           <md-button class="md-raised md-primary" ng-click="removeAnime(anime.id_anime)" ng-if="userCookie != undefined">Retirer de ma collection</md-button>
         </md-card-actions>
         <span ng-if="anime.img_banniere">
-          <img src="medias/animes/{{ anime.img_banniere }}" width="100%">
+          <img ng-src="client/medias/animes/{{ anime.img_banniere }}" width="100%">
         </span>
       </md-card>
     </div>
