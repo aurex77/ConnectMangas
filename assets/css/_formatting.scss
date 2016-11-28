@@ -1,49 +1,29 @@
-/*************************************/
-/*************** FONTS ***************/
-/*************************************/
+// GLOBAL STYLES //
+// LAYOUT + BUTTONS //
+// ALSO FONTS //
 
-
-/*************************************/
-/*************** COLORS **************/
-/*************************************/
-$black: #000;
-
-/*************************************/
-/**************** CTAS ***************/
-/*************************************/
-.cta {
-  border: 1px solid $black; background-color: transparent; padding: 10px 12px; width: 275px; cursor: pointer; outline: none; @include appearance(none); @include border-radius(25px); text-transform: uppercase; font-family: 'Open Sans', sans-serif; @include transition(all, .25s, ease); font-weight: 700;
-
-  &:hover { @include bp(1024) { background-color: rgba(255,255,255,.65); } }
+// FONTS //
+/* @font-face {
+  font-family:'FuturaStd-Bold';
+  src: url('../../fonts/FuturaStd-Bold_gdi.eot');
+  src: url('../../fonts/FuturaStd-Bold_gdi.eot?#iefix') format('embedded-opentype'),
+  url('../../fonts/FuturaStd-Bold_gdi.woff') format('woff'),
+  url('../../fonts/FuturaStd-Bold_gdi.ttf') format('truetype'),
+  url('../../fonts/FuturaStd-Bold_gdi.svg#FuturaStd-Bold') format('svg');
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
 }
+$fontbold: 'FuturaStd-Bold'; */
 
-/*************************************/
-/**************** MISC ***************/
-/*************************************/
-html, body {
-  width: 100%; height: 100%; overflow-x: hidden;
-  @include bp(1024) { overflow-x: visible; }
-}
 
-/*************************************/
-/************** COMMONS **************/
-/*************************************/
-header, section, footer {
-  display: block; position: relative; width: 100%; color: $black;
+// LAYOUT //
+html, body { position: relative; width: 100vw; height: 100vh; background-color: #FFFFFF; background-size: cover; background-repeat: no-repeat; background-position: center top; }
 
-  .inner {
-    padding: 75px 10px;
-    @include bp(1024) { width: 1000px; margin: 0 auto; padding: 75px 0; }
-  }
-  h1, h2, h3, p { font-family: 'Open Sans', sans-serif; }
-  h1 { @include fs(26); font-weight: 800; }
-  p { @include fs(14); font-weight: 400; line-height: 1.2em; }
 
-  .title { margin-bottom: 20px; }
-}
+// COLORS //
 
-footer {
-  color: #FFF; background-color: #505050;
+// TITLES //
 
-  .inner { padding: 20px 10px; text-align: center; }
-}
+// BUTTONS
