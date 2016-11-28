@@ -166,20 +166,19 @@ class Api extends MY_Controller {
             if ($check_auth_client == true) {
                 $params = json_decode(file_get_contents('php://input'), TRUE);
 
+
+                if (empty($params['username'])) {
+                    return json_output(403, array('status' => 403, 'message' => 'Username must not be empty.'));
+                }
+                if (empty($params['password'])) {
+                    return json_output(403, array('status' => 403, 'message' => 'Password must not be empty.'));
+                }
+                if (empty($params['email'])) {
+                    return json_output(403, array('status' => 403, 'message' => 'Email must not be empty.'));
+                }
                 $username = $params['username'];
                 $password = $params['password'];
                 $email = $params['email'];
-
-                if (empty($username)) {
-                    return json_output(403, array('status' => 403, 'message' => 'Username must not be empty.'));
-                }
-                if (empty($password)) {
-                    return json_output(403, array('status' => 403, 'message' => 'Password must not be empty.'));
-                }
-                if (empty($email)) {
-                    return json_output(403, array('status' => 403, 'message' => 'Email must not be empty.'));
-                }
-
                 if ($this->user->check_username($username) === true) {
                     return json_output(403, array('status' => 403, 'message' => 'Username already exist.'));
                 }
