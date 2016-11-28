@@ -539,7 +539,7 @@
 
       });
       // $route.reload();
-      $location.PATH_JG_TAF('/');
+      $location.path('/');
     }
 
   });
