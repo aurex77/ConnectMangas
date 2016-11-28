@@ -11,11 +11,11 @@
                 <md-card-content>
                     <div ng-if="tome.couverture_jp">
                         <p>Couverture japonaise :</p>
-                        <img src="medias/tomes/{{ tome.couverture_jp }}" width="50%">
+                        <img ng-src="client/medias/tomes/{{ tome.couverture_jp }}" width="50%">
                     </div>
                     <div ng-if="tome.couverture_fr">
                         <p>Couverture française :</p>
-                        <img src="medias/tomes/{{ tome.couverture_fr }}" width="50%">
+                        <img ng-src="client/medias/tomes/{{ tome.couverture_fr }}" width="50%">
                     </div>
                     <div ng-if="tome.publication_jp">
                         <p>Publication japonaise : {{ tome.publication_jp }}</p>
