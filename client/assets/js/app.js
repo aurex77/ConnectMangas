@@ -15,28 +15,28 @@
     $httpProvider.defaults.headers.post['Auth-Key'] = 'simplerestapi';
 
     $routeProvider.when('/', {
-      templateUrl: 'pages/homepage.html',
+      templateUrl: 'client/pages/homepage.html',
       controller: 'HomeController'
     }).when('/manga/:mangaID', {
-      templateUrl: 'pages/manga.html',
+      templateUrl: 'client/pages/manga.html',
       controller: 'MangaController'
     }).when('/tomes/:mangaID', {
-      templateUrl: 'pages/tomes.html',
+      templateUrl: 'client/pages/tomes.html',
       controller: 'TomesController'
     }).when('/anime/:animeID', {
-      templateUrl: 'pages/anime.html',
+      templateUrl: 'client/pages/anime.html',
       controller: 'AnimeController'
     }).when('/episodes/:animeID', {
-      templateUrl: 'pages/episodes.html',
+      templateUrl: 'client/pages/episodes.html',
       controller: 'EpisodesController'
     }).when('/search/:searchParam', {
-      templateUrl: 'pages/search.html',
+      templateUrl: 'client/pages/search.html',
       controller: 'SearchController'
     }).when('/authentication', {
-      templateUrl: 'pages/authentication.html',
+      templateUrl: 'client/pages/authentication.html',
       controller: 'AuthenticationController'
     }).when('/collection', {
-      templateUrl: 'pages/collection.html',
+      templateUrl: 'client/pages/collection.html',
       controller: 'CollectionController'
     }).otherwise({
       redirectTo: '/'
