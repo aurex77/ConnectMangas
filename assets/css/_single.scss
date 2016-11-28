@@ -1,0 +1,25 @@
+#content {
+  height: 100%; width: 100%; display: block; position: relative;
+
+  .container, md-content { height: 100%; }
+}
+
+header, section, footer {
+  width: 100%; display: block; position: relative;
+
+  .inner {
+    width: 100%; max-width: 1000px; margin: 0 auto; padding: 20px;
+    @include bp(1024) { padding: 20px 0; }
+  }
+}
+
+header {
+
+  .inner { padding: 20px 0 0; }
+}
+
+#section-auth {
+
+  form > div { display: inline-block; width: 100%; vertical-align: top; } // FIW POUR ALIGNER LES 2 BLOCS
+
+}

@@ -1,0 +1,21 @@
+<section id="section-search">
+  <div class="inner">
+
+    <div>
+      <h1>Animes</h1>
+
+      <ul>
+        <li ng-repeat="anime in listAnimes"><a href="#/anime/{{ anime.id_anime }}">{{ anime.title }} ({{ anime.year }})</a></li>
+      </ul>
+    </div><br/>
+
+    <div>
+      <h1>Mangas</h1>
+
+      <ul>
+        <li ng-repeat="manga in listMangas"><a href="#/manga/{{ manga.id_manga }}">{{ manga.title }} ({{ manga.year }})</a></li>
+      </ul>
+    </div>
+    
+  </div>
+</section>

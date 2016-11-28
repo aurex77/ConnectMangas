@@ -1,0 +1,41 @@
+<section id="section-manga" ng-controller="CollectionController">
+    <div class="inner">
+
+        <div flex-xs flex-gt-xs="50" layout="column">
+            <h1>Titre : {{ tomes[0].title }}</h1>
+            <md-card ng-repeat="tome in tomes">
+                <md-card-title>
+                    <span class="md-headline">Tome {{ tome.number }}</span>
+                </md-card-title>
+
+                <md-card-content>
+                    <div ng-if="tome.couverture_jp">
+                        <p>Couverture japonaise :</p>
+                        <img src="medias/tomes/{{ tome.couverture_jp }}" width="50%">
+                    </div>
+                    <div ng-if="tome.couverture_fr">
+                        <p>Couverture française :</p>
+                        <img src="medias/tomes/{{ tome.couverture_fr }}" width="50%">
+                    </div>
+                    <div ng-if="tome.publication_jp">
+                        <p>Publication japonaise : {{ tome.publication_jp }}</p>
+                    </div>
+                    <div ng-if="tome.publication_fr">
+                        <p>Publication française : {{ tome.publication_fr }}</p>
+                    </div>
+                    <div ng-if="tome.synopsis">
+                        <p>Synopsis : {{ tome.synopsis }}</p>
+                    </div>
+                </md-card-content>
+
+                <md-card-actions layout="row" layout-align="center" ng-show="!isTomeInCollection">
+                    <md-button class="md-raised md-primary" ng-click="addTome(tome.id_manga, tome.number)" ng-if="userCookie != undefined">Ajouter à ma collection</md-button>
+                </md-card-actions>
+                <md-card-actions layout="row" layout-align="center" ng-show="isTomeInCollection">
+                    <md-button class="md-raised md-primary" ng-click="removeTome(tome.id_manga, tome.number)" ng-if="userCookie != undefined">Retirer de ma collection</md-button>
+                </md-card-actions>
+            </md-card>
+        </div>
+
+    </div>
+</section>

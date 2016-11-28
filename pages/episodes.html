@@ -1,0 +1,48 @@
+<section id="section-anime" ng-controller="CollectionController">
+    <div class="inner">
+
+        <div flex-xs flex-gt-xs="50" layout="column">
+            <h1>Titre : {{ tomes[0].title }}</h1>
+            <md-card ng-repeat="episode in episodes">
+                <md-card-title>
+                    <span class="md-headline">Épisode {{ episode.number }} - {{ episode.title }}</span>
+                </md-card-title>
+
+                <md-card-content>
+                    <div ng-if="episode.diffusion">
+                        <p>Diffusion : {{ episode.diffusion }}</p>
+                    </div>
+                    <div ng-if="episode.hs">
+                        <p>HS : {{ episode.hs }}</p>
+                    </div>
+                    <div ng-if="episode.screenshot1">
+                        <img src="medias/episodes/{{ episode.screenshot1 }}" width="25%">
+                    </div>
+                    <div ng-if="episode.screenshot2">
+                        <img src="medias/episodes/{{ episode.screenshot2 }}" width="25%">
+                    </div>
+                    <div ng-if="episode.screenshot3">
+                        <img src="medias/episodes/{{ episode.screenshot3 }}" width="25%">
+                    </div>
+                    <div ng-if="episode.screenshot4">
+                        <img src="medias/episodes/{{ episode.screenshot4 }}" width="25%">
+                    </div>
+                    <div ng-if="episode.screenshot5">
+                        <img src="medias/episodes/{{ episode.screenshot5 }}" width="25%">
+                    </div>
+                    <div ng-if="episode.screenshot6">
+                        <img src="medias/episodes/{{ episode.screenshot6 }}" width="25%">
+                    </div>
+                </md-card-content>
+
+                <md-card-actions layout="row" layout-align="center" ng-show="!isEpisodeInCollection">
+                    <md-button class="md-raised md-primary" ng-click="addEpisode(episode.id_anime, episode.number)" ng-if="userCookie != undefined">Ajouter à ma collection</md-button>
+                </md-card-actions>
+                <md-card-actions layout="row" layout-align="center" ng-show="isEpisodeInCollection">
+                    <md-button class="md-raised md-primary" ng-click="removeEpisode(episode.id_anime, episode.number)" ng-if="userCookie != undefined">Retirer de ma collection</md-button>
+                </md-card-actions>
+            </md-card>
+        </div>
+
+    </div>
+</section>

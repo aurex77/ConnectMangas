@@ -94,9 +94,9 @@ $fix-mqs: false !default;
 /* GLOBAL STYLES */
 
 html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
-blockquote, caption, li, p, pre, td, textarea, th {font-size: 1em;line-height: 1.5em;}
+blockquote, caption, li, p, pre, td, textarea, th {font-size: 1em;line-height: 1.2em;}
 html,body,blockquote,form{margin:0;padding:0;}
-body{font-family: Verdana, Sans-serif; @include fs(15);color: #000000;}
+body{font-family: Verdana, Sans-serif; @include fs(15);color: #5e5e5e;}
 article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block;}
 a img,form,fieldset{border:none;}
 input,button,select{vertical-align:middle;}
