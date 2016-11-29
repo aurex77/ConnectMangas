@@ -51,8 +51,8 @@
                             </li>
                             <li ng-class="{active: $state.includes('reports')}"><a ui-sref=reports>Reports</a></li> -->
                             <li><a href="#/" name="home">Accueil</a></li>
-                            <li><a href="#/collection" name="collection" ng-if="userCookie != undefined">Collection</a></li>
-                            <li><a href="#/authentication" name="auth"ng-if="userCookie == undefined">Connexion / Inscription</a></li>
+                            <li><a href="#/collection" name="collection" ng-show="!userCookie" ng-if="userCookie != undefined">{{userCookie}}Collection</a></li>
+                            <li><a href="#/authentication" name="auth" ng-show="userCookie" ng-if="userCookie == undefined">Connexion / Inscription</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view> </div>
