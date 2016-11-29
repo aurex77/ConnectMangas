@@ -40,7 +40,7 @@
         }).when('/collection', {
             templateUrl: 'client/pages/collection.html',
             controller: 'CollectionController'
-        }).when('/profile/:userID', {
+        }).when('/profile/:username', {
             templateUrl: 'client/pages/profile.html',
             controller: 'ProfileController'
         }).otherwise({
@@ -66,7 +66,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/manga/'+id,
+                    url: PATH_MAC+'api/action/manga/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -98,7 +98,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/tomes/'+id,
+                    url: PATH_MAC+'api/action/tomes/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -130,7 +130,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/anime/'+id,
+                    url: PATH_MAC+'api/action/anime/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -162,7 +162,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/episodes/'+id,
+                    url: PATH_MAC+'api/action/episodes/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -185,7 +185,7 @@
 
         return {
             getSearchResult: function(param) {
-                return $http.get(PATH_JG_TAF+'api/action/search/'+param).then(function(response) {
+                return $http.get(PATH_MAC+'api/action/search/'+param).then(function(response) {
 
                     var searchResult = response.data;
                     return searchResult;
@@ -201,7 +201,7 @@
             register: function(username, password, email){
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/register',
+                    url: PATH_MAC+'api/action/register',
                     data: {username: username, password: password, email: email}
                 }).success(function(data){
                     sAlert.success(data.message).autoRemove();
@@ -214,7 +214,7 @@
             login : function(username, password){
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/login',
+                    url: PATH_MAC+'api/action/login',
                     data: {username: username, password: password}
                 }).error(function(data){
                     sAlert.error(data.message).autoRemove();
@@ -228,10 +228,10 @@
     app.factory('userService', function($http) {
 
         return {
-            getUserById: function(id, token) {
+            getUserById: function(id, token, username) {
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/profil/'+id,
+                    url: PATH_MAC+'api/action/profil/'+username,
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -255,7 +255,7 @@
             setMangaToCollection: function(id_manga, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/add_collection_manga',
+                    url: PATH_MAC+'api/action/add_collection_manga',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -279,7 +279,7 @@
             setAnimeToCollection: function(id_anime, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/add_collection_anime',
+                    url: PATH_MAC+'api/action/add_collection_anime',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -303,7 +303,7 @@
             setTomeToCollection: function(id_manga, id_tome) {
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/add_collection_tome',
+                    url: PATH_MAC+'api/action/add_collection_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -329,7 +329,7 @@
             setEpisodeToCollection: function(id_anime, id_episode) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/add_collection_episode',
+                    url: PATH_MAC+'api/action/add_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -358,7 +358,7 @@
             removeMangaFromCollection: function(id_manga, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/delete_collection_manga',
+                    url: PATH_MAC+'api/action/delete_collection_manga',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -382,7 +382,7 @@
             removeAnimeFromCollection: function(id_anime, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/delete_collection_anime',
+                    url: PATH_MAC+'api/action/delete_collection_anime',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -406,7 +406,7 @@
             removeTomeFromCollection: function(id_manga, id_tome, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/delete_collection_tome',
+                    url: PATH_MAC+'api/action/delete_collection_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -432,7 +432,7 @@
             removeEpisodeFromCollection: function() {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/delete_collection_episode',
+                    url: PATH_MAC+'api/action/delete_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -541,11 +541,12 @@
                 // Si la connexion est OK
                 if ( loginData.status == 200 ) {
                     // On récupère les infos du user à partir de l'ID retourné par le header
-                    var user = userService.getUserById(loginData.data.id, loginData.data.token);
+                    var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
                     user.then(function(userData) {
                         // On set le cookie avec quelques infos potentiellement utiles
                         $cookies.putObject('user', {
                             'userID': userData.infos.id,
+                            'username' : userData.infos.username,
                             'userEmail': userData.infos.email,
                             'userToken': loginData.data.token
                         });
@@ -668,7 +669,7 @@
     app.controller('ProfileController', function($scope, $routeParams, $cookies, userService) {
       var user = $cookies.getObject('user');
 
-      var promiseProfile = userService.getUserById($routeParams.userID, user.userToken);
+      var promiseProfile = userService.getUserById(user.userID, user.userToken, $routeParams.username);
       promiseProfile.then(function(response) {
 
         if ( response.status == 200 ) {

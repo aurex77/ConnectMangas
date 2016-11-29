@@ -38,7 +38,7 @@
                   <li ng-class="{active: $state.includes('reports')}"><a ui-sref=reports>Reports</a></li> -->
                   <li><a href="#/" name="home">Accueil</a></li>
                   <li><a href="#/collection" name="collection" ng-if="userCookie != undefined">Collection</a></li>
-                  <li><a href="#/profile/{{ userCookie.userID }}" name="profile" ng-if="userCookie != undefined">Mon profil</a></li>
+                  <li><a href="#/profile/{{ userCookie.username }}" name="profile" ng-if="userCookie != undefined">Mon profil</a></li>
                   <li><a href="#/authentication" name="auth"ng-if="userCookie == undefined">Connexion / Inscription</a></li>
                 </ul>
               </div>
