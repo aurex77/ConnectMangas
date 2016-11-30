@@ -31,7 +31,9 @@
                   <img src="client/medias/profils/default.png" class="user-avatar"><br>
                     <a ui-sref=login class="btn btn-white btn-outline btn-rounded btn-sm" ng-if="userCookie != undefined" ng-click="logout()">Déconnexion</a>
                 </div>
-                <input type="search" placeholder="Recherche..." ng-change="searchFunc()" ng-model="mySearch" />
+                  <md-input-container>
+                      <input type="search" placeholder="Recherche..." ng-change="searchFunc()" ng-model="mySearch" class="ng-pristine ng-valid md-input ng-not-empty ng-touched"/>
+                  </md-input-container>
                 <ul class="nav nav-sidebar">
                   <!-- <li ng-class="{active: $state.includes('overview')}">
                       <a ui-sref=overview>Overview <span class=sr-only>(current)</span></a>
