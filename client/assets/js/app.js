@@ -303,7 +303,7 @@
 
                 });
             },
-            setTomeToCollection: function(id_manga, id_tome) {
+            setTomeToCollection: function(id_manga, id_tome, user) {
                 return $http({
                     method: 'POST',
                     url: PATH_MAC+'api/action/add_collection_tome',
@@ -329,7 +329,7 @@
 
                 });
             },
-            setEpisodeToCollection: function(id_anime, id_episode) {
+            setEpisodeToCollection: function(id_anime, id_episode, user) {
                 return $http({
                     method: 'DELETE',
                     url: PATH_MAC+'api/action/add_collection_episode',
@@ -432,7 +432,7 @@
 
                 });
             },
-            removeEpisodeFromCollection: function() {
+            removeEpisodeFromCollection: function(id_anime, id_episode, user) {
                 return $http({
                     method: 'DELETE',
                     url: PATH_MAC+'api/action/delete_collection_episode',
