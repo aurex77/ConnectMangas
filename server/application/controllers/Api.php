@@ -255,6 +255,7 @@ class Api extends MY_Controller {
       $animes = $this->anime->get_anime_by_name($search);
       $mangas = $this->manga->get_manga_by_name($search);
 
+        $result = ["animes" => [], "mangas" => []];
       if (!empty($animes)) {
           foreach ($animes as $row) {
               $result["animes"][] = array("id_anime" => intval($row->id_anime), "title" => $row->title, "year" => intval($row->year), "img_affiche" => $row->img_affiche);
