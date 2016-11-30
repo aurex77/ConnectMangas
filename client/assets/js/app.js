@@ -39,10 +39,12 @@
             controller: 'AuthenticationController'
         }).when('/collection', {
             templateUrl: 'client/pages/collection.html',
-            controller: 'CollectionController'
+            controller: 'CollectionController',
+            requireAuth: true
         }).when('/profile/:userID', {
             templateUrl: 'client/pages/profile.html',
-            controller: 'ProfileController'
+            controller: 'ProfileController',
+            requireAuth: true
         }).otherwise({
             redirectTo: '/'
         });
@@ -66,7 +68,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/manga/'+id,
+                    url: PATH_MAC+'api/action/manga/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -98,7 +100,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/tomes/'+id,
+                    url: PATH_MAC+'api/action/tomes/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -130,7 +132,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/anime/'+id,
+                    url: PATH_MAC+'api/action/anime/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -162,7 +164,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/episodes/'+id,
+                    url: PATH_MAC+'api/action/episodes/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -172,9 +174,7 @@
                     return episodes;
 
                 }, function errorCallback(response) {
-
                     console.log(response);
-
                 });
             }
         }
@@ -185,7 +185,7 @@
 
         return {
             getSearchResult: function(param) {
-                return $http.get(PATH_JG_TAF+'api/action/search/'+param).then(function(response) {
+                return $http.get(PATH_MAC+'api/action/search/'+param).then(function(response) {
 
                     var searchResult = response.data;
                     return searchResult;
@@ -196,12 +196,12 @@
 
     });
 
-    app.factory('authenticationService', function($http, sAlert) {
+    app.factory('authenticationService', function($http, sAlert, $location, $window) {
         return {
             register: function(username, password, email){
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/register',
+                    url: PATH_MAC+'api/action/register',
                     data: {username: username, password: password, email: email}
                 }).success(function(data){
                     sAlert.success(data.message).autoRemove();
@@ -214,8 +214,12 @@
             login : function(username, password){
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/login',
+                    url: PATH_MAC+'api/action/login',
                     data: {username: username, password: password}
+                }).success(function(data){
+                    sAlert.success(data.message).autoRemove();
+                    $window.location.reload();
+                    $location.path('/');
                 }).error(function(data){
                     sAlert.error(data.message).autoRemove();
                 });
@@ -231,7 +235,7 @@
             getUserById: function(id, token) {
                 return $http({
                     method: 'GET',
-                    url: PATH_JG_TAF+'api/action/profil/'+id,
+                    url: PATH_MAC+'api/action/profil/'+id,
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -255,7 +259,7 @@
             setMangaToCollection: function(id_manga, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/add_collection_manga',
+                    url: PATH_MAC+'api/action/add_collection_manga',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -279,7 +283,7 @@
             setAnimeToCollection: function(id_anime, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/add_collection_anime',
+                    url: PATH_MAC+'api/action/add_collection_anime',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -303,7 +307,7 @@
             setTomeToCollection: function(id_manga, id_tome) {
                 return $http({
                     method: 'POST',
-                    url: PATH_JG_TAF+'api/action/add_collection_tome',
+                    url: PATH_MAC+'api/action/add_collection_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -329,7 +333,7 @@
             setEpisodeToCollection: function(id_anime, id_episode) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/add_collection_episode',
+                    url: PATH_MAC+'api/action/add_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -358,7 +362,7 @@
             removeMangaFromCollection: function(id_manga, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/delete_collection_manga',
+                    url: PATH_MAC+'api/action/delete_collection_manga',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -382,7 +386,7 @@
             removeAnimeFromCollection: function(id_anime, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/delete_collection_anime',
+                    url: PATH_MAC+'api/action/delete_collection_anime',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -406,7 +410,7 @@
             removeTomeFromCollection: function(id_manga, id_tome, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/delete_collection_tome',
+                    url: PATH_MAC+'api/action/delete_collection_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -432,7 +436,7 @@
             removeEpisodeFromCollection: function() {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_JG_TAF+'api/action/delete_collection_episode',
+                    url: PATH_MAC+'api/action/delete_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -463,7 +467,7 @@
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
      */
-    app.controller('AppCtrl', function($scope, $cookies, $location, $rootScope) {
+    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope) {
 
         // DO SOMETHING
         var userCookie = $cookies.getObject('user');
@@ -471,7 +475,8 @@
 
         $scope.logout = function() {
             $cookies.remove('user');
-            $scope.$apply();
+            $window.location.reload();
+            //$scope.$apply();
         }
 
     });
