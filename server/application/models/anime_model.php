@@ -94,7 +94,7 @@ class Anime_model extends CI_Model {
 
         if ( !is_null($name) ) {
 
-            $this->db->select("animes.id_anime, animes.title, animes.year")
+            $this->db->select("animes.id_anime, animes.title, animes.year, animes.img_affiche")
                 ->join("animes_titles", "animes_titles.id_anime = animes.id_anime");
 
             foreach ($segments as $segment) {

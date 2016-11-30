@@ -105,7 +105,21 @@ class Manga_model extends CI_Model {
 
         if ( !is_null($name) ) {
 
-            $this->db->select("mangas.id_manga, mangas.title, mangas.year")
+            $this->db->select("mangas.id_manga, mangas.title, mangas.year,
+                         (SELECT mangas_tomes.couverture_fr
+                         FROM mangas_tomes
+                         WHERE mangas_tomes.id_manga = mangas.id_manga
+                         AND couverture_fr IS NOT NULL
+                         AND couverture_fr != ''
+                         ORDER BY number
+                         LIMIT 1) as img_tome_fr,
+                        (SELECT mangas_tomes.couverture_jp
+                         FROM mangas_tomes
+                         WHERE mangas_tomes.id_manga = mangas.id_manga
+                         AND couverture_jp IS NOT NULL
+                         AND couverture_jp != ''
+                         ORDER BY number
+                         LIMIT 1) as img_tome_jp")
                 ->join("mangas_titles", "mangas_titles.id_manga = mangas.id_manga");
 
             foreach ($segments as $segment) {

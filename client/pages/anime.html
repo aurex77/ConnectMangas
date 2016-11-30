@@ -8,8 +8,8 @@
         </md-card-title>
 
         <md-card-content>
-          <div ng-ng-if="anime.img_affiche">
-            <img src="client/medias/animes/{{ anime.img_affiche }}">
+          <div ng-if="anime.img_affiche">
+            <img ng-src="client/medias/animes/{{ anime.img_affiche }}">
           </div>
           <div ng-if="anime.genres">
             <p>Genres : {{ anime.genres | prettycomma }}</p>
@@ -47,6 +47,7 @@
           <div ng-if="anime.season">
             <p>Saison : {{ anime.season }}</p>
           </div>
+          <a href="#/episodes/{{ anime.id_anime }}">Voir la liste des épisodes</a>
         </md-card-content>
 
         <md-card-actions layout="row" layout-align="center" ng-show="!isAnimeInCollection">

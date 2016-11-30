@@ -47,6 +47,7 @@
           <div ng-if="manga.year">
             <p>Année : {{ manga.year }}</p>
           </div>
+          <a href="#/tomes/{{ manga.id_manga }}">Voir la liste des tomes</a>
         </md-card-content>
 
         <md-card-actions layout="row" layout-align="center" ng-show="!isMangaInCollection">

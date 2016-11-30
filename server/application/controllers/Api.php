@@ -257,12 +257,12 @@ class Api extends MY_Controller {
 
       if (!empty($animes)) {
           foreach ($animes as $row) {
-              $result["animes"][] = array("id_anime" => intval($row->id_anime), "title" => $row->title, "year" => intval($row->year));
+              $result["animes"][] = array("id_anime" => intval($row->id_anime), "title" => $row->title, "year" => intval($row->year), "img_affiche" => $row->img_affiche);
           }
       }
       if (!empty($mangas)) {
           foreach ($mangas as $row) {
-              $result["mangas"][] = array("id_manga" => intval($row->id_manga), "title" => $row->title, "year" => intval($row->year));
+              $result["mangas"][] = array("id_manga" => intval($row->id_manga), "title" => $row->title, "year" => intval($row->year), "img_tome_fr" => $row->img_tome_fr, "img_tome_jp" => $row->img_tome_jp);
           }
       }
 

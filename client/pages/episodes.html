@@ -13,7 +13,7 @@
                         <p>Diffusion : {{ episode.diffusion }}</p>
                     </div>
                     <div ng-if="episode.hs">
-                        <p>HS : {{ episode.hs }}</p>
+                        <p>Hors-série : {{ episode.hs == 1 ? 'Oui' : 'Non' }}</p>
                     </div>
                     <div ng-if="episode.screenshot1">
                         <img src="client/medias/episodes/{{ episode.screenshot1 }}" width="25%">

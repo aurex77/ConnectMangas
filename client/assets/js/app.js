@@ -477,6 +477,11 @@
             //$scope.$apply();
         }
 
+        $scope.searchFunc = function() {
+            var search = $scope.mySearch.replace(/ /g,"_");
+            $location.path('/search/'+search);
+        };
+
     });
 
     app.controller('HomeController', function($scope) {
