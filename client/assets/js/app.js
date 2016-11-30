@@ -562,7 +562,9 @@
 
     });
 
-    app.controller('CollectionController', function($scope, collectionService, $cookies) {
+    app.controller('CollectionController', function($scope, $cookies, $location, collectionService) {
+        var user = $cookies.getObject('user');
+        if ( user == undefined ) $location.path('/');
 
         $scope.isMangaInCollection = false;
         $scope.isAnimeInCollection = false;
@@ -668,8 +670,9 @@
 
     });
 
-    app.controller('ProfileController', function($scope, $routeParams, $cookies, userService) {
+    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService) {
       var user = $cookies.getObject('user');
+      if ( user == undefined ) $location.path('/');
 
       var promiseProfile = userService.getUserById(user.userID, user.userToken, $routeParams.username);
       promiseProfile.then(function(response) {
