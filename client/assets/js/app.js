@@ -39,9 +39,8 @@
             controller: 'AuthenticationController'
         }).when('/collection', {
             templateUrl: 'client/pages/collection.html',
-            controller: 'CollectionController',
-            requireAuth: true
-        }).when('/profile/:userID', {
+            controller: 'CollectionController'
+        }).when('/profile/:username', {
             templateUrl: 'client/pages/profile.html',
             controller: 'ProfileController',
             requireAuth: true
@@ -232,10 +231,10 @@
     app.factory('userService', function($http) {
 
         return {
-            getUserById: function(id, token) {
+            getUserById: function(id, token, username) {
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/profil/'+id,
+                    url: PATH_MAC+'api/action/profil/'+username,
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -546,11 +545,12 @@
                 // Si la connexion est OK
                 if ( loginData.status == 200 ) {
                     // On récupère les infos du user à partir de l'ID retourné par le header
-                    var user = userService.getUserById(loginData.data.id, loginData.data.token);
+                    var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
                     user.then(function(userData) {
                         // On set le cookie avec quelques infos potentiellement utiles
                         $cookies.putObject('user', {
                             'userID': userData.infos.id,
+                            'username' : userData.infos.username,
                             'userEmail': userData.infos.email,
                             'userToken': loginData.data.token
                         });
@@ -673,7 +673,7 @@
     app.controller('ProfileController', function($scope, $routeParams, $cookies, userService) {
       var user = $cookies.getObject('user');
 
-      var promiseProfile = userService.getUserById($routeParams.userID, user.userToken);
+      var promiseProfile = userService.getUserById(user.userID, user.userToken, $routeParams.username);
       promiseProfile.then(function(response) {
 
         if ( response.status == 200 ) {

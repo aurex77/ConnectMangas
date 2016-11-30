@@ -29,7 +29,7 @@ class Api extends MY_Controller {
                 $this->_register();
                 break;
             case "profil":
-                $this->_get_user((int)$param);
+                $this->_get_user($param);
                 break;
             case "profil_update":
                 $this->_update_user();
@@ -131,7 +131,7 @@ class Api extends MY_Controller {
     * @param $id, $search
     */
     // Récupère l'utilisateur depuis son id
-    private function _get_user($id) {
+    private function _get_user($username) {
         $method = $_SERVER['REQUEST_METHOD'];
         if($method != 'GET'){
             json_output(400,array('status' => 400,'message' => 'Bad request.'));
@@ -141,11 +141,11 @@ class Api extends MY_Controller {
 
                 $response = $this->user->auth();
                 if($response['status'] == 200) {
-                    if (empty($id) || $id == 0) {
-                        return json_output(403, array('status' => 403, 'message' => 'User id is missing.'));
+                    if (empty($username) || !isset($username)) {
+                        return json_output(403, array('status' => 403, 'message' => 'Username is missing.'));
                     }
 
-                    if (!$user = $this->user->get_user($id, (int)$this->input->get_request_header('User-ID', TRUE))) {
+                    if (!$user = $this->user->get_user($username, (int)$this->input->get_request_header('User-ID', TRUE))) {
                         print json_encode(array('status' => 403, 'message' => 'User not found.'));
                     } else {
                         print json_encode(array('status' => 200, 'infos' => $user));

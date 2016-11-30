@@ -49,7 +49,7 @@ class User_model extends CI_Model {
                     return array('status' => 500,'message' => 'Internal server error.');
                 } else {
                     $this->db->trans_commit();
-                    return array('status' => 200,'message' => 'Successfully login.','id' => $id, 'token' => $token);
+                    return array('status' => 200,'message' => 'Successfully login.','id' => $id, 'token' => $token, 'username' => $username);
                 }
             } else {
                 return array('status' => 403,'message' => 'Wrong password.');
@@ -57,15 +57,25 @@ class User_model extends CI_Model {
         }
     }
 
-    public function get_user($id = 0, $myId) {
+    public function get_user($username = NULL, $myId) {
 
-        if ($id === $myId) {
+        $this->db->select("id")
+            ->where('username', $username);
+
+        $query = $this->db->get($this->table);
+
+        if (isset($query) && $query->num_rows() > 0)
+            $id_user = $query->row("id");
+        else
+            $id_user = null;
+
+        if ($id_user == $myId) {
             $this->db->select("id, username, email, address, latitude, longitude, img_profil, date_create");
         }else{
             $this->db->select("id, username, img_profil, date_create");
         }
 
-        $this->db->where('id', $id);
+        $this->db->where('username', $username);
 
         $query = $this->db->get($this->table);
 
