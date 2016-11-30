@@ -217,7 +217,6 @@
                     data: {username: username, password: password}
                 }).success(function(data){
                     sAlert.success(data.message).autoRemove();
-                    $window.location.reload();
                     $location.path('/');
                 }).error(function(data){
                     sAlert.error(data.message).autoRemove();
@@ -558,7 +557,6 @@
                 }
 
             });
-            // $route.reload();
             $location.path('/');
         }
 
