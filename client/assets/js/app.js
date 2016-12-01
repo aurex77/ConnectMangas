@@ -96,13 +96,16 @@
                     }
                 }).then(function(response) {
 
+                    if ( response.status == 201 && response.message == "Data has been created." )
+                      sAlert.success("Le manga a été ajouté à votre collection.").autoRemove();
+
                     var addMangaResult = response.data;
                     return addMangaResult;
 
                 }, function errorCallback(response) {
 
                     if ( response.status == 403 && response.data.message == "Already in collection." )
-                      sAlert.error(response.data.message).autoRemove();
+                      sAlert.error("Le manga est déjà dans votre collection.").autoRemove();
 
                 });
             },
@@ -121,12 +124,16 @@
                     }
                 }).then(function(response) {
 
+                    if ( response.status == 201 && response.message == "Data has been created." )
+                      sAlert.success("Le manga a été retiré de votre collection.").autoRemove();
+
                     var removeMangaResult = response.data;
                     return removeMangaResult;
 
                 }, function errorCallback(response) {
 
-                    console.log(response);
+                  if ( response.status == 403 && response.message == "Not in collection." )
+                    sAlert.error("Le manga n'est pas dans votre collection.").autoRemove();
 
                 });
             }
@@ -179,13 +186,19 @@
                     }
                 }).then(function(response) {
 
+                    if ( response.status == 201 && response.message == "Data has been created." )
+                      sAlert.success("Le tome a été ajouté à votre collection.").autoRemove();
+
                     var addTomeResult = response.data;
                     return addTomeResult;
 
                 }, function errorCallback(response) {
 
                   if ( response.status == 403 && response.data.message == "Already in collection." )
-                    sAlert.error(response.data.message).autoRemove();
+                    sAlert.error("Le tome est déjà dans votre collection.").autoRemove();
+
+                  var addTomeResult = response.data;
+                  return addTomeResult;
 
                 });
             },
@@ -206,12 +219,13 @@
                     }
                 }).then(function(response) {
 
-                    var removeTomeResult = response.data;
-                    return removeTomeResult;
+                    if ( response.status == 201 && response.message == "Data has been created." )
+                      sAlert.success("Le tome a été retiré de votre collection.").autoRemove();
 
                 }, function errorCallback(response) {
 
-                    console.log(response);
+                  if ( response.status == 403 && response.message == "Not in collection." )
+                    sAlert.error("Le tome n'est pas dans votre collection.").autoRemove();
 
                 });
             }
@@ -262,13 +276,16 @@
                     }
                 }).then(function(response) {
 
+                    if ( response.status == 201 && response.message == "Data has been created." )
+                      sAlert.success("L'anime a été ajouté à votre collection.").autoRemove();
+
                     var addAnimeResult = response.data;
                     return addAnimeResult;
 
                 }, function errorCallback(response) {
 
                   if ( response.status == 403 && response.data.message == "Already in collection." )
-                    sAlert.error(response.data.message).autoRemove();
+                    sAlert.error("L'anime est déjà dans votre collection.").autoRemove();
 
                 });
             },
@@ -287,12 +304,16 @@
                     }
                 }).then(function(response) {
 
+                    if ( response.status == 201 && response.message == "Data has been created." )
+                      sAlert.success("L'anime a été retiré de votre collection.").autoRemove();
+
                     var removeAnimeResult = response.data;
                     return removeAnimeResult;
 
                 }, function errorCallback(response) {
 
-                    console.log(response);
+                  if ( response.status == 403 && response.message == "Not in collection." )
+                    sAlert.error("L'anime n'est pas dans votre collection.").autoRemove();
 
                 });
             }
@@ -343,13 +364,16 @@
                     }
                 }).then(function(response) {
 
+                    if ( response.status == 201 && response.message == "Data has been created." )
+                      sAlert.success("L'épisode a été ajouté à votre collection.").autoRemove();
+
                     var addEpisodeResult = response.data;
                     return addEpisodeResult;
 
                 }, function errorCallback(response) {
 
                   if ( response.status == 403 && response.data.message == "Already in collection." )
-                    sAlert.error(response.data.message).autoRemove();
+                    sAlert.error("L'épisode est déjà dans votre collection.").autoRemove();
 
                 });
             },
@@ -370,12 +394,16 @@
                     }
                 }).then(function(response) {
 
+                    if ( response.status == 201 )
+                      sAlert.success("L'épisode a été retiré de votre collection.").autoRemove();
+
                     var removeEpisodeResult = response.data;
                     return removeEpisodeResult;
 
                 }, function errorCallback(response) {
 
-                    console.log(response);
+                  if ( response.status == 403 && response.message == "Not in collection." )
+                    sAlert.error("L'épisode n'est pas dans votre collection.").autoRemove();
 
                 });
             }
@@ -461,7 +489,7 @@
 
             },
             checkIfInCollection: function() {
-              
+
             }
         }
 
@@ -499,6 +527,11 @@
         var promiseManga = mangasService.getMangaById($routeParams.mangaID);
         promiseManga.then(function(manga) {
             $scope.manga = manga;
+
+            if ( manga.inCollection == '1' )
+              $scope.isMangaInCollection = true;
+            else
+              $scope.isMangaInCollection = false;
         });
 
         var user = $cookies.getObject('user');
@@ -507,7 +540,7 @@
           var promiseAddManga = mangasService.setMangaToCollection(id_manga, user);
           promiseAddManga.then(function(response) {
 
-              if ( response != undefined && response.status == 201 )
+              if ( response != undefined && response.status == 201 && response.message == "Data has been created." )
                 $scope.isMangaInCollection = true;
 
 
