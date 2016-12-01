@@ -1,0 +1,30 @@
+<section id="section-manga" ng-controller="usersTomeController">
+    <s-alert></s-alert>
+    <div class="inner">
+
+        <div flex-xs flex-gt-xs="50" layout="column">
+            <md-card ng-repeat="user in users">
+
+                <md-card-content>
+                    <a href="#/profile/{{ user.username }}" style="float: left;">
+                        <div ng-if="user.img_profil">
+                            <img ng-src="client/medias/profils/{{ user.img_profil }}" width="50px">
+                        </div>
+                        <div ng-if="!user.img_profil">
+                            <img ng-src="client/medias/default/thumbnail.png" width="50px">
+                        </div>
+                        <div ng-if="user.username">
+                            <p>{{ user.username }}</p>
+                        </div>
+                    </a>
+                    <div style="margin-left: 70px;">
+                        {{ user.username }} se trouve à environ {{ user.distance }}km de vous !
+                        Envoyez-lui dès maintenant une proposition d'achat ou d'échange pour son tome numéro {{ number }} de {{ title }}.
+                    </div>
+                </md-card-content>
+
+            </md-card>
+        </div>
+
+    </div>
+</section>

@@ -43,6 +43,10 @@
             templateUrl: 'client/pages/profile.html',
             controller: 'ProfileController',
             requireAuth: true
+        }).when('/manga/:mangaID/tome/:tomeNumber', {
+            templateUrl: 'client/pages/usersTome.html',
+            controller: 'usersTomeController',
+            requireAuth: true
         }).otherwise({
             redirectTo: '/'
         });
@@ -507,6 +511,42 @@
 
     });
 
+    app.factory('usersTomeService', function($http, $cookies) {
+
+        return {
+            getUsersByTome: function (id_manga, number) {
+                var user = '';
+                if (angular.isUndefined($cookies.getObject('user'))) {
+                    user = 0;
+                } else {
+                    user = $cookies.getObject('user')
+                }
+
+                return $http({
+                    method: 'GET',
+                    url: PATH_MAC + 'api/action/users_tome',
+                    headers: {
+                        'Client-Service': 'frontend-client',
+                        'Auth-Key': 'simplerestapi',
+                        'Authorization': user.userToken,
+                        'User-ID': user.userID
+                    },
+                    params: {
+                        'id_manga': id_manga,
+                        'number': number
+                    }
+                }).then(function (response) {
+                    return response.data;
+
+                }, function errorCallback(response) {
+
+                    console.log(response);
+
+                });
+            }
+        }
+    });
+
     /*
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
@@ -743,6 +783,24 @@
         }
 
       });
+
+    });
+
+    app.controller('usersTomeController', function($scope, $routeParams, $cookies, usersTomeService, mangasService) {
+
+        var promiseUsersTome = usersTomeService.getUsersByTome($routeParams.mangaID, $routeParams.tomeNumber);
+        promiseUsersTome.then(function(response) {
+
+            if ( response.status == 200 ) {
+                $scope.users = response.infos;
+                $scope.number = $routeParams.tomeNumber;
+            }
+        });
+
+        var promiseManga = mangasService.getMangaById($routeParams.mangaID);
+        promiseManga.then(function(manga) {
+            $scope.title = manga.title;
+        });
 
     });
 
