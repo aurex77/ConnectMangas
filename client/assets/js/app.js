@@ -521,7 +521,7 @@
             $cookies.remove('user');
             $window.location.reload();
             //$scope.$apply();
-        }
+        };
 
         $scope.searchFunc = function() {
             var search = $scope.mySearch.replace(/ /g,"_");
