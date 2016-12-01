@@ -458,8 +458,11 @@
     app.factory('collectionService', function($http) {
 
         return {
-            getCollection: function() {
+            getAllCollection: function() {
 
+            },
+            checkIfInCollection: function() {
+              
             }
         }
 
