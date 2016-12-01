@@ -29,10 +29,10 @@
                     </div>
                 </md-card-content>
 
-                <md-card-actions layout="row" layout-align="center" ng-show="!thisTomeIsInCollection">
+                <md-card-actions layout="row" layout-align="center" ng-show="tome.inCollection == '0'">
                     <md-button class="md-raised md-primary" ng-click="addTome(tome.id_manga, tome.number)" ng-if="userCookie != undefined">Ajouter à ma collection</md-button>
                 </md-card-actions>
-                <md-card-actions layout="row" layout-align="center" ng-show="thisTomeIsInCollection">
+                <md-card-actions layout="row" layout-align="center" ng-show="tome.inCollection == '1'">
                     <md-button class="md-raised md-primary" ng-click="removeTome(tome.id_manga, tome.number)" ng-if="userCookie != undefined">Retirer de ma collection</md-button>
                 </md-card-actions>
             </md-card>
