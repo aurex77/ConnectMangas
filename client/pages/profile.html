@@ -1,5 +1,23 @@
-<section id="section-profil">
-  <div class="inner">
-    <p>Bienvenue {{ user.username }}</p>
-  </div>
+<section id="section-profil" ng-controller="ProfileController">
+    <div class="inner">
+
+        <div flex-xs flex-gt-xs="50" layout="column">
+            <md-card>
+
+                <md-card-content>
+                    <div style="float:left;">
+                        <img ng-src="client/medias/{{ user.img_profil ? 'profils/'+user.img_profil : 'default/thumbnail.png' }}" width="150px">
+                    </div>
+                    <div ng-if="user.username" style="margin-left: 200px;">
+                        <h1>{{ user.username }}</h1>
+                    </div>
+                    <div ng-if="user.date_create" style="margin-left: 200px;">
+                        <p>Inscrit le : {{ user.date_create }}</p>
+                    </div>
+                </md-card-content>
+
+            </md-card>
+        </div>
+
+    </div>
 </section>

@@ -4,7 +4,7 @@
 
         <div flex-xs flex-gt-xs="50" layout="column">
             <h1>Titre : {{ tomes[0].title }}</h1>
-            <md-card ng-repeat="tome in tomes">
+            <md-card ng-repeat="(key, tome) in tomes">
                 <md-card-title>
                     <span class="md-headline">Tome {{ tome.number }}</span>
                 </md-card-title>
@@ -30,11 +30,11 @@
                     <a href="#/manga/{{ tome.id_manga }}/tome/{{ tome.number }}">Voir les utilisateurs possédant ce tome</a>
                 </md-card-content>
 
-                <md-card-actions layout="row" layout-align="center" ng-show="tome.inCollection == '0'">
-                    <md-button class="md-raised md-primary" ng-click="addTome(tome.id_manga, tome.number)" ng-if="userCookie != undefined">Ajouter à ma collection</md-button>
+                <md-card-actions layout="row" layout-align="center" ng-show="tome.inCollection == 0">
+                    <md-button class="md-raised md-primary" ng-click="addTome(tome.id_manga, tome.number, key)" ng-if="userCookie != undefined">Ajouter à ma collection</md-button>
                 </md-card-actions>
-                <md-card-actions layout="row" layout-align="center" ng-show="tome.inCollection == '1'">
-                    <md-button class="md-raised md-primary" ng-click="removeTome(tome.id_manga, tome.number)" ng-if="userCookie != undefined">Retirer de ma collection</md-button>
+                <md-card-actions layout="row" layout-align="center" ng-show="tome.inCollection > 0">
+                    <md-button class="md-raised md-primary" ng-click="removeTome(tome.id_manga, tome.number, key)" ng-if="userCookie != undefined">Retirer de ma collection</md-button>
                 </md-card-actions>
             </md-card>
         </div>

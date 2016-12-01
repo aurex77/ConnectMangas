@@ -100,7 +100,7 @@
                     }
                 }).then(function(response) {
 
-                    if ( response.status == 201 && response.message == "Data has been created." )
+                    if ( response.status == 200 )
                       sAlert.success("Le manga a été ajouté à votre collection.").autoRemove();
 
                     var addMangaResult = response.data;
@@ -128,7 +128,7 @@
                     }
                 }).then(function(response) {
 
-                    if ( response.status == 201 && response.message == "Data has been created." )
+                    if ( response.status == 200 )
                       sAlert.success("Le manga a été retiré de votre collection.").autoRemove();
 
                     var removeMangaResult = response.data;
@@ -190,7 +190,7 @@
                     }
                 }).then(function(response) {
 
-                    if ( response.status == 201 && response.message == "Data has been created." )
+                    if ( response.status == 200 )
                       sAlert.success("Le tome a été ajouté à votre collection.").autoRemove();
 
                     var addTomeResult = response.data;
@@ -223,13 +223,17 @@
                     }
                 }).then(function(response) {
 
-                    if ( response.status == 201 && response.message == "Data has been created." )
+                    if ( response.status == 200 )
                       sAlert.success("Le tome a été retiré de votre collection.").autoRemove();
+
+                    return response.data;
 
                 }, function errorCallback(response) {
 
                   if ( response.status == 403 && response.message == "Not in collection." )
                     sAlert.error("Le tome n'est pas dans votre collection.").autoRemove();
+
+                    return response.data;
 
                 });
             }
@@ -280,7 +284,7 @@
                     }
                 }).then(function(response) {
 
-                    if ( response.status == 201 && response.message == "Data has been created." )
+                    if ( response.status == 200 )
                       sAlert.success("L'anime a été ajouté à votre collection.").autoRemove();
 
                     var addAnimeResult = response.data;
@@ -308,7 +312,7 @@
                     }
                 }).then(function(response) {
 
-                    if ( response.status == 201 && response.message == "Data has been created." )
+                    if ( response.status == 200 )
                       sAlert.success("L'anime a été retiré de votre collection.").autoRemove();
 
                     var removeAnimeResult = response.data;
@@ -353,7 +357,7 @@
             },
             setEpisodeToCollection: function(id_anime, id_episode, user) {
                 return $http({
-                    method: 'DELETE',
+                    method: 'POST',
                     url: PATH_MAC+'api/action/add_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
@@ -368,7 +372,7 @@
                     }
                 }).then(function(response) {
 
-                    if ( response.status == 201 && response.message == "Data has been created." )
+                    if ( response.status == 200 )
                       sAlert.success("L'épisode a été ajouté à votre collection.").autoRemove();
 
                     var addEpisodeResult = response.data;
@@ -398,7 +402,7 @@
                     }
                 }).then(function(response) {
 
-                    if ( response.status == 201 )
+                    if ( response.status == 200 )
                       sAlert.success("L'épisode a été retiré de votre collection.").autoRemove();
 
                     var removeEpisodeResult = response.data;
@@ -588,7 +592,7 @@
 
         var user = $cookies.getObject('user');
 
-        $scope.addManga = function(id_manga, user) {
+        $scope.addManga = function(id_manga) {
           var promiseAddManga = mangasService.setMangaToCollection(id_manga, user);
           promiseAddManga.then(function(response) {
 
@@ -599,7 +603,7 @@
           });
         };
 
-        $scope.removeManga = function(id_manga, user) {
+        $scope.removeManga = function(id_manga) {
           var promiseRemoveManga = mangasService.removeMangaFromCollection(id_manga, user);
           promiseRemoveManga.then(function(response) {
 
@@ -620,22 +624,20 @@
 
         var user = $cookies.getObject('user');
 
-        $scope.addTome = function(id_manga, id_tome) {
+        $scope.addTome = function(id_manga, id_tome, key) {
             var promiseAddTome = tomesService.setTomeToCollection(id_manga, id_tome, user);
             promiseAddTome.then(function(response) {
-
                 if ( response != undefined && response.status == 201 )
-                    $scope.isTomeInCollection = true;
+                    $scope.tomes[key].inCollection = 1;
 
             });
         };
 
-        $scope.removeTome = function(id_manga, id_tome) {
+        $scope.removeTome = function(id_manga, id_tome, key) {
             var promiseRemoveTome = tomesService.removeTomeFromCollection(id_manga, id_tome, user);
             promiseRemoveTome.then(function(response) {
-
                 if ( response != undefined && response.status == 201 )
-                    $scope.isTomeInCollection = false;
+                    $scope.tomes[key].inCollection = 0;
 
             });
         }
@@ -647,6 +649,11 @@
         var promiseAnime = animesService.getAnimeById($routeParams.animeID);
         promiseAnime.then(function(anime) {
             $scope.anime = anime;
+            if (anime.inCollection > 0){
+                $scope.isAnimeInCollection = true;
+            }else{
+                $scope.isAnimeInCollection = false;
+            }
         });
 
         var user = $cookies.getObject('user');
@@ -682,26 +689,26 @@
 
         var user = $cookies.getObject('user');
 
-        $scope.addEpisode = function(id_anime, id_episode) {
+        $scope.addEpisode = function(id_anime, id_episode, key) {
             var user = $cookies.getObject('user');
 
             var promiseAddEpisode = episodesService.setEpisodeToCollection(id_anime, id_episode, user);
             promiseAddEpisode.then(function(response) {
 
                 if ( response != undefined && response.status == 201 )
-                    $scope.isEpisodeInCollection = true;
+                    $scope.episodes[key].inCollection = 1;
 
             });
         }
 
-        $scope.removeEpisode = function(id_anime, id_episode) {
+        $scope.removeEpisode = function(id_anime, id_episode, key) {
             var user = $cookies.getObject('user');
 
-            var promiseRemoveEpisode = episodesService.setEpisodeToCollection(id_anime, id_episode, user);
+            var promiseRemoveEpisode = episodesService.removeEpisodeFromCollection(id_anime, id_episode, user);
             promiseRemoveEpisode.then(function(response) {
 
                 if ( response != undefined && response.status == 201 )
-                    $scope.isEpisodeInCollection = false;
+                    $scope.episodes[key].inCollection = 0;
 
             });
         }
