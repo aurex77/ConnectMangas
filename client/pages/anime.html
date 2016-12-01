@@ -50,7 +50,6 @@
           </div>
           <a href="#/episodes/{{ anime.id_anime }}">Voir la liste des épisodes</a>
         </md-card-content>
-        {{isAnimeInCollection}}
         <md-card-actions layout="row" layout-align="center" ng-show="!isAnimeInCollection">
           <md-button class="md-raised md-primary" ng-click="addAnime(anime.id_anime)" ng-if="userCookie != undefined">Ajouter à ma collection</md-button>
         </md-card-actions>
