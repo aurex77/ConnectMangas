@@ -1,8 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert']);
-
+    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner'])
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
     const PATH_MAC = "http://localhost:8888/connectmangas/server/";
@@ -524,10 +523,13 @@
 
     });
 
-    app.controller('SearchController', function($scope, $routeParams, searchService) {
-
+    app.controller('SearchController', function($scope, $routeParams, searchService, usSpinnerService, $timeout) {
+        $timeout(function() {
+            usSpinnerService.spin('spinner-1');
+        }, 100);
         var promiseSearch = searchService.getSearchResult($routeParams.searchParam);
         promiseSearch.then(function(searchResult) {
+            usSpinnerService.stop('spinner-1');
             $scope.listAnimes = searchResult.animes;
             $scope.listMangas = searchResult.mangas;
         });
