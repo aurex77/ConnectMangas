@@ -14,11 +14,12 @@
                             <img ng-src="client/medias/default/thumbnail.png" width="50px">
                         </div>
                         <div ng-if="user.username">
-                            <p>{{ user.username }}</p>
+                            <p style="text-align: center;">{{ user.username }}</p>
                         </div>
                     </a>
                     <div style="margin-left: 70px;">
-                        {{ user.username }} se trouve à environ {{ user.distance }}km de vous !
+                        {{ user.username }} se trouve à environ {{ user.distance }} km de vous !
+                        <br>
                         Envoyez-lui dès maintenant une proposition d'achat ou d'échange pour son tome numéro {{ number }} de {{ title }}.
                     </div>
                 </md-card-content>
