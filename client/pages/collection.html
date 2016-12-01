@@ -5,8 +5,8 @@
 
       <ul>
         <li ng-if="listAnimes.length == 0">Aucun anime trouvé.</li>
-        <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height well-lg" ng-repeat="anime in listAnimes">
-          <div ng-if="anime.img_affiche" style="padding-bottom: 20px;">
+        <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="anime in listAnimes">
+          <div ng-if="anime.img_affiche" style="padding-top: 20px;padding-bottom: 20px;">
             <img class="img-thumbnail" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/animes/{{ anime.img_affiche }}">
           </div>
           <ul>
@@ -22,14 +22,14 @@
 
       <ul>
         <li ng-if="listMangas.length == 0">Aucun manga trouvé.</li>
-        <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height well-lg" ng-repeat="manga in listMangas">
-          <div ng-if="manga.img_tome_fr" style="padding-bottom: 20px;">
+        <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="manga in listMangas">
+          <div ng-if="manga.img_tome_fr" style="padding-top: 20px;padding-bottom: 20px;">
             <img class="img-thumbnail" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/tomes/{{ manga.img_tome_fr }}" height="200px">
           </div>
-          <div ng-if="!manga.img_tome_fr && manga.img_tome_jp" style="padding-bottom: 20px;">
+          <div ng-if="!manga.img_tome_fr && manga.img_tome_jp" style="padding-top: 20px;padding-bottom: 20px;">
             <img class="img-thumbnail" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/tomes/{{ manga.img_tome_jp }}" height="200px">
           </div>
-          <div ng-if="!manga.img_tome_fr && !manga.img_tome_jp" style="padding-bottom: 20px;">
+          <div ng-if="!manga.img_tome_fr && !manga.img_tome_jp" style="padding-top: 20px;padding-bottom: 20px;">
             <img ng-src="client/medias/default/thumbnail.png" class="img-thumbnail" style="height: 200px !important;">
           </div>
           <ul>
