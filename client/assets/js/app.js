@@ -582,6 +582,7 @@
 
         var promiseManga = mangasService.getMangaById($routeParams.mangaID);
         promiseManga.then(function(manga) {
+            manga.synopsis = 'Synopsis : <br>'+ manga.synopsis;
             $scope.manga = manga;
 
             if ( manga.inCollection == '1' )
@@ -644,7 +645,7 @@
 
     });
 
-    app.controller('AnimeController', function($scope, $routeParams, $cookies, animesService, $sce) {
+    app.controller('AnimeController', function($scope, $routeParams, $cookies, animesService) {
 
         var promiseAnime = animesService.getAnimeById($routeParams.animeID);
         promiseAnime.then(function(anime) {

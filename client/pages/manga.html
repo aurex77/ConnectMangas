@@ -40,7 +40,7 @@
             <p>Publication JP : {{ manga.publication_jp }}</p>
           </div>
           <div ng-if="manga.synopsis">
-            <p>Synopsis : {{ manga.synopsis }}</p>
+            <p ng-bind-html="manga.synopsis"></p>
           </div>
           <div ng-if="manga.themes">
             <p>Thèmes : {{ manga.themes | prettycomma }}</p>
