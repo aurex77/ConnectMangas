@@ -30,7 +30,7 @@
                 <div class="text-center">
                   <h2 class="brand"><small>ConnectMangas</small></h2>
                   <img src="client/medias/profils/default.png" class="user-avatar"><br>
-                    <a ui-sref=login class="btn btn-white btn-outline btn-rounded btn-sm" ng-if="userCookie != undefined" ng-click="logout()">Déconnexion</a>
+                    <a ui-sref=login class="btn btn-white btn-outline btn-rounded btn-sm" ng-show="userCookie" ng-click="logout()">Déconnexion</a>
                 </div>
                   <md-input-container>
                       <input type="search" placeholder="Recherche..." ng-change="searchFunc()" ng-model="mySearch" class="ng-pristine ng-valid md-input ng-not-empty ng-touched"/>
@@ -41,9 +41,9 @@
                   </li>
                   <li ng-class="{active: $state.includes('reports')}"><a ui-sref=reports>Reports</a></li> -->
                   <li><a href="#/" name="home">Accueil</a></li>
-                  <li><a href="#/collection" name="collection" ng-if="userCookie != undefined">Collection</a></li>
-                  <li><a href="#/profile/{{ userCookie.username }}" name="profile" ng-if="userCookie != undefined">Mon profil</a></li>
-                  <li><a href="#/authentication" name="auth" ng-if="userCookie == undefined">Connexion / Inscription</a></li>
+                  <li><a href="#/collection" name="collection" ng-show="userCookie">Collection</a></li>
+                  <li><a href="#/profile/{{ userCookie.username }}" name="profile" ng-show="userCookie">Mon profil</a></li>
+                  <li><a href="#/authentication" name="auth" ng-show="!userCookie">Connexion / Inscription</a></li>
                 </ul>
               </div>
               <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view> </div>

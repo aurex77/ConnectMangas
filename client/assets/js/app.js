@@ -559,7 +559,7 @@
 
         // DO SOMETHING
         var userCookie = $cookies.getObject('user');
-        $scope.userCookie = userCookie;
+        $rootScope.userCookie = userCookie;
 
         $scope.logout = function() {
             $cookies.remove('user');
@@ -728,7 +728,7 @@
 
     });
 
-    app.controller('AuthenticationController', function($scope, $location, $cookies, $route, $window, authenticationService, userService) {
+    app.controller('AuthenticationController', function($rootScope, $scope, $location, $cookies, $route, $window, authenticationService, userService) {
 
         $scope.register = function() {
             authenticationService.register($scope.register.username, $scope.register.password, $scope.register.email);
@@ -752,6 +752,12 @@
                             'userEmail': userData.infos.email,
                             'userToken': loginData.data.token
                         });
+                        $rootScope.userCookie = {
+                            'userID': userData.infos.id,
+                            'username' : userData.infos.username,
+                            'userEmail': userData.infos.email,
+                            'userToken': loginData.data.token
+                        };
                     });
                 }
 
