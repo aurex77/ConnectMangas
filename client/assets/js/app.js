@@ -485,8 +485,20 @@
     app.factory('collectionService', function($http) {
 
         return {
-            getAllCollection: function() {
+            getAllCollection: function(id, token) {
+                return $http({
+                    method: 'GET',
+                    url: PATH_MAC+'api/action/collection',
+                    headers: {
+                        'Client-Service': 'frontend-client',
+                        'Auth-Key': 'simplerestapi',
+                        'Authorization': token,
+                        'User-ID': id
+                    }
+                }).then(function(response) {
+                    return response.data;
 
+                });
             },
             checkIfInCollection: function() {
 
@@ -711,6 +723,15 @@
         if ( user == undefined ) $location.path('/authentication');
 
         // Récupère la collection de l'utilisateur
+        var promiseCollection = collectionService.getAllCollection(user.userID, user.userToken);
+
+        promiseCollection.then(function(response) {
+            if ( response.status == 200 ) {
+                $scope.listAnimes = response.infos.animes;
+                $scope.listMangas = response.infos.mangas;
+            }
+
+        });
 
     });
 

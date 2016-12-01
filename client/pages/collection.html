@@ -1,5 +1,34 @@
 <section id="section-collection">
   <div class="inner">
-    <p>Hello :)</p>
+    <div>
+      <h1>Animes</h1>
+
+      <ul>
+        <li ng-if="listAnimes.length == 0">Aucun anime trouvé.</li>
+        <li ng-repeat="anime in listAnimes">
+          <div ng-if="anime.img_affiche" style="display: inline-block;">
+            <img ng-src="client/medias/animes/{{ anime.img_affiche }}" height="200px">
+          </div>
+          <a href="#/anime/{{ anime.id_anime }}">{{ anime.title }}</a>
+        </li>
+      </ul>
+    </div><br/>
+
+    <div>
+      <h1>Mangas</h1>
+
+      <ul>
+        <li ng-if="listMangas.length == 0">Aucun manga trouvé.</li>
+        <li ng-repeat="manga in listMangas">
+          <div ng-if="manga.img_tome_fr" style="display: inline-block;">
+            <img ng-src="client/medias/tomes/{{ manga.img_tome_fr }}" height="200px">
+          </div>
+          <div ng-if="!manga.img_tome_fr && manga.img_tome_jp" style="display: inline-block;">
+            <img ng-src="client/medias/tomes/{{ manga.img_tome_jp }}" height="200px">
+          </div>
+          <a href="#/manga/{{ manga.id_manga }}">{{ manga.title }}</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </section>

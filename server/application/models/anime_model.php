@@ -186,4 +186,17 @@ class Anime_model extends CI_Model {
         return array('status' => 201,'message' => 'Data has been deleted.');
     }
 
+    public function get_anime_collection($id_user) {
+
+        $this->db->select("animes.id_anime, animes.title, animes.img_affiche")
+            ->join("animes_collection", "animes_collection.id_anime = animes.id_anime")
+            ->where("animes_collection.id_user", $id_user);
+
+        $query = $this->db->get($this->table);
+        if ( $query->num_rows() > 0 )
+            return $query->result();
+
+        return FALSE;
+    }
+
 }
