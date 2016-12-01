@@ -211,4 +211,31 @@ class Manga_model extends CI_Model {
         return array('status' => 201,'message' => 'Data has been deleted.');
     }
 
+    public function get_manga_collection($id_user) {
+
+        $this->db->select("mangas.id_manga, mangas.title,
+                         (SELECT mangas_tomes.couverture_fr
+                         FROM mangas_tomes
+                         WHERE mangas_tomes.id_manga = mangas.id_manga
+                         AND couverture_fr IS NOT NULL
+                         AND couverture_fr != ''
+                         ORDER BY number
+                         LIMIT 1) as img_tome_fr,
+                        (SELECT mangas_tomes.couverture_jp
+                         FROM mangas_tomes
+                         WHERE mangas_tomes.id_manga = mangas.id_manga
+                         AND couverture_jp IS NOT NULL
+                         AND couverture_jp != ''
+                         ORDER BY number
+                         LIMIT 1) as img_tome_jp")
+            ->join("mangas_collection", "mangas_collection.id_manga = mangas.id_manga")
+            ->where("mangas_collection.id_user", $id_user);
+
+        $query = $this->db->get($this->table);
+        if ( $query->num_rows() > 0 )
+            return $query->result();
+
+        return FALSE;
+    }
+
 }
