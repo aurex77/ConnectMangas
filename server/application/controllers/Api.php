@@ -627,7 +627,7 @@ class Api extends MY_Controller {
         } else {
             $id_manga = $this->input->get('id_manga');
             $number = $this->input->get('number');
-
+            
             $check_auth_client = $this->user->check_auth_client();
             $check_tome = $this->manga->check_tome($id_manga, $number);
             if ($check_auth_client === true && $check_tome === true){

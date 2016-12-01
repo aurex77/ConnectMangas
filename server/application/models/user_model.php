@@ -139,11 +139,19 @@ class User_model extends CI_Model {
 
     public function _get_users_tome($id_manga, $number, $id_user) {
 
-        $user = $this->get_user($id_user, $id_user);
+        $this->db->select("latitude, longitude")
+            ->where('id', $id_user);
+
+        $query = $this->db->get($this->table);
+
+        if (isset($query) && $query->num_rows() > 0) {
+            $latitude = $query->row("latitude");
+            $longitude = $query->row("longitude");
+        }
 
         $this->db->select("users.id, users.username, users.img_profil, tomes_collection.date_add,
-        ROUND(6366*ACOS(COS(RADIANS(".$user->latitude."))*COS(RADIANS(users.`latitude`))*COS(RADIANS(users.`longitude`) -RADIANS(".$user->longitude."))+SIN(RADIANS(".$user->latitude."))*SIN(RADIANS(users.`latitude`)))
-	    ,2) as distance")
+        ROUND(6366*ACOS(COS(RADIANS(".$latitude."))*COS(RADIANS(users.`latitude`))*COS(RADIANS(users.`longitude`) -RADIANS(".$longitude."))+SIN(RADIANS(".$latitude."))*SIN(RADIANS(users.`latitude`)))
+	    ) as distance")
             ->join("tomes_collection", "tomes_collection.id_user = users.id")
             ->where('tomes_collection.id_manga', $id_manga)
             ->where('tomes_collection.number', $number)
