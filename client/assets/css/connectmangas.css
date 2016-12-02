@@ -2,3 +2,11 @@
     height: 340px;
     margin: 20px;
 }
+
+.dashboard-page .sidebar {
+    background-color: #f26522;
+}
+.dashboard-page .nav>li>a:hover, .dashboard-page .nav>li>a:focus {
+    background: #ecf0f1;
+    color: #f26522;
+}
