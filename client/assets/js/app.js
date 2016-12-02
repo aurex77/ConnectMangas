@@ -5,7 +5,7 @@
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
     const PATH_MAC = "http://localhost:8888/connectmangas/server/";
-    const PATH = "http://connectmangas.com/server/";
+    const PATH_SERVER = "http://connectmangas.com/server/";
 
     /*
      * Gestion des routes
@@ -72,7 +72,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH+'api/action/manga/'+id,
+                    url: PATH_MAC+'api/action/manga/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -90,7 +90,7 @@
             setMangaToCollection: function(id_manga, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH+'api/action/add_collection_manga',
+                    url: PATH_MAC+'api/action/add_collection_manga',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -118,7 +118,7 @@
             removeMangaFromCollection: function(id_manga, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH+'api/action/delete_collection_manga',
+                    url: PATH_MAC+'api/action/delete_collection_manga',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -160,7 +160,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH+'api/action/tomes/'+id,
+                    url: PATH_MAC+'api/action/tomes/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -178,7 +178,7 @@
             setTomeToCollection: function(id_manga, id_tome, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH+'api/action/add_collection_tome',
+                    url: PATH_MAC+'api/action/add_collection_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -211,7 +211,7 @@
             removeTomeFromCollection: function(id_manga, id_tome, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH+'api/action/delete_collection_tome',
+                    url: PATH_MAC+'api/action/delete_collection_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -256,7 +256,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH+'api/action/anime/'+id,
+                    url: PATH_MAC+'api/action/anime/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -274,7 +274,7 @@
             setAnimeToCollection: function(id_anime, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH+'api/action/add_collection_anime',
+                    url: PATH_MAC+'api/action/add_collection_anime',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -302,7 +302,7 @@
             removeAnimeFromCollection: function(id_anime, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH+'api/action/delete_collection_anime',
+                    url: PATH_MAC+'api/action/delete_collection_anime',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -344,7 +344,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH+'api/action/episodes/'+id,
+                    url: PATH_MAC+'api/action/episodes/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -360,7 +360,7 @@
             setEpisodeToCollection: function(id_anime, id_episode, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH+'api/action/add_collection_episode',
+                    url: PATH_MAC+'api/action/add_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -390,7 +390,7 @@
             removeEpisodeFromCollection: function(id_anime, id_episode, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH+'api/action/delete_collection_episode',
+                    url: PATH_MAC+'api/action/delete_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -425,7 +425,7 @@
 
         return {
             getSearchResult: function(param) {
-                return $http.get(PATH+'api/action/search/'+param).then(function(response) {
+                return $http.get(PATH_MAC+'api/action/search/'+param).then(function(response) {
 
                     var searchResult = response.data;
                     return searchResult;
@@ -441,7 +441,7 @@
             register: function(username, password, email){
                 return $http({
                     method: 'POST',
-                    url: PATH+'api/action/register',
+                    url: PATH_MAC+'api/action/register',
                     data: {username: username, password: password, email: email}
                 }).success(function(data){
                     //sAlert.success(data.message).autoRemove();
@@ -453,7 +453,7 @@
             login : function(username, password){
                 return $http({
                     method: 'POST',
-                    url: PATH+'api/action/login',
+                    url: PATH_MAC+'api/action/login',
                     data: {username: username, password: password}
                 }).success(function(data){
                     sAlert.success(data.message).autoRemove();
@@ -473,7 +473,7 @@
             getUserById: function(id, token, username) {
                 return $http({
                     method: 'GET',
-                    url: PATH+'api/action/profil/'+username,
+                    url: PATH_MAC+'api/action/profil/'+username,
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -497,7 +497,7 @@
             getAllCollection: function(id, token) {
                 return $http({
                     method: 'GET',
-                    url: PATH+'api/action/collection',
+                    url: PATH_MAC+'api/action/collection',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -529,7 +529,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH + 'api/action/users_tome',
+                    url: PATH_MAC + 'api/action/users_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -798,6 +798,8 @@
 
         if ( response.status == 200 ) {
           $scope.user = response.infos;
+        } else {
+            $location.path('/');
         }
 
       });
