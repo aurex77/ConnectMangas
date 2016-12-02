@@ -25,7 +25,7 @@
                         <p>Publication française : {{ tome.publication_fr }}</p>
                     </div>
                     <div ng-if="tome.synopsis">
-                        <p>Synopsis : {{ tome.synopsis }}</p>
+                        <p ng-bind-html="tome.synopsis"></p>
                     </div>
                     <a href="#/manga/{{ tome.id_manga }}/tome/{{ tome.number }}">Voir les utilisateurs possédant ce tome</a>
                 </md-card-content>

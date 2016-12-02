@@ -701,7 +701,7 @@
                     $scope.episodes[key].inCollection = 1;
 
             });
-        }
+        };
 
         $scope.removeEpisode = function(id_anime, id_episode, key) {
             var user = $cookies.getObject('user');
