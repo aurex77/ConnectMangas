@@ -16,6 +16,12 @@
                     </div>
                 </md-card-content>
 
+                <md-input-container class="md-block" ng-if="userCookie.username == user.username">
+                    <label>Adresse</label>
+                    <input ng-model="user.address">
+                    <md-button type="submit" ng-click="updateProfile">Modifier</md-button>
+                </md-input-container>
+
             </md-card>
         </div>
 
