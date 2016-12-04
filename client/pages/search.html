@@ -7,10 +7,10 @@
         <li ng-if="listAnimes.length == 0">Aucun anime trouvé.</li>
         <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="anime in listAnimes">
           <div ng-if="anime.img_affiche" style="padding-top: 20px;padding-bottom: 20px;">
-            <img style="display: block;margin: 0 auto;height: 200px !important;" class="img-thumbnail" ng-src="client/medias/animes/{{ anime.img_affiche }}">
+            <img class="img-thumbnail img-hover img-center" ng-src="client/medias/animes/{{ anime.img_affiche }}">
           </div>
           <div ng-if="!anime.img_affiche" style="padding-top: 20px;padding-bottom: 20px;">
-            <img style="display: block;margin: 0 auto;height: 200px !important;" class="img-thumbnail" ng-src="client/medias/default/thumbnail.png">
+            <img class="img-thumbnail img-hover img-center" ng-src="client/medias/default/thumbnail.png">
           </div>
           <ul >
             <li style="text-align: center;"><a href="#/anime/{{ anime.id_anime }}">{{ anime.title }} ({{ anime.year }})</a></li>
@@ -28,13 +28,13 @@
         <li ng-if="listMangas.length == 0">Aucun manga trouvé.</li>
         <li class="col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="manga in listMangas">
           <div ng-if="manga.img_tome_fr" style="padding-top: 20px;padding-bottom: 20px;">
-            <img ng-src="client/medias/tomes/{{ manga.img_tome_fr }}" class="img-thumbnail"  style="display: block;margin: 0 auto;height: 200px !important;">
+            <img ng-src="client/medias/tomes/{{ manga.img_tome_fr }}" class="img-thumbnail img-hover img-center">
           </div>
           <div ng-if="!manga.img_tome_fr && manga.img_tome_jp" style="padding-top: 20px;padding-bottom: 20px;">
-            <img ng-src="client/medias/tomes/{{ manga.img_tome_jp }}" class="img-thumbnail" style="display: block;margin: 0 auto;height: 200px !important;">
+            <img ng-src="client/medias/tomes/{{ manga.img_tome_jp }}" class="img-thumbnail img-hover img-center">
           </div>
           <div ng-if="!manga.img_tome_fr && !manga.img_tome_jp" style="padding-top: 20px;padding-bottom: 20px;">
-            <img ng-src="client/medias/default/thumbnail.png" class="img-thumbnail" style="height: 200px !important;">
+            <img ng-src="client/medias/default/thumbnail.png" class="img-thumbnail img-hover img-center" style="height: 200px !important;">
           </div>
           <ul>
             <li style="text-align: center;"><a href="#/manga/{{ manga.id_manga }}">{{ manga.title }} ({{ manga.year }})</a></li>

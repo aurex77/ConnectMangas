@@ -10,3 +10,22 @@
     background: #ecf0f1;
     color: #f26522;
 }
+.img-center {
+    display: block;
+    margin: 0 auto;
+    height: 200px !important;
+}
+
+.img-hover {
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.img-hover:hover {
+    -moz-box-shadow: 0 0 10px #000;
+    -webkit-box-shadow: 0 0 10px #000;
+    box-shadow: 0 0 10px #000;
+}

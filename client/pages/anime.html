@@ -10,7 +10,7 @@
 
         <md-card-content>
           <div ng-if="anime.img_affiche">
-            <img ng-src="client/medias/animes/{{ anime.img_affiche }}">
+            <img style="height: 100% !important;" class="img-thumbnail img-center" ng-src="client/medias/animes/{{ anime.img_affiche }}">
           </div>
           <div ng-if="anime.genres">
             <p>Genres : {{ anime.genres | prettycomma }}</p>
