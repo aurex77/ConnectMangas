@@ -88,6 +88,9 @@ class Api extends MY_Controller {
             case "collection":
                 $this->_get_collection();
                 break;
+            case "update_user":
+                $this->_update_user();
+                break;
             default:
                 show_404();
                 break;
@@ -562,13 +565,21 @@ class Api extends MY_Controller {
                     }
                     if (isset($params['address']) && !empty($params['address'])){
                         $user_infos['address'] = $params['address'];
+
+                        $map_api_url = "https://maps.googleapis.com/maps/api/geocode/json?address=".urlencode($params['address']);
+
+                        $resp_json = file_get_contents($map_api_url);
+                        $resp = json_decode($resp_json, true);
+
+                        if(isset($resp['results'][0]['geometry']['location'])){
+                            $user_infos['latitude'] = $resp['results'][0]['geometry']['location']['lat'];
+                            $user_infos['longitude'] = $resp['results'][0]['geometry']['location']['lng'];
+                        }else{
+                            print json_encode(array('status' => 401, 'message' => 'Invalid address.'));
+                            exit;
+                        }
                     }
-                    if (isset($params['latitude']) && !empty($params['latitude'])){
-                        $user_infos['latitude'] = $params['latitude'];
-                    }
-                    if (isset($params['longitude']) && !empty($params['longitude'])){
-                        $user_infos['longitude'] = $params['longitude'];
-                    }
+
                     $user_infos['date_upd'] = date('Y-m-d H:i:s');
 
                     if ($this->user->update_user((int)$this->input->get_request_header('User-ID', TRUE), $user_infos)) {
@@ -597,7 +608,7 @@ class Api extends MY_Controller {
                         return json_output(403, array('status' => 403,'message' => 'Address is empty.'));
                     }
 
-                    $resp_json = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=".urlencode($address));
+                    $resp_json = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?components=country:FR&address=".urlencode($address));
                     $resp = (object) json_decode($resp_json, true);
                     $address = [];
                     if($resp->status == "OK" && count($resp->results)){

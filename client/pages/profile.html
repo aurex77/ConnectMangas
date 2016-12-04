@@ -16,11 +16,15 @@
                     </div>
                 </md-card-content>
 
-                <md-input-container class="md-block" ng-if="userCookie.username == user.username">
+                <md-input-container class="md-block" ng-if="userCookie.username == user.username" style="margin-bottom: 0px; padding-bottom: 0px;">
                     <label>Adresse</label>
-                    <input ng-model="user.address">
-                    <md-button type="submit" ng-click="updateProfile">Modifier</md-button>
+                    <input ng-model="user.address" ng-change="googlePlaces()" placeholder="Entrez votre adresse" type="text">
                 </md-input-container>
+                <md-subheader ng-show="addressList.length > 0" class="md-no-sticky">Sélectionnez une adresse parmis les suivantes :</md-subheader>
+                <md-list-item ng-click="selectAddress(address.address)" ng-repeat="address in addressList">
+                    <p>{{ address.address }}</p>
+                </md-list-item>
+                <md-button ng-if="userCookie.username == user.username" type="submit" ng-click="updateProfile(user.address)">Modifier</md-button>
 
             </md-card>
         </div>
