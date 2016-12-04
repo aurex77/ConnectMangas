@@ -188,7 +188,15 @@ class Anime_model extends CI_Model {
 
     public function get_anime_collection($id_user) {
 
-        $this->db->select("animes.id_anime, animes.title, animes.img_affiche")
+        $this->db->select("animes.id_anime, animes.title, animes.img_affiche, animes.nb_episodes,
+                            (SELECT COUNT(*)
+                             FROM episodes_collection
+                             WHERE episodes_collection.id_anime = animes.id_anime
+                             AND episodes_collection.id_user = animes_collection.id_user) as episodes_progression,
+                             ROUND(((SELECT COUNT(*)
+                             FROM episodes_collection
+                             WHERE episodes_collection.id_anime = animes.id_anime
+                             AND episodes_collection.id_user = animes_collection.id_user) / animes.nb_episodes)*100) as progression")
             ->join("animes_collection", "animes_collection.id_anime = animes.id_anime")
             ->where("animes_collection.id_user", $id_user);
 

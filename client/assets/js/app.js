@@ -789,7 +789,7 @@
 
     });
 
-    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService) {
+    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert) {
       var user = $cookies.getObject('user');
       if ( user == undefined ) $location.path('/authentication');
 
@@ -797,12 +797,73 @@
       promiseProfile.then(function(response) {
 
         if ( response.status == 200 ) {
-          $scope.user = response.infos;
+            $scope.user = response.infos;
+            $scope.animes = response.animes;
+            $scope.mangas = response.mangas;
         } else {
             $location.path('/');
         }
 
       });
+
+        $scope.updateProfile = function(address) {
+            return $http({
+                method: 'PUT',
+                url: PATH_MAC+'api/action/update_user',
+                headers: {
+                    'Client-Service': 'frontend-client',
+                    'Auth-Key': 'simplerestapi',
+                    'Authorization': user.userToken,
+                    'User-ID': user.userID
+                },
+                data: {
+                    address: address
+                }
+            }).then(function(response) {
+                if ( response.data.status == 200 ) {
+                    sAlert.success("Profil mis à jour avec succès.").autoRemove();
+                } else {
+                    sAlert.error(response.data.message).autoRemove();
+                }
+
+            }, function errorCallback(response) {
+                console.log(response);
+            });
+        };
+
+        $scope.googlePlaces = function() {
+            if ($scope.user.address.length > 10) {
+                return $http({
+                    method: 'GET',
+                    url: PATH_MAC + 'api/action/address',
+                    headers: {
+                        'Client-Service': 'frontend-client',
+                        'Auth-Key': 'simplerestapi',
+                        'Authorization': user.userToken,
+                        'User-ID': user.userID
+                    },
+                    params: {
+                        address: $scope.user.address
+                    }
+                }).then(function (response) {
+
+                    if (response.data.status == 200)
+                        $scope.addressList = response.data.infos;
+                    else
+                        console.log(response.data.message);
+
+                }, function errorCallback(response) {
+
+                    console.log(response);
+
+                });
+            }
+        };
+
+        $scope.selectAddress = function(address) {
+            $scope.user.address = address;
+            $scope.addressList = {};
+        }
 
     });
 

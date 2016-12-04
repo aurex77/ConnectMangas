@@ -16,13 +16,66 @@
                     </div>
                 </md-card-content>
 
-                <md-input-container class="md-block" ng-if="userCookie.username == user.username">
+                <md-input-container class="md-block" ng-if="userCookie.username == user.username" style="margin-bottom: 0px; padding-bottom: 0px;">
                     <label>Adresse</label>
-                    <input ng-model="user.address">
-                    <md-button type="submit" ng-click="updateProfile">Modifier</md-button>
+                    <input ng-model="user.address" ng-change="googlePlaces()" placeholder="Entrez votre adresse" type="text">
                 </md-input-container>
+                <md-subheader ng-show="addressList.length > 0" class="md-no-sticky">Sélectionnez une adresse parmis les suivantes :</md-subheader>
+                <md-list-item ng-click="selectAddress(address.address)" ng-repeat="address in addressList">
+                    <p>{{ address.address }}</p>
+                </md-list-item>
+                <md-button ng-if="userCookie.username == user.username" type="submit" ng-click="updateProfile(user.address)">Modifier</md-button>
 
             </md-card>
+        </div>
+
+        <div class="row" ng-if="animes.length > 0">
+            <h1>Animes</h1>
+
+            <ul>
+                <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="anime in animes">
+                    <div ng-if="anime.img_affiche" style="padding-top: 20px;padding-bottom: 20px;">
+                        <img class="img-thumbnail" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/animes/{{ anime.img_affiche }}">
+                    </div>
+                    <ul>
+                        <li style="text-align: center;"><a href="#/anime/{{ anime.id_anime }}">{{ anime.title }}</a></li>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ anime.progression }}"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:{{ anime.progression }}%; background-color: #f26522;">
+                                <span style="color: #000000;">{{ anime.episodes_progression }}/{{ anime.nb_episodes }}</span>
+                            </div>
+                        </div>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <br/>
+
+        <div class="row" ng-if="mangas.length > 0">
+            <h1>Mangas</h1>
+
+            <ul>
+                <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="manga in mangas">
+                    <div ng-if="manga.img_tome_fr" style="padding-top: 20px;padding-bottom: 20px;">
+                        <img class="img-thumbnail" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/tomes/{{ manga.img_tome_fr }}" height="200px">
+                    </div>
+                    <div ng-if="!manga.img_tome_fr && manga.img_tome_jp" style="padding-top: 20px;padding-bottom: 20px;">
+                        <img class="img-thumbnail" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/tomes/{{ manga.img_tome_jp }}" height="200px">
+                    </div>
+                    <div ng-if="!manga.img_tome_fr && !manga.img_tome_jp" style="padding-top: 20px;padding-bottom: 20px;">
+                        <img ng-src="client/medias/default/thumbnail.png" class="img-thumbnail" style="height: 200px !important;">
+                    </div>
+                    <ul>
+                        <li style="text-align: center;"><a href="#/manga/{{ manga.id_manga }}">{{ manga.title }}</a></li>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ manga.progression }}"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:{{ manga.progression }}%; background-color: #f26522;">
+                                <span style="color: #000000;">{{ manga.tomes_progression }}/{{ manga.nb_tomes }}</span>
+                            </div>
+                        </div>
+                    </ul>
+                </li>
+            </ul>
         </div>
 
     </div>

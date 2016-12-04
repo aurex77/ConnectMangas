@@ -11,6 +11,12 @@
           </div>
           <ul>
             <li style="text-align: center;"><a href="#/anime/{{ anime.id_anime }}">{{ anime.title }}</a></li>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{ anime.progression }}"
+                   aria-valuemin="0" aria-valuemax="100" style="width:{{ anime.progression }}%; background-color: #f26522;">
+                <span style="color: #000000;">{{ anime.episodes_progression }}/{{ anime.nb_episodes }}</span>
+              </div>
+            </div>
           </ul>
         </li>
       </ul>
@@ -34,6 +40,12 @@
           </div>
           <ul>
             <li style="text-align: center;"><a href="#/manga/{{ manga.id_manga }}">{{ manga.title }}</a></li>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{ manga.progression }}"
+                   aria-valuemin="0" aria-valuemax="100" style="width:{{ manga.progression }}%; background-color: #f26522;">
+                <span style="color: #000000;">{{ manga.tomes_progression }}/{{ manga.nb_tomes }}</span>
+              </div>
+            </div>
           </ul>
         </li>
       </ul>
