@@ -797,7 +797,9 @@
       promiseProfile.then(function(response) {
 
         if ( response.status == 200 ) {
-          $scope.user = response.infos;
+            $scope.user = response.infos;
+            $scope.animes = response.animes;
+            $scope.mangas = response.mangas;
         } else {
             $location.path('/');
         }

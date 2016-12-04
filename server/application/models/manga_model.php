@@ -227,8 +227,16 @@ class Manga_model extends CI_Model {
                          AND couverture_jp IS NOT NULL
                          AND couverture_jp != ''
                          ORDER BY number
-                         LIMIT 1) as img_tome_jp")
-            ->join("mangas_collection", "mangas_collection.id_manga = mangas.id_manga")
+                         LIMIT 1) as img_tome_jp, mangas.nb_tomes,
+                        (SELECT COUNT(*)
+                         FROM tomes_collection
+                         WHERE tomes_collection.id_manga = mangas.id_manga
+                         AND tomes_collection.id_user = mangas_collection.id_user) as tomes_progression,
+                         ROUND(((SELECT COUNT(*)
+                         FROM tomes_collection
+                         WHERE tomes_collection.id_manga = mangas.id_manga
+                         AND tomes_collection.id_user = mangas_collection.id_user) / mangas.nb_tomes)*100) as progression")
+        ->join("mangas_collection", "mangas_collection.id_manga = mangas.id_manga")
             ->where("mangas_collection.id_user", $id_user);
 
         $query = $this->db->get($this->table);

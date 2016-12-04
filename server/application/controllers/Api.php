@@ -153,9 +153,13 @@ class Api extends MY_Controller {
 
                     if (!$user = $this->user->get_user($username, (int)$this->input->get_request_header('User-ID', TRUE))) {
                         print json_encode(array('status' => 403, 'message' => 'User not found.'));
-                    } else {
-                        print json_encode(array('status' => 200, 'infos' => $user));
+                        exit;
                     }
+
+                    $animes = $this->anime->get_anime_collection($user->id);
+                    $mangas = $this->manga->get_manga_collection($user->id);
+                    
+                    print json_encode(array('status' => 200, 'infos' => $user, 'animes' => $animes, 'mangas' => $mangas));
                 }
             }
         }
@@ -669,13 +673,13 @@ class Api extends MY_Controller {
 
                     $result = ["animes" => [], "mangas" => []];
                     if (!empty($animes)) {
-                        foreach ($animes as $row) {
-                            $result["animes"][] = array("id_anime" => intval($row->id_anime), "title" => $row->title, "img_affiche" => $row->img_affiche);
+                        foreach ($animes as $anime) {
+                            $result["animes"][] = $anime;
                         }
                     }
                     if (!empty($mangas)) {
-                        foreach ($mangas as $row) {
-                            $result["mangas"][] = array("id_manga" => intval($row->id_manga), "title" => $row->title, "img_tome_fr" => $row->img_tome_fr, "img_tome_jp" => $row->img_tome_jp);
+                        foreach ($mangas as $manga) {
+                            $result["mangas"][] = $manga;
                         }
                     }
 
