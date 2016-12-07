@@ -31,17 +31,17 @@
         }).when('/episodes/:animeID', {
             templateUrl: 'client/pages/episodes.html',
             controller: 'EpisodesController'
-        }).when('/search/:searchParam', {
+        }).when('/recherche/:searchParam', {
             templateUrl: 'client/pages/search.html',
             controller: 'SearchController'
-        }).when('/authentication', {
+        }).when('/authentification', {
             templateUrl: 'client/pages/authentication.html',
             controller: 'AuthenticationController',
             requireAuth: true
         }).when('/collection', {
             templateUrl: 'client/pages/collection.html',
             controller: 'CollectionController'
-        }).when('/profile/:username', {
+        }).when('/profil/:username', {
             templateUrl: 'client/pages/profile.html',
             controller: 'ProfileController',
             requireAuth: true
@@ -570,7 +570,7 @@
 
         $scope.searchFunc = function() {
             var search = $scope.mySearch.replace(/ /g,"_");
-            $location.path('/search/'+search);
+            $location.path('/recherche/'+search);
         };
 
     });
@@ -774,7 +774,7 @@
 
     app.controller('CollectionController', function($scope, $cookies, $location, collectionService) {
         var user = $cookies.getObject('user');
-        if ( user == undefined ) $location.path('/authentication');
+        if ( user == undefined ) $location.path('/authentification');
 
         // Récupère la collection de l'utilisateur
         var promiseCollection = collectionService.getAllCollection(user.userID, user.userToken);
@@ -791,7 +791,7 @@
 
     app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert) {
       var user = $cookies.getObject('user');
-      if ( user == undefined ) $location.path('/authentication');
+      if ( user == undefined ) $location.path('/authentification');
 
       var promiseProfile = userService.getUserById(user.userID, user.userToken, $routeParams.username);
       promiseProfile.then(function(response) {

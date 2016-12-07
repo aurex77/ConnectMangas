@@ -236,8 +236,9 @@ class Manga_model extends CI_Model {
                          FROM tomes_collection
                          WHERE tomes_collection.id_manga = mangas.id_manga
                          AND tomes_collection.id_user = mangas_collection.id_user) / mangas.nb_tomes)*100) as progression")
-        ->join("mangas_collection", "mangas_collection.id_manga = mangas.id_manga")
-            ->where("mangas_collection.id_user", $id_user);
+            ->join("mangas_collection", "mangas_collection.id_manga = mangas.id_manga")
+            ->where("mangas_collection.id_user", $id_user)
+            ->order_by('mangas.title', 'ASC');
 
         $query = $this->db->get($this->table);
         if ( $query->num_rows() > 0 )

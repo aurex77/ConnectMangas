@@ -198,7 +198,8 @@ class Anime_model extends CI_Model {
                              WHERE episodes_collection.id_anime = animes.id_anime
                              AND episodes_collection.id_user = animes_collection.id_user) / animes.nb_episodes)*100) as progression")
             ->join("animes_collection", "animes_collection.id_anime = animes.id_anime")
-            ->where("animes_collection.id_user", $id_user);
+            ->where("animes_collection.id_user", $id_user)
+            ->order_by('animes.title', 'ASC');
 
         $query = $this->db->get($this->table);
         if ( $query->num_rows() > 0 )
