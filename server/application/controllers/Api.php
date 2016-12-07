@@ -585,7 +585,7 @@ class Api extends MY_Controller {
                             exit;
                         }
                     }
-                    if (isset($_FILES['file'])){
+                    if (isset($_FILES['file']) && !empty($_FILES['file'])){
 
                         $filename = uniqid().".jpg";
                         $datas['img_profil'] = $filename;

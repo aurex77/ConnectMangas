@@ -808,6 +808,10 @@
 
         $scope.updateProfile = function(address, file) {
 
+            if (!address){
+                address = undefined;
+            }
+
             if (!file){
                 file = {};
             }

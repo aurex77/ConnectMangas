@@ -18,8 +18,8 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div ng-show="userCookie.username == user.username">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-show="userCookie.username == user.username">
+                            <div>
                                 <md-tooltip>Veuillez choisir une image au format JPG, JPEG, PNG ou GIF qui soit inférieur à 2Mo.</md-tooltip>
                                 <md-icon md-svg-src="client/medias/default/ic_photo_24px.svg" class="name"></md-icon>
                                 <input type="file" ngf-select ng-model="picFile" name="file" style="display: inline-block;">
