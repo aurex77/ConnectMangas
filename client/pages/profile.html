@@ -5,26 +5,29 @@
             <md-card>
 
                 <md-card-content>
-                    <div style="float:left;">
-                        <img ng-show="user.img_profil" ng-src="client/medias/profils/{{ user.img_profil }}" width="150px">
-                        <img ng-show="!user.img_profil" ng-src="client/medias/default/thumbnail.png" width="150px">
+                    <div class="row">
+                        <img class="col-lg-6 col-md-6 col-sm-12 col-xs-12" ng-show="user.img_profil" ng-src="client/medias/profils/{{ user.img_profil }}" width="150px">
+                        <img class="col-lg-6 col-md-6 col-sm-12 col-xs-12" ng-show="!user.img_profil" ng-src="client/medias/default/thumbnail.png" width="150px">
 
-                        <input type="file" ngf-select ng-model="picFile" name="file"
-                               accept="image/*" ngf-max-size="2MB" required
-                               ngf-model-invalid="errorFile">
-                        <i ng-show="myForm.file.$error.required">*required</i><br>
-                        <i ng-show="myForm.file.$error.maxSize">File too large
-                            {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
-                        <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb" style="width: 50px;">
-                        <button ng-click="picFile = null" ng-show="picFile">Supprimer</button>
-                        <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div ng-if="user.username">
+                                <h1>{{ user.username }}</h1>
+                            </div>
+                            <div ng-if="user.date_create">
+                                <p>Inscrit le : {{ user.date_create }}</p>
+                            </div>
+                        </div>
 
-                    </div>
-                    <div ng-if="user.username" style="margin-left: 200px;">
-                        <h1>{{ user.username }}</h1>
-                    </div>
-                    <div ng-if="user.date_create" style="margin-left: 200px;">
-                        <p>Inscrit le : {{ user.date_create }}</p>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div ng-show="userCookie.username == user.username">
+                                <md-tooltip>Veuillez choisir une image au format JPG, JPEG, PNG ou GIF qui soit inférieur à 2Mo.</md-tooltip>
+                                <md-icon md-svg-src="client/medias/default/ic_photo_24px.svg" class="name"></md-icon>
+                                <input type="file" ngf-select ng-model="picFile" name="file" style="display: inline-block;">
+                            </div>
+                            <br>
+                            <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb" style="width: 50px;">
+                            <button ng-click="picFile = null" ng-show="picFile">Supprimer</button>
+                        </div>
                     </div>
                 </md-card-content>
 

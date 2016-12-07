@@ -789,7 +789,7 @@
 
     });
 
-    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert, Upload, $timeout) {
+    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert, Upload) {
       var user = $cookies.getObject('user');
       if ( user == undefined ) $location.path('/authentification');
 
@@ -829,10 +829,6 @@
 
             file.upload.then(function (response) {
 
-                $timeout(function () {
-                    file.result = response.data;
-                });
-
                 if ( response.data.status == 200 ) {
                     if (response.data.datas.img_profil) {
                         $scope.user.img_profil = response.data.datas.img_profil;
@@ -843,8 +839,6 @@
                 }
 
             }, function (response) {
-                console.log('test');
-                $scope.errorMsg = response.status + ': ' + response.data;
                 sAlert.error(response.data.message).autoRemove();
             });
         };
