@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize']);
+    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload']);
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
     const PATH_MAC = "http://localhost:8888/connectmangas/server/";
@@ -789,7 +789,7 @@
 
     });
 
-    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert) {
+    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert, Upload, $timeout) {
       var user = $cookies.getObject('user');
       if ( user == undefined ) $location.path('/authentification');
 
@@ -806,9 +806,14 @@
 
       });
 
-        $scope.updateProfile = function(address) {
-            return $http({
-                method: 'PUT',
+        $scope.updateProfile = function(address, file) {
+
+            if (!file){
+                file = {};
+            }
+
+            file.upload = Upload.upload({
+                method: 'POST',
                 url: PATH_MAC+'api/action/update_user',
                 headers: {
                     'Client-Service': 'frontend-client',
@@ -816,18 +821,31 @@
                     'Authorization': user.userToken,
                     'User-ID': user.userID
                 },
+                file: file,
                 data: {
                     address: address
                 }
-            }).then(function(response) {
+            });
+
+            file.upload.then(function (response) {
+
+                $timeout(function () {
+                    file.result = response.data;
+                });
+
                 if ( response.data.status == 200 ) {
+                    if (response.data.datas.img_profil) {
+                        $scope.user.img_profil = response.data.datas.img_profil;
+                    }
                     sAlert.success("Profil mis à jour avec succès.").autoRemove();
                 } else {
                     sAlert.error(response.data.message).autoRemove();
                 }
 
-            }, function errorCallback(response) {
-                console.log(response);
+            }, function (response) {
+                console.log('test');
+                $scope.errorMsg = response.status + ': ' + response.data;
+                sAlert.error(response.data.message).autoRemove();
             });
         };
 

@@ -554,7 +554,7 @@ class Api extends MY_Controller {
 
     private function _update_user() {
         $method = $_SERVER['REQUEST_METHOD'];
-        if($method != 'PUT'){
+        if($method != 'POST'){
             json_output(400,array('status' => 400,'message' => 'Bad request.'));
         } else {
             $check_auth_client = $this->user->check_auth_client();
@@ -562,7 +562,9 @@ class Api extends MY_Controller {
 
                 $response = $this->user->auth();
                 if($response['status'] == 200) {
-                    $params = json_decode(file_get_contents('php://input'), TRUE);
+                    $params = $_POST;
+
+                    $datas = [];
 
                     if (isset($params['password']) && !empty($params['password'])){
                         $user_infos['password'] = md5($params['password']);
@@ -583,11 +585,43 @@ class Api extends MY_Controller {
                             exit;
                         }
                     }
+                    if (isset($_FILES['file'])){
+
+                        $filename = uniqid().".jpg";
+                        $datas['img_profil'] = $filename;
+
+                        $destination = getcwd()."/../client/medias/profils/".$filename;
+
+                        $check = getimagesize($_FILES["file"]["tmp_name"]);
+                        if($check === false) {
+                            print json_encode(array('status' => 401, 'message' => "Le fichier n'est pas une image."));
+                            exit;
+                        }
+
+                        if ($_FILES["file"]["size"] > 2000000) {
+                            print json_encode(array('status' => 401, 'message' => "Le poids de l'image doit être inférieur à 2Mo."));
+                            exit;
+                        }
+
+                        $imageFileType = pathinfo($destination, PATHINFO_EXTENSION);
+
+                        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+                            print json_encode(array('status' => 401, 'message' => "L'image doit être au format JPG, JPEG, PNG ou GIF."));
+                            exit;
+                        }
+
+                        if (!move_uploaded_file($_FILES['file']['tmp_name'] , $destination)){
+                            print json_encode(array('status' => 401, 'message' => "Une erreur est survenue lors de l'upload de l'image."));
+                            exit;
+                        }
+
+                        $user_infos['img_profil'] = $filename;
+                    }
 
                     $user_infos['date_upd'] = date('Y-m-d H:i:s');
 
                     if ($this->user->update_user((int)$this->input->get_request_header('User-ID', TRUE), $user_infos)) {
-                        print json_encode(array('status' => 200, 'message' => 'User updated with success.'));
+                        print json_encode(array('status' => 200, 'message' => 'User updated with success.', 'datas' => $datas));
                     } else {
                         print json_encode(array('status' => 403, 'message' => 'User could not be updated.'));
                     }

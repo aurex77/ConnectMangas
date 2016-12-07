@@ -6,7 +6,19 @@
 
                 <md-card-content>
                     <div style="float:left;">
-                        <img ng-src="client/medias/{{ user.img_profil ? 'profils/'+user.img_profil : 'default/thumbnail.png' }}" width="150px">
+                        <img ng-show="user.img_profil" ng-src="client/medias/profils/{{ user.img_profil }}" width="150px">
+                        <img ng-show="!user.img_profil" ng-src="client/medias/default/thumbnail.png" width="150px">
+
+                        <input type="file" ngf-select ng-model="picFile" name="file"
+                               accept="image/*" ngf-max-size="2MB" required
+                               ngf-model-invalid="errorFile">
+                        <i ng-show="myForm.file.$error.required">*required</i><br>
+                        <i ng-show="myForm.file.$error.maxSize">File too large
+                            {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+                        <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb" style="width: 50px;">
+                        <button ng-click="picFile = null" ng-show="picFile">Supprimer</button>
+                        <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+
                     </div>
                     <div ng-if="user.username" style="margin-left: 200px;">
                         <h1>{{ user.username }}</h1>
@@ -24,7 +36,7 @@
                 <md-list-item ng-click="selectAddress(address.address)" ng-repeat="address in addressList">
                     <p>{{ address.address }}</p>
                 </md-list-item>
-                <md-button ng-if="userCookie.username == user.username" type="submit" ng-click="updateProfile(user.address)">Modifier</md-button>
+                <md-button ng-if="userCookie.username == user.username" type="submit" ng-click="updateProfile(user.address, picFile)">Modifier</md-button>
 
             </md-card>
         </div>
