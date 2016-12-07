@@ -585,12 +585,7 @@ class Api extends MY_Controller {
                             exit;
                         }
                     }
-                    if (isset($_FILES['file']) && !empty($_FILES['file'])){
-
-                        $filename = uniqid().".jpg";
-                        $datas['img_profil'] = $filename;
-
-                        $destination = getcwd()."/../client/medias/profils/".$filename;
+                    if (isset($_FILES['file']) && !empty($_FILES['file'])){;
 
                         $check = getimagesize($_FILES["file"]["tmp_name"]);
                         if($check === false) {
@@ -603,12 +598,19 @@ class Api extends MY_Controller {
                             exit;
                         }
 
-                        $imageFileType = pathinfo($destination, PATHINFO_EXTENSION);
+                        $target_file = getcwd()."/../client/medias/profils/".basename($_FILES["file"]["name"]);
+
+                        $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
 
                         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
                             print json_encode(array('status' => 401, 'message' => "L'image doit être au format JPG, JPEG, PNG ou GIF."));
                             exit;
                         }
+
+                        $filename = uniqid().".".$imageFileType;
+                        $datas['img_profil'] = $filename;
+
+                        $destination = getcwd()."/../client/medias/profils/".$filename;
 
                         if (!move_uploaded_file($_FILES['file']['tmp_name'] , $destination)){
                             print json_encode(array('status' => 401, 'message' => "Une erreur est survenue lors de l'upload de l'image."));

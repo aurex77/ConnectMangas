@@ -6,21 +6,23 @@
             <md-card ng-repeat="user in users">
 
                 <md-card-content>
-                    <a href="#/profil/{{ user.username }}" style="float: left;">
-                        <div ng-if="user.img_profil">
-                            <img ng-src="client/medias/profils/{{ user.img_profil }}" width="50px">
+                    <div class="row">
+                        <a href="#/profil/{{ user.username }}" class="col-lg-4 col-md-4">
+                            <div ng-if="user.img_profil">
+                                <img ng-src="client/medias/profils/{{ user.img_profil }}" width="100%">
+                            </div>
+                            <div ng-if="!user.img_profil">
+                                <img ng-src="client/medias/default/thumbnail.png" width="100%">
+                            </div>
+                            <div ng-if="user.username">
+                                <p style="text-align: center;">{{ user.username }}</p>
+                            </div>
+                        </a>
+                        <div class="col-lg-8 col-md-8">
+                            {{ user.username }} se trouve à environ {{ user.distance }} km de vous !
+                            <br>
+                            Envoyez-lui dès maintenant une proposition d'achat ou d'échange pour son tome numéro {{ number }} de {{ title }}.
                         </div>
-                        <div ng-if="!user.img_profil">
-                            <img ng-src="client/medias/default/thumbnail.png" width="50px">
-                        </div>
-                        <div ng-if="user.username">
-                            <p style="text-align: center;">{{ user.username }}</p>
-                        </div>
-                    </a>
-                    <div style="margin-left: 70px;">
-                        {{ user.username }} se trouve à environ {{ user.distance }} km de vous !
-                        <br>
-                        Envoyez-lui dès maintenant une proposition d'achat ou d'échange pour son tome numéro {{ number }} de {{ title }}.
                     </div>
                 </md-card-content>
 

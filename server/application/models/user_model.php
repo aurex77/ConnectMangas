@@ -159,6 +159,7 @@ class User_model extends CI_Model {
             ->where('users.latitude IS NOT NULL', null, false)
             ->where('users.longitude IS NOT NULL', null, false)
             ->having('distance < 50')
+            ->group_by("users.id")
             ->order_by("distance", "asc")
             ->limit(20);
 
