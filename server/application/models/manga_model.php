@@ -105,32 +105,24 @@ class Manga_model extends CI_Model {
 
         if ( !is_null($name) ) {
 
-            $this->db->select("mangas.id_manga, mangas.title, mangas.year,
-                         (SELECT mangas_tomes.couverture_fr
-                         FROM mangas_tomes
-                         WHERE mangas_tomes.id_manga = mangas.id_manga
-                         AND couverture_fr IS NOT NULL
-                         AND couverture_fr != ''
-                         ORDER BY number
-                         LIMIT 1) as img_tome_fr,
-                        (SELECT mangas_tomes.couverture_jp
-                         FROM mangas_tomes
-                         WHERE mangas_tomes.id_manga = mangas.id_manga
-                         AND couverture_jp IS NOT NULL
-                         AND couverture_jp != ''
-                         ORDER BY number
-                         LIMIT 1) as img_tome_jp")
-                ->join("mangas_titles", "mangas_titles.id_manga = mangas.id_manga");
+            $this->db->select("mangas.id_manga, mangas.title, mangas.year, tome_fr.couverture_fr as img_tome_fr, tome_jp.couverture_jp as img_tome_jp, MIN(tome_fr.number), MIN(tome_jp.number)")
+                ->join("mangas_titles", "mangas_titles.id_manga = mangas.id_manga")
+                ->join("mangas_tomes as tome_fr",
+                    "tome_fr.id_manga = mangas.id_manga AND tome_fr.couverture_fr != '' AND tome_fr.couverture_fr IS NOT NULL", "left")
+                ->join("mangas_tomes as tome_jp",
+                    "tome_jp.id_manga = mangas.id_manga AND tome_jp.couverture_jp != '' AND tome_jp.couverture_jp IS NOT NULL", "left");
 
             foreach ($segments as $segment) {
                 $this->db->where("(mangas.title LIKE '%$segment%'
                     OR mangas_titles.title LIKE '%$segment%')");
             }
 
-            $this->db->group_by('mangas.id_manga');
-            $this->db->limit(10);
+            $this->db->group_by('mangas.id_manga')
+                ->order_by("LENGTH(mangas.title)")
+                ->limit(10);
 
             $query = $this->db->get($this->table);
+
             if ( $query->num_rows() > 0 )
                 return $query->result();
 

@@ -102,8 +102,9 @@ class Anime_model extends CI_Model {
                     OR animes_titles.title LIKE '%$segment%')");
             }
 
-            $this->db->group_by('animes.id_anime');
-            $this->db->limit(10);
+            $this->db->group_by('animes.id_anime')
+                ->order_by("LENGTH(animes.title)")
+                ->limit(10);
 
             $query = $this->db->get($this->table);
             if ( $query->num_rows() > 0 )
