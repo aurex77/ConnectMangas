@@ -8,6 +8,10 @@
           <img style="height: 100% !important;" class="img-thumbnail img-center" ng-src="client/medias/animes/{{ anime.img_affiche }}">
         </div>
         <div flex-offset="5" flex style="padding-top: 15px;">
+          <div>
+            <a href="#/episodes/{{ anime.id_anime }}"><span class="md-headline">{{ anime.title }}</span></a>
+          </div>
+          <br>
           <div ng-if="anime.genres">
             <p>Genres : {{ anime.genres | prettycomma }}</p>
           </div>
@@ -44,10 +48,6 @@
         </div>
         </div>
       <br>
-        <md-card-title>
-          <a href="#/episodes/{{ anime.id_anime }}"><span class="md-headline">{{ anime.title }}</span></a>
-        </md-card-title>
-        <br>
         <md-card-content>
           <div ng-if="anime.synopsis">
             <p ng-bind-html="anime.synopsis"></p>
