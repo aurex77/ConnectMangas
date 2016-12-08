@@ -203,7 +203,7 @@ class Api extends MY_Controller {
                 );
 
                 $this->user->save($form_datas);
-                $this->htmlmail($username, $email, 'Bienvenue sur ConnectMangas !');die();
+                $this->htmlmail($username, $email, 'Bienvenue sur ConnectMangas !');
                 return json_output(200, array('status' => 200, 'message' => 'User created with success.'));
             }
         }
