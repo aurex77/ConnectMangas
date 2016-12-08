@@ -203,9 +203,36 @@ class Api extends MY_Controller {
                 );
 
                 $this->user->save($form_datas);
+                $this->htmlmail($username, $email, 'Bienvenue sur ConnectMangas !');die();
                 return json_output(200, array('status' => 200, 'message' => 'User created with success.'));
             }
         }
+    }
+
+    public function htmlmail($username, $email, $subject) {
+        $config = Array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.googlemail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'connectmangas',
+            'smtp_pass' => 'etnaconnectmangas',
+            'smtp_timeout' => '4',
+            'mailtype'  => 'html',
+            'charset'   => 'iso-8859-1'
+        );
+        $this->load->library('email', $config);
+        $this->email->set_newline("\r\n");
+
+        $this->email->from('connectmangas', 'Connectmangas Support');
+        $data = array(
+            'userName'=> $username
+        );
+        $this->email->to($email);  // replace it with receiver mail id
+        $this->email->subject($subject); // replace it with relevant subject
+
+        $body = $this->load->view('email/template.php',$data,TRUE);
+        $this->email->message($body);
+        $this->email->send();
     }
 
     // Récupère tous les mangas
