@@ -650,7 +650,7 @@
 
         var promiseAnime = animesService.getAnimeById($routeParams.animeID);
         promiseAnime.then(function(anime) {
-            anime.synopsis = 'Synopsis : <br>'+ anime.synopsis;
+            anime.synopsis = anime.synopsis;
             $scope.anime = anime;
             if (anime.inCollection > 0){
                 $scope.isAnimeInCollection = true;
