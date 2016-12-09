@@ -239,4 +239,19 @@ class Manga_model extends CI_Model {
         return FALSE;
     }
 
+    public function get_tome($id_manga, $number) {
+
+        $this->db->select("mangas.title, mangas_tomes.number, mangas_tomes.couverture_fr, mangas_tomes.couverture_jp")
+            ->join("mangas_tomes", "mangas_tomes.id_manga = mangas.id_manga AND mangas_tomes.number = ".$number)
+            ->where('mangas.id_manga', $id_manga);
+
+        $query = $this->db->get($this->table);
+
+        if ( $query->num_rows() > 0 )
+            return $query->row();
+
+        return FALSE;
+
+    }
+
 }
