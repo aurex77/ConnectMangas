@@ -583,7 +583,7 @@
 
         var promiseManga = mangasService.getMangaById($routeParams.mangaID);
         promiseManga.then(function(manga) {
-            manga.synopsis = 'Synopsis : <br>'+ manga.synopsis;
+            manga.synopsis = manga.synopsis;
             $scope.manga = manga;
 
             if ( manga.inCollection == '1' )

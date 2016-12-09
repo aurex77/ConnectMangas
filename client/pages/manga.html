@@ -1,20 +1,20 @@
 <section id="section-manga" ng-controller="MangaController">
   <s-alert></s-alert>
-  <div class="inner">
+  <div class="">
 
-    <div flex-xs flex-gt-xs="50" layout="column">
-      <md-card>
-        <md-card-title>
-          <a href="#/tomes/{{ manga.id_manga }}"><span class="md-headline">{{ manga.title }}</span></a>
-        </md-card-title>
-
-        <md-card-content>
-          <div ng-if="manga.img_tome_fr">
-            <img ng-src="client/medias/tomes/{{ manga.img_tome_fr }}">
+    <div flex-gt-xs layout="column">
+      <div flex-xs flex-gt-xs layout="row">
+          <div flex="29" ng-if="manga.img_tome_fr">
+            <img style="height: 400px;" class="img-thumbnail" ng-src="client/medias/tomes/{{ manga.img_tome_fr }}">
           </div>
-          <div ng-if="!manga.img_tome_fr && manga.img_tome_jp">
-            <img ng-src="client/medias/tomes/{{ manga.img_tome_jp }}">
+          <div flex="29" ng-if="!manga.img_tome_fr && manga.img_tome_jp">
+            <img style="height: 400px;" class="img-thumbnail" ng-src="client/medias/tomes/{{ manga.img_tome_jp }}">
           </div>
+        <div flex-offset="5" flex style="padding-top: 15px;">
+          <div>
+            <a href="#/tomes/{{ manga.id_manga }}"><span class="md-headline">{{ manga.title }}</span></a>
+          </div>
+          <br>
           <div ng-if="manga.genres">
             <p>Genres : {{ manga.genres | prettycomma }}</p>
           </div>
@@ -36,18 +36,24 @@
           <div ng-if="manga.publication_jp">
             <p>Publication JP : {{ manga.publication_jp }}</p>
           </div>
-          <div ng-if="manga.synopsis">
-            <p ng-bind-html="manga.synopsis"></p>
-          </div>
           <div ng-if="manga.themes">
             <p>Thèmes : {{ manga.themes | prettycomma }}</p>
           </div>
           <div ng-if="manga.year">
             <p>Année : {{ manga.year }}</p>
           </div>
-          <a href="#/tomes/{{ manga.id_manga }}">Voir la liste des tomes</a>
+          <div>
+            <a href="#/tomes/{{ manga.id_manga }}">Voir la liste des tomes</a>
+          </div>
+        </div>
+      </div>
+        <br>
+        <md-card-content>
+          <div ng-if="manga.synopsis">
+            <p ng-bind-html="manga.synopsis"></p>
+          </div>
         </md-card-content>
-
+        <br>
         <md-card-actions layout="row" layout-align="center" ng-show="!isMangaInCollection">
           <md-button class="md-raised md-primary" ng-click="addManga(manga.id_manga)" ng-if="userCookie != undefined">Ajouter à ma collection</md-button>
         </md-card-actions>
@@ -57,8 +63,7 @@
         <span ng-if="manga.img_banniere">
           <img ng-src="client/medias/mangas/{{ manga.img_banniere }}" width="100%">
         </span>
-      </md-card>
     </div>
-
+    </div>
   </div>
 </section>
