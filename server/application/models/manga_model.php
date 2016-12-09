@@ -76,8 +76,8 @@ class Manga_model extends CI_Model {
         if ( !is_null($id) )
             $this->db->select("mangas_tomes.id_manga,
                         mangas_tomes.number,
-                        mangas_tomes.publication_jp,
-                        mangas_tomes.publication_fr,
+                        DATE_FORMAT(mangas_tomes.publication_jp, '%d/%m/%Y') as publication_jp,
+                        DATE_FORMAT(mangas_tomes.publication_fr, '%d/%m/%Y') as publication_fr,
                         mangas_tomes.synopsis,
                         mangas_tomes.couverture_jp,
                         mangas_tomes.couverture_fr,

@@ -70,7 +70,7 @@ class User_model extends CI_Model {
             $id_user = null;
 
         if ($id_user == $myId) {
-            $this->db->select("id, username, email, address, latitude, longitude, img_profil, date_create");
+            $this->db->select("id, username, email, address, latitude, longitude, img_profil, DATE_FORMAT(date_create, '%d/%m/%Y') as date_create");
         }else{
             $this->db->select("id, username, img_profil, date_create");
         }
