@@ -1,8 +1,40 @@
-<section id="section-manga" ng-controller="usersTomeController">
+<section id="section-manga" ng-controller="usersTomeController" id="popupContainer">
     <s-alert></s-alert>
     <div class="inner">
 
-        <div flex-xs flex-gt-xs="50" layout="column">
+        <div flex-xs flex-gt-xs="75" layout="column">
+
+            <md-card>
+                <md-card-content>
+                    <div class="row">
+                        <div ng-if="tome.couverture_fr" class="col-lg-4 col-md-4">
+                            <img ng-src="client/medias/tomes/{{ tome.couverture_fr }}" class="img-thumbnail img-hover">
+                        </div>
+                        <div ng-if="!tome.couverture_fr && tome.couverture_jp" class="col-lg-5 col-md-5">
+                            <img ng-src="client/medias/tomes/{{ tome.couverture_jp }}" class="img-thumbnail img-hover">
+                        </div>
+
+                        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                            <div ng-if="tome.title">
+                                <h1>{{ tome.title }}</h1>
+                            </div>
+                            <div ng-if="tome.number">
+                                <h2>Tome {{ tome.number }}</h2>
+                            </div>
+
+                            <span>Afficher les utilisateurs possédants ce tome, proches de :</span>
+
+                            <md-radio-group ng-model="localisation" ng-change="changeLocalisation()" class="md-primary">
+
+                                <md-radio-button value="address">Mon adresse</md-radio-button>
+                                <md-radio-button value="geolocalisation">Ma localisation</md-radio-button>
+
+                            </md-radio-group>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+
             <md-card ng-repeat="user in users">
 
                 <md-card-content>
@@ -21,13 +53,17 @@
                         <div class="col-lg-8 col-md-8">
                             {{ user.username }} se trouve à environ {{ user.distance }} km de vous !
                             <br>
-                            Envoyez-lui dès maintenant une proposition d'achat ou d'échange pour son tome numéro {{ number }} de {{ title }}.
+                            Envoyez-lui dès maintenant une proposition d'achat ou d'échange pour son tome numéro {{ tome.number }} de {{ tome.title }}.
                         </div>
+
+                        <md-button class="md-raised md-warn">Envoyer une demande</md-button>
                     </div>
                 </md-card-content>
 
             </md-card>
         </div>
+
+        <span us-spinner spinner-key="spinner-1"></span>
 
     </div>
 </section>

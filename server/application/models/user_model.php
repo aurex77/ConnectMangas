@@ -70,9 +70,9 @@ class User_model extends CI_Model {
             $id_user = null;
 
         if ($id_user == $myId) {
-            $this->db->select("id, username, email, address, latitude, longitude, img_profil, date_create");
+            $this->db->select("id, username, email, address, latitude, longitude, img_profil, DATE_FORMAT(date_create, '%d/%m/%Y') as date_create");
         }else{
-            $this->db->select("id, username, img_profil, date_create");
+            $this->db->select("id, username, img_profil, DATE_FORMAT(date_create, '%d/%m/%Y') as date_create");
         }
 
         $this->db->where('username', $username);
@@ -137,16 +137,18 @@ class User_model extends CI_Model {
     }
 
 
-    public function _get_users_tome($id_manga, $number, $id_user) {
+    public function _get_users_tome($id_manga, $number, $id_user, $latitude, $longitude) {
 
-        $this->db->select("latitude, longitude")
-            ->where('id', $id_user);
+        if ($latitude == null) {
+            $this->db->select("latitude, longitude")
+                ->where('id', $id_user);
 
-        $query = $this->db->get($this->table);
+            $query = $this->db->get($this->table);
 
-        if (isset($query) && $query->num_rows() > 0) {
-            $latitude = $query->row("latitude");
-            $longitude = $query->row("longitude");
+            if (isset($query) && $query->num_rows() > 0) {
+                $latitude = $query->row("latitude");
+                $longitude = $query->row("longitude");
+            }
         }
 
         $this->db->select("users.id, users.username, users.img_profil, tomes_collection.date_add,

@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload']);
+    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload', 'ngGeolocation']);
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
     const PATH_MAC = "http://localhost:8888/connectmangas/server/";
@@ -519,12 +519,26 @@
     app.factory('usersTomeService', function($http, $cookies) {
 
         return {
-            getUsersByTome: function (id_manga, number) {
+            getUsersByTome: function (id_manga, number, latitude, longitude) {
                 var user = '';
                 if (angular.isUndefined($cookies.getObject('user'))) {
                     user = 0;
                 } else {
-                    user = $cookies.getObject('user')
+                    user = $cookies.getObject('user');
+                }
+
+                if (latitude && longitude){
+                    var params = {
+                        'id_manga': id_manga,
+                        'number': number,
+                        'latitude': latitude,
+                        'longitude' : longitude
+                    };
+                }else{
+                    var params = {
+                        'id_manga': id_manga,
+                        'number': number
+                    };
                 }
 
                 return $http({
@@ -536,10 +550,7 @@
                         'Authorization': user.userToken,
                         'User-ID': user.userID
                     },
-                    params: {
-                        'id_manga': id_manga,
-                        'number': number
-                    }
+                    params: params
                 }).then(function (response) {
                     return response.data;
 
@@ -756,12 +767,14 @@
                             'userID': userData.infos.id,
                             'username' : userData.infos.username,
                             'userEmail': userData.infos.email,
+                            'userAddress': userData.infos.address,
                             'userToken': loginData.data.token
                         });
                         $rootScope.userCookie = {
                             'userID': userData.infos.id,
                             'username' : userData.infos.username,
                             'userEmail': userData.infos.email,
+                            'userAddress': userData.infos.address,
                             'userToken': loginData.data.token
                         };
                     });
@@ -837,6 +850,9 @@
                     if (response.data.datas.img_profil) {
                         $scope.user.img_profil = response.data.datas.img_profil;
                     }
+                    var cookie = $cookies.getObject('user');
+                    cookie.userAddress = address;
+                    $cookies.putObject('user', cookie);
                     sAlert.success("Profil mis à jour avec succès.").autoRemove();
                 } else {
                     sAlert.error(response.data.message).autoRemove();
@@ -883,21 +899,101 @@
 
     });
 
-    app.controller('usersTomeController', function($scope, $routeParams, $cookies, usersTomeService, mangasService) {
+    app.controller('usersTomeController', function($scope, $routeParams, $cookies, $location, usersTomeService, mangasService, $geolocation, $mdDialog, $timeout, usSpinnerService) {
 
-        var promiseUsersTome = usersTomeService.getUsersByTome($routeParams.mangaID, $routeParams.tomeNumber);
-        promiseUsersTome.then(function(response) {
+        var user = $cookies.getObject('user');
+        if ( user == undefined ) $location.path('/authentification');
+        
+        if (user.userAddress){
+            $scope.localisation = 'address';
 
-            if ( response.status == 200 ) {
-                $scope.users = response.infos;
-                $scope.number = $routeParams.tomeNumber;
-            }
-        });
+            var latitude = '';
+            var longitude = '';
+            var promiseUsersTome = usersTomeService.getUsersByTome($routeParams.mangaID, $routeParams.tomeNumber, latitude, longitude);
+
+            promiseUsersTome.then(function(response) {
+
+                if ( response.status == 200 ) {
+                    $scope.users = response.infos;
+                    $scope.tome = response.tome;
+                }
+            });
+        }else{
+            $scope.localisation = 'geolocalisation';
+
+            $timeout(function() {
+                usSpinnerService.spin('spinner-1');
+            }, 100);
+
+            $geolocation.getCurrentPosition({timeout: 60000}).then(function(data){
+                var latitude = data.coords.latitude;
+                var longitude = data.coords.longitude;
+
+                var promiseUsersTome = usersTomeService.getUsersByTome($routeParams.mangaID, $routeParams.tomeNumber, latitude, longitude);
+
+                promiseUsersTome.then(function(response) {
+
+                    if ( response.status == 200 ) {
+                        usSpinnerService.stop('spinner-1');
+                        $scope.users = response.infos;
+                        $scope.tome = response.tome;
+                    }
+                });
+            });
+        }
 
         var promiseManga = mangasService.getMangaById($routeParams.mangaID);
         promiseManga.then(function(manga) {
             $scope.title = manga.title;
         });
+
+        $scope.changeLocalisation = function(ev){
+            if ($scope.localisation == 'address'){
+                if (user.userAddress){
+                    var promiseUsersTome = usersTomeService.getUsersByTome($routeParams.mangaID, $routeParams.tomeNumber, '', '');
+
+                    promiseUsersTome.then(function(response) {
+
+                        if ( response.status == 200 ) {
+                            $scope.users = response.infos;
+                            $scope.tome = response.tome;
+                        }
+                    });
+                }else{
+                    $scope.localisation = "geolocalisation";
+                    $mdDialog.show(
+                        $mdDialog.alert()
+                            .parent(angular.element(document.querySelector('#popupContainer')))
+                            .clickOutsideToClose(true)
+                            .title("Impossible d'effectuer une recherche par votre adresse")
+                            .textContent("Votre adresse n'a pas été renseigné. Veuillez vous rendre sur votre profil et renseignez votre adresse pour pouvoir effectuer cette action.")
+                            .ariaLabel('Alert address empty')
+                            .ok('ok')
+                    );
+
+                }
+            }else{
+                $timeout(function() {
+                    usSpinnerService.spin('spinner-1');
+                }, 100);
+
+                $geolocation.getCurrentPosition({timeout: 60000}).then(function(data){
+                    var latitude = data.coords.latitude;
+                    var longitude = data.coords.longitude;
+
+                    var promiseUsersTome = usersTomeService.getUsersByTome($routeParams.mangaID, $routeParams.tomeNumber, latitude, longitude);
+
+                    promiseUsersTome.then(function(response) {
+
+                        if ( response.status == 200 ) {
+                            usSpinnerService.stop('spinner-1');
+                            $scope.users = response.infos;
+                            $scope.tome = response.tome;
+                        }
+                    });
+                });
+            }
+        }
 
     });
 

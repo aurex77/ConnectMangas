@@ -64,7 +64,7 @@ class Anime_model extends CI_Model {
             $this->db->select("id_anime,
                         number,
                         title,
-                        diffusion,
+                        DATE_FORMAT(diffusion, '%d/%m/%Y') as diffusion,
                         hs,
                         screenshot1,
                         screenshot2,

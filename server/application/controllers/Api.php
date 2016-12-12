@@ -705,6 +705,14 @@ class Api extends MY_Controller {
         } else {
             $id_manga = $this->input->get('id_manga');
             $number = $this->input->get('number');
+
+            if ($this->input->get('latitude') !== null && $this->input->get('longitude') !== null) {
+                $latitude = $this->input->get('latitude');
+                $longitude = $this->input->get('longitude');
+            }else{
+                $latitude = null;
+                $longitude = null;
+            }
             
             $check_auth_client = $this->user->check_auth_client();
             $check_tome = $this->manga->check_tome($id_manga, $number);
@@ -712,8 +720,9 @@ class Api extends MY_Controller {
 
                 $response = $this->user->auth();
                 if($response['status'] == 200) {
-                    $users = $this->user->_get_users_tome($id_manga, $number, (int)$this->input->get_request_header('User-ID', TRUE));
-                    print json_encode(array('status' => 200, 'total' => count($users), 'infos' => $users));
+                    $users = $this->user->_get_users_tome($id_manga, $number, (int)$this->input->get_request_header('User-ID', TRUE), $latitude, $longitude);
+                    $tome = $this->manga->get_tome($id_manga, $number);
+                    print json_encode(array('status' => 200, 'total' => count($users), 'infos' => $users, 'tome' => $tome));
                 }
             }
         }
