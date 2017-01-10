@@ -55,6 +55,9 @@ class Api extends MY_Controller {
             case "search":
                 $this->_get_search_result($param);
                 break;
+            case "search_anime_collection":
+                $this->_search_anime_collection($param);
+                break;
             case "add_collection_anime":
                 $this->_add_collection_anime();
                 break;
@@ -752,6 +755,32 @@ class Api extends MY_Controller {
                     if (!empty($mangas)) {
                         foreach ($mangas as $manga) {
                             $result["mangas"][] = $manga;
+                        }
+                    }
+
+                    print json_encode(['status' => 200, 'infos' => $result]);
+                }
+            }
+
+        }
+    }
+
+    private function _search_anime_collection($search) {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'GET'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            if ($this->user->check_auth_client()) {
+                $response = $this->user->auth();
+                if($response['status'] == 200) {
+                    $id_user = (int)$this->input->get_request_header('User-ID', TRUE);
+
+                    $animes = $this->anime->get_anime_collection_search($id_user, $search);
+
+                    $result = ["animes" => []];
+                    if (!empty($animes)) {
+                        foreach ($animes as $anime) {
+                            $result["animes"][] = $anime;
                         }
                     }
 

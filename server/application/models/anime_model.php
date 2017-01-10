@@ -202,6 +202,36 @@ class Anime_model extends CI_Model {
             ->where("animes_collection.id_user", $id_user)
             ->order_by('animes.title', 'ASC');
 
+
+        $query = $this->db->get($this->table);
+        if ( $query->num_rows() > 0 )
+            return $query->result();
+
+        return FALSE;
+    }
+
+    public function get_anime_collection_search($id_user, $name = NULL) {
+
+        $segments = explode(" ", $name);
+
+        if ( !is_null($name) ) {
+            $this->db->select("animes.id_anime, animes.title, animes.img_affiche, animes.nb_episodes,
+                            (SELECT COUNT(*)
+                             FROM episodes_collection
+                             WHERE episodes_collection.id_anime = animes.id_anime
+                             AND episodes_collection.id_user = animes_collection.id_user) as episodes_progression,
+                             ROUND(((SELECT COUNT(*)
+                             FROM episodes_collection
+                             WHERE episodes_collection.id_anime = animes.id_anime
+                             AND episodes_collection.id_user = animes_collection.id_user) / animes.nb_episodes)*100) as progression")
+                ->join("animes_collection", "animes_collection.id_anime = animes.id_anime")
+                ->where("animes_collection.id_user", $id_user)
+                ->order_by('animes.title', 'ASC');
+            foreach ($segments as $segment) {
+                $this->db->where("(animes.title LIKE '%$segment%'
+                    OR animes_titles.title LIKE '%$segment%')");
+            }
+        }
         $query = $this->db->get($this->table);
         if ( $query->num_rows() > 0 )
             return $query->result();

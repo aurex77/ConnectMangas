@@ -1,11 +1,22 @@
 (function(angular) {
     'use strict';
 
-    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload', 'ngGeolocation']);
+    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload', 'ngGeolocation', 'chat', 'infinite-scroll', 'ui.bootstrap']);
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
     const PATH_MAC = "http://localhost:8888/connectmangas/server/";
     const PATH_PROD = "http://connectmangas.com/server/";
+
+
+    app.constant( 'config', {
+        //
+        // Get your PubNub API Keys in the link above.
+        //
+        "pubnub": {
+            "publish-key"   : "pub-c-e33e9e87-84aa-417d-a31d-46a7c097b72d",
+            "subscribe-key" : "sub-c-48476bca-c046-11e6-a856-0619f8945a4f"
+        }
+    } );
 
     /*
      * Gestion des routes
@@ -567,7 +578,7 @@
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
      */
-    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope) {
+    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Messages) {
 
         // DO SOMETHING
         var userCookie = $cookies.getObject('user');
@@ -584,13 +595,56 @@
             $location.path('/recherche/'+search);
         };
 
+        $scope.messages = [];
+
+        $scope.loadMore = function() {
+            console.log($scope.messages);
+        if($scope.messages.length > 0) {
+            var last = $scope.messages[$scope.messages.length - 1];
+            for(var i = 1; i <= 8; i++) {
+                $scope.messages.push(last + i);
+            }
+            console.log($scope.messages);
+        }
+
+        };
+
+        if(typeof userCookie === "undefined") {
+            Messages.user({ id: '0' , name : 'anonyme' });
+        } else {
+            Messages.user({ id: userCookie.userID , name : userCookie.username });
+        }
+        console.log(Messages);
+        // - - - - - - - - - - - - - - - - - -
+        // Receive Messages
+        // Push to Message Inbox.
+        // - - - - - - - - - - - - - - - - - -
+        Messages.receive(function(message){
+            console.log(message);
+            $scope.messages.push(message);
+        });
+
+        // - - - - - - - - - - - - - - - - - -
+        // Send Message
+        // This is a controller method used
+        // when a user action occurs.
+        // Also we expect a model reference
+        // ng-model="textbox".
+        // - - - - - - - - - - - - - - - - - -
+        $scope.send = function() {
+            console.log($scope.textbox);
+            Messages.send({ data : $scope.textbox });
+            $scope.textbox = '';
+        };
+
+
     });
 
     app.controller('HomeController', function($scope) {
         $scope.message = "This is the home page";
     });
 
-    app.controller('MangaController', function($scope, $routeParams, $cookies, mangasService, sAlert) {
+    app.controller('MangaController', function($scope, $routeParams, $cookies, mangasService) {
 
         var promiseManga = mangasService.getMangaById($routeParams.mangaID);
         promiseManga.then(function(manga) {
