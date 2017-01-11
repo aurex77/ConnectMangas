@@ -60,6 +60,9 @@
             templateUrl: 'client/pages/usersTome.html',
             controller: 'usersTomeController',
             requireAuth: true
+        }).when('/calendrier', {
+            templateUrl: 'client/pages/calendrier.html',
+            controller: 'calendarController'
         }).otherwise({
             redirectTo: '/'
         });
@@ -436,7 +439,15 @@
 
         return {
             getSearchResult: function(param) {
-                return $http.get(PATH_MAC+'api/action/search/'+param).then(function(response) {
+                return $http({
+                    method: 'GET',
+                    url: PATH_MAC+'api/action/search/'+param,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Client-Service': 'frontend-client',
+                        'Auth-Key': 'simplerestapi'
+                    }
+                }).then(function(response) {
 
                     var searchResult = response.data;
                     return searchResult;
@@ -574,6 +585,26 @@
         }
     });
 
+    app.factory('calendarService', function($http) {
+
+        return {
+            getCalendar: function() {
+                return $http({
+                    method: 'GET',
+                    url: PATH_MAC+'api/action/calendar',
+                    headers: {
+                        'Client-Service': 'frontend-client',
+                        'Auth-Key': 'simplerestapi'
+                    }
+                }).then(function(response) {
+                    return response.data;
+
+                });
+            }
+        }
+
+    });
+
     /*
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
@@ -591,20 +622,18 @@
         };
 
         $scope.searchFunc = function() {
-            var search = $scope.mySearch.replace(/ /g,"_");
+            var search = escape($scope.mySearch.replace(/\//g,"_"));
             $location.path('/recherche/'+search);
         };
 
         $scope.messages = [];
 
         $scope.loadMore = function() {
-            console.log($scope.messages);
         if($scope.messages.length > 0) {
             var last = $scope.messages[$scope.messages.length - 1];
             for(var i = 1; i <= 8; i++) {
                 $scope.messages.push(last + i);
             }
-            console.log($scope.messages);
         }
 
         };
@@ -614,13 +643,11 @@
         } else {
             Messages.user({ id: userCookie.userID , name : userCookie.username });
         }
-        console.log(Messages);
         // - - - - - - - - - - - - - - - - - -
         // Receive Messages
         // Push to Message Inbox.
         // - - - - - - - - - - - - - - - - - -
         Messages.receive(function(message){
-            console.log(message);
             $scope.messages.push(message);
         });
 
@@ -632,7 +659,6 @@
         // ng-model="textbox".
         // - - - - - - - - - - - - - - - - - -
         $scope.send = function() {
-            console.log($scope.textbox);
             Messages.send({ data : $scope.textbox });
             $scope.textbox = '';
         };
@@ -1049,6 +1075,30 @@
             }
         }
 
+    });
+
+    app.controller('calendarController', function($scope, calendarService) {
+
+        /*var today = $filter('date')(new Date(), 'dd/MM/yyyy');
+
+        var tomorrow = new Date();
+        tomorrow = $filter('date')(tomorrow.setDate(tomorrow.getDate() + 1), 'dd/MM/yyyy');
+
+        console.log(tomorrow);
+
+        $scope.days = [
+            today,
+            tomorrow
+        ];*/
+
+        var calendar = calendarService.getCalendar();
+
+        calendar.then(function(response) {
+            if ( response.status == 200 ) {
+                $scope.days = response.infos;
+            }
+
+        });
     });
 
     /*

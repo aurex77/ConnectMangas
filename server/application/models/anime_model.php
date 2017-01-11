@@ -239,4 +239,34 @@ class Anime_model extends CI_Model {
         return FALSE;
     }
 
+    public function get_anime_calendar() {
+
+        $sql = "SET lc_time_names = 'fr_FR'";
+
+        $this->db->query($sql);
+
+        $this->db->select("animes.id_anime, animes.title as anime_title, animes.img_affiche, animes_episodes.number,
+                            animes_episodes.title, DATE_FORMAT(animes_episodes.diffusion, '%d %M %Y') as diffusion, DATEDIFF(animes_episodes.diffusion, NOW()) as nb_days")
+            ->join("animes", "animes.id_anime = animes_episodes.id_anime")
+            ->where("animes_episodes.diffusion >= CONCAT(YEAR(NOW()), '-', MONTH(NOW()), '-', DAY(NOW()))")
+            ->order_by('animes_episodes.diffusion', 'ASC');
+
+
+        $query = $this->db->get("animes_episodes");
+
+        $results = [];
+        foreach($query->result_array() as $row){
+            $results[$row['diffusion']][] = [
+                'id_anime' => $row['id_anime'],
+                'anime_title' => $row['anime_title'],
+                'img_affiche' => $row['img_affiche'],
+                'number' => $row['number'],
+                'title' => $row['title'],
+                'nb_days' => $row['nb_days']
+            ];
+        }
+
+        return $results;
+    }
+
 }

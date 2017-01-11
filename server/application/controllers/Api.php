@@ -94,6 +94,9 @@ class Api extends MY_Controller {
             case "update_user":
                 $this->_update_user();
                 break;
+            case "calendar":
+                $this->_get_calendar();
+                break;
             default:
                 show_404();
                 break;
@@ -291,6 +294,8 @@ class Api extends MY_Controller {
       if(empty($search)){
           return json_output(403, array('status' => 403,'message' => 'Search empty.'));
       }
+
+        $search = str_replace("'", "\'", urldecode($search));
 
       $animes = $this->anime->get_anime_by_name($search);
       $mangas = $this->manga->get_manga_by_name($search);
@@ -786,6 +791,20 @@ class Api extends MY_Controller {
 
                     print json_encode(['status' => 200, 'infos' => $result]);
                 }
+            }
+
+        }
+    }
+
+    private function _get_calendar() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'GET'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            if ($this->user->check_auth_client()) {
+                $animes = $this->anime->get_anime_calendar();
+
+                print json_encode(['status' => 200, 'infos' => $animes]);
             }
 
         }
