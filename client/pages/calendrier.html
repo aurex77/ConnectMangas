@@ -16,9 +16,12 @@
                             infos[0].nb_days ? 'Dans '+infos[0].nb_days+' jours' : 'Dans '+infos[0].nb_days+' jours' }} - {{day}}
                         </h2>
                     </li>
-                    <li class="col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="info in infos">
-                        <div ng-if="info.img" style="padding-top: 20px;padding-bottom: 20px;">
+                    <li class="col-lg-2 col-md-2 col-sm-12 col-xs-12 well well-height" ng-repeat="info in infos">
+                        <div ng-if="info.img" style="padding-bottom: 20px;">
                             <img class="img-thumbnail img-hover img-center" ng-src="client/medias/{{ info.type == 'manga' ? 'tomes' : 'animes' }}/{{ info.img }}">
+                        </div>
+                        <div ng-if="!info.img" style="padding-bottom: 20px;">
+                            <img class="img-thumbnail img-hover img-center" ng-src="client/medias/default/thumbnail.png">
                         </div>
                         <p style="text-align: center;">
                             <a href="#/{{ info.type }}/{{ info.id }}">{{ info.title_oeuvre }}</a>
