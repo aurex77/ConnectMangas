@@ -588,13 +588,16 @@
     app.factory('calendarService', function($http) {
 
         return {
-            getCalendar: function() {
+            getCalendar: function(type) {
                 return $http({
                     method: 'GET',
                     url: PATH_MAC+'api/action/calendar',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi'
+                    },
+                    params: {
+                        type: type
                     }
                 }).then(function(response) {
                     return response.data;
@@ -1079,26 +1082,20 @@
 
     app.controller('calendarController', function($scope, calendarService) {
 
-        /*var today = $filter('date')(new Date(), 'dd/MM/yyyy');
+        $scope.calendar = "animes";
 
-        var tomorrow = new Date();
-        tomorrow = $filter('date')(tomorrow.setDate(tomorrow.getDate() + 1), 'dd/MM/yyyy');
+        $scope.displayCalendar = function(){
+            var calendar = calendarService.getCalendar($scope.calendar);
 
-        console.log(tomorrow);
+            calendar.then(function(response) {
+                if ( response.status == 200 ) {
+                    $scope.days = response.infos;
+                }
 
-        $scope.days = [
-            today,
-            tomorrow
-        ];*/
+            });
+        }
 
-        var calendar = calendarService.getCalendar();
-
-        calendar.then(function(response) {
-            if ( response.status == 200 ) {
-                $scope.days = response.infos;
-            }
-
-        });
+        $scope.displayCalendar();
     });
 
     /*

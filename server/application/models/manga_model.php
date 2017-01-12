@@ -254,4 +254,37 @@ class Manga_model extends CI_Model {
 
     }
 
+    public function get_mangas_calendar() {
+
+        $sql = "SET lc_time_names = 'fr_FR'";
+
+        $this->db->query($sql);
+
+        $this->db->select("mangas.id_manga, mangas.title as manga_title,
+                        CASE WHEN mangas_tomes.couverture_fr THEN mangas_tomes.couverture_fr ELSE mangas_tomes.couverture_jp END as couverture,
+                        mangas_tomes.number, mangas_tomes.title, DATE_FORMAT(mangas_tomes.publication_fr, '%d %M %Y') as publication_fr,
+                        DATEDIFF(mangas_tomes.publication_fr, NOW()) as nb_days", false)
+            ->join("mangas", "mangas.id_manga = mangas_tomes.id_manga")
+            ->where("mangas_tomes.publication_fr >= CONCAT(YEAR(NOW()), '-', MONTH(NOW()), '-', DAY(NOW()))")
+            ->order_by('mangas_tomes.publication_fr', 'ASC');
+
+
+        $query = $this->db->get("mangas_tomes");
+
+        $results = [];
+        foreach($query->result_array() as $row){
+            $results[$row['publication_fr']][] = [
+                'id' => $row['id_manga'],
+                'title_oeuvre' => $row['manga_title'],
+                'img' => $row['couverture'],
+                'number' => $row['number'],
+                'title' => $row['title'],
+                'nb_days' => $row['nb_days'],
+                'type' => 'manga'
+            ];
+        }
+
+        return $results;
+    }
+
 }

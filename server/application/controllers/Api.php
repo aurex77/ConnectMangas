@@ -796,15 +796,22 @@ class Api extends MY_Controller {
         }
     }
 
-    private function _get_calendar() {
+    private function _get_calendar($type = null) {
         $method = $_SERVER['REQUEST_METHOD'];
         if($method != 'GET'){
             json_output(400,array('status' => 400,'message' => 'Bad request.'));
         } else {
             if ($this->user->check_auth_client()) {
-                $animes = $this->anime->get_anime_calendar();
 
-                print json_encode(['status' => 200, 'infos' => $animes]);
+                $type = $this->input->get('type');
+                
+                if ($type == "mangas"){
+                    $calendar = $this->manga->get_mangas_calendar();
+                }else {
+                    $calendar = $this->anime->get_animes_calendar();
+                }
+
+                print json_encode(['status' => 200, 'infos' => $calendar]);
             }
 
         }
