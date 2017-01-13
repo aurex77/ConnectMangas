@@ -224,17 +224,26 @@ class Api extends MY_Controller {
             'smtp_pass' => 'etnaconnectmangas',
             'smtp_timeout' => '4',
             'mailtype'  => 'html',
-            'charset'   => 'iso-8859-1'
+            'charset'   => 'utf-8'
         );
         $this->load->library('email', $config);
         $this->email->set_newline("\r\n");
 
-        $this->email->from('connectmangas', 'Connectmangas Support');
-        $data = array(
-            'userName'=> $username
-        );
+        $this->email->from('ConnectMangas', 'ConnectMangas');
+        $icone = getcwd()."/../client/medias/default/icone.png";
+        $background = getcwd()."/../client/medias/default/background-mail.jpg";
+        $this->email->attach($icone);
+        $this->email->attach($background);
         $this->email->to($email);  // replace it with receiver mail id
         $this->email->subject($subject); // replace it with relevant subject
+        $cid_icone = $this->email->attachment_cid($icone);
+        $cid_background = $this->email->attachment_cid($background);
+
+        $data = array(
+            'userName'=> $username,
+            'cid_icone' => $cid_icone,
+            'cid_background' => $cid_background
+        );
 
         $body = $this->load->view('email/template.php',$data,TRUE);
         $this->email->message($body);

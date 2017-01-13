@@ -466,7 +466,7 @@
                     url: PATH_MAC+'api/action/register',
                     data: {username: username, password: password, email: email}
                 }).success(function(data){
-                    //sAlert.success(data.message).autoRemove();
+                    sAlert.success(data.message).autoRemove();
                 }).error(function(data){
                     sAlert.error(data.message).autoRemove();
                 });
@@ -832,9 +832,7 @@
 
         $scope.register = function() {
             authenticationService.register($scope.register.username, $scope.register.password, $scope.register.email);
-            sAlert.success("Votre compte a été créé avec succès.").autoRemove();
-
-            // À voir si on fait un cookie au register
+            // TODO: À voir si on fait un cookie au register
         };
 
         $scope.login = function() {
