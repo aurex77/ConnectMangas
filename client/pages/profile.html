@@ -46,7 +46,12 @@
 
 
         <div class="row" ng-if="animes.length > 0">
-            <h1><a ng-click="isCollapsed = !isCollapsed">Animes</a></h1>
+            <h1>
+                <a style="cursor: pointer;" ng-click="isCollapsed = !isCollapsed">
+                    Animes
+                    <i ng-class="{'glyphicon glyphicon-chevron-up': isCollapsed, 'glyphicon glyphicon-chevron-down': !isCollapsed }"></i>
+                </a>
+            </h1>
 
             <ul uib-collapse="isCollapsed">
                 <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="anime in animes">
@@ -69,7 +74,12 @@
         <br/>
 
         <div class="row" ng-if="mangas.length > 0">
-            <h1><a ng-click="isCollapsed2 = !isCollapsed2">Mangas</a></h1>
+            <h1>
+                <a style="cursor: pointer;" ng-click="isCollapsed2 = !isCollapsed2">
+                    Mangas
+                    <i ng-class="{'glyphicon glyphicon-chevron-up': isCollapsed2, 'glyphicon glyphicon-chevron-down': !isCollapsed2 }"></i>
+                </a>
+            </h1>
 
             <ul uib-collapse="isCollapsed2">
                 <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="manga in mangas">
