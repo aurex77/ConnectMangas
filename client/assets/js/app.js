@@ -1115,6 +1115,7 @@
                     'User-ID': user.userID
                 },
                 data: {
+                    id_manga: $routeParams.mangaID,
                     username_src : user.username,
                     username_dest: userSelected.username,
                     title: $scope.tome.title,
@@ -1124,7 +1125,7 @@
             }).success(function(data){
                 sAlert.success("Demande envoyé avec succès !").autoRemove();
             }).error(function(data){
-                sAlert.error("Erreur lors de l'envoi de la demande.").autoRemove();
+                sAlert.error(data.message).autoRemove();
             });
         }
 

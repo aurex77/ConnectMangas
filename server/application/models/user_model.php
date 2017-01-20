@@ -127,8 +127,7 @@ class User_model extends CI_Model {
         return false;
     }
 
-    public function update_user($id_user, $infos)
-    {
+    public function update_user($id_user, $infos){
         if ($this->db->where('id',$id_user)->update('users',$infos)) {
             return true;
         }else{
@@ -172,6 +171,26 @@ class User_model extends CI_Model {
 
         return false;
 
+    }
+
+    public function check_request_tome($id_manga, $number, $id_user_src, $id_user_dest){
+        $this->db->select("request_tome.id")
+            ->where('request_tome.id_manga', $id_manga)
+            ->where('request_tome.number', $number)
+            ->where('request_tome.id_user_src', $id_user_src)
+            ->where('request_tome.id_user_dest', $id_user_dest)
+            ->where('request_tome.date_add >= ADDDATE(NOW(), INTERVAL -1 MONTH)');
+
+        $query = $this->db->get("request_tome");
+
+        if (isset($query) && $query->num_rows() > 0)
+            return false;
+
+        return true;
+    }
+
+    public function save_request_tome($id_manga, $number, $id_user_src, $id_user_dest){
+        $this->db->insert('request_tome', array('id_manga' => $id_manga,'number' => $number,'id_user_src' => $id_user_src,'id_user_dest' => $id_user_dest));
     }
 
 }

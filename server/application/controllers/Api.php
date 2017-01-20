@@ -857,12 +857,14 @@ class Api extends MY_Controller {
                     $params = json_decode(file_get_contents('php://input'), TRUE);
 
                     if (!$user_src = $this->user->get_user($params['username_src'], (int)$this->input->get_request_header('User-ID', TRUE), true)) {
-                        print json_encode(array('status' => 403, 'message' => 'User not found.'));
-                        exit;
+                        return json_output(403, array('status' => 403, 'message' => 'User not found.'));
                     }
                     if (!$user_dest = $this->user->get_user($params['username_dest'], (int)$this->input->get_request_header('User-ID', TRUE), true)) {
-                        print json_encode(array('status' => 403, 'message' => 'User not found.'));
-                        exit;
+                        return json_output(403, array('status' => 403, 'message' => 'User not found.'));
+                    }
+
+                    if (!$this->user->check_request_tome($params['id_manga'], $params['number'], $user_src->id, $user_dest->id)){
+                        return json_output(403, array('status' => 403, 'message' => 'Une demande a déjà été envoyé à cet utilisateur.'));
                     }
 
                     $datas = array(
@@ -874,6 +876,7 @@ class Api extends MY_Controller {
                         'couverture' => $params['couverture']
                     );
 
+                    $this->user->save_request_tome($params['id_manga'], $params['number'], $user_src->id, $user_dest->id);
                     $this->htmlmail($user_dest->email, 'Un utilisateur est interessé par votre manga', $datas, 'request.php');
                     return json_output(200, array('status' => 200, 'message' => $datas));
                 }
