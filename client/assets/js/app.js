@@ -458,15 +458,16 @@
 
     });
 
-    app.factory('authenticationService', function($http, sAlert, $location, $window) {
+    app.factory('authenticationService', function($http, sAlert, $location) {
         return {
             register: function(username, password, email){
                 return $http({
                     method: 'POST',
                     url: PATH_MAC+'api/action/register',
                     data: {username: username, password: password, email: email}
-                }).success(function(data){
-                    sAlert.success(data.message).autoRemove();
+                }).success(function(){
+                    sAlert.success("Compte enregistré avec succès.").autoRemove();
+                    $location.path('/');
                 }).error(function(data){
                     sAlert.error(data.message).autoRemove();
                 });
@@ -831,8 +832,28 @@
         if ( user != undefined ) $location.path('/');
 
         $scope.register = function() {
-            authenticationService.register($scope.register.username, $scope.register.password, $scope.register.email);
-            // TODO: À voir si on fait un cookie au register
+            var login = authenticationService.register($scope.register.username, $scope.register.password, $scope.register.email);
+            login.then(function(loginData){
+                // On récupère les infos du user à partir de l'ID retourné par le header
+                var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
+                user.then(function(userData) {
+                    // On set le cookie avec quelques infos potentiellement utiles
+                    $cookies.putObject('user', {
+                        'userID': userData.infos.id,
+                        'username' : userData.infos.username,
+                        'userEmail': userData.infos.email,
+                        'userAddress': userData.infos.address,
+                        'userToken': loginData.data.token
+                    });
+                    $rootScope.userCookie = {
+                        'userID': userData.infos.id,
+                        'username' : userData.infos.username,
+                        'userEmail': userData.infos.email,
+                        'userAddress': userData.infos.address,
+                        'userToken': loginData.data.token
+                    };
+                });
+            });
         };
 
         $scope.login = function() {
@@ -1077,7 +1098,6 @@
         }
 
         $scope.sendRequest = function(userSelected){
-            console.log($scope.tome);
             return $http({
                 method: 'POST',
                 url: PATH_MAC+'api/action/send_request',
@@ -1093,9 +1113,9 @@
                     couverture: ($scope.tome.couverture_fr ? $scope.tome.couverture_fr : $scope.tome.couverture_jp)
                 }
             }).success(function(data){
-                sAlert.success(data.message).autoRemove();
+                sAlert.success("Demande envoyé avec succès !").autoRemove();
             }).error(function(data){
-                sAlert.error(data.message).autoRemove();
+                sAlert.error("Erreur lors de l'envoi de la demande.").autoRemove();
             });
         }
 
