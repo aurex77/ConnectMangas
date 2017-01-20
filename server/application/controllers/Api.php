@@ -869,7 +869,7 @@ class Api extends MY_Controller {
 
                     $datas = array(
                         'username_src' => $params['username_src'],
-                        'img_profil' => ($user_src->img_profil ? getcwd()."/../client/medias/profils/".$user_src->img_profil : getcwd()."/../client/medias/default/thumbnail.png"),
+                        'img_profil' => ($user_src->img_profil ? getcwd()."/../client/medias/profils/".$user_src->img_profil : getcwd()."/../client/medias/default/thumbnail-profil.png"),
                         'username_dest' => $params['username_dest'],
                         'title' => $params['title'],
                         'number' => $params['number'],
