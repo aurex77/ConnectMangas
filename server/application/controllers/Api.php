@@ -97,6 +97,9 @@ class Api extends MY_Controller {
             case "calendar":
                 $this->_get_calendar();
                 break;
+            case "send_request":
+                $this->_send_request();
+                break;
             default:
                 show_404();
                 break;
@@ -208,14 +211,18 @@ class Api extends MY_Controller {
                     'email' => $email
                 );
 
+                $mail_datas = [
+                    'username' => $username
+                ];
+
                 $this->user->save($form_datas);
-                $this->htmlmail($username, $email, 'Bienvenue sur ConnectMangas !');
+                $this->htmlmail($email, 'Bienvenue sur ConnectMangas !', $mail_datas, 'template.php');
                 return json_output(200, array('status' => 200, 'message' => 'User created with success.'));
             }
         }
     }
 
-    public function htmlmail($username, $email, $subject) {
+    public function htmlmail($email, $subject, $datas, $template) {
         $config = Array(
             'protocol' => 'smtp',
             'smtp_host' => 'ssl://smtp.googlemail.com',
@@ -230,22 +237,35 @@ class Api extends MY_Controller {
         $this->email->set_newline("\r\n");
 
         $this->email->from('ConnectMangas', 'ConnectMangas');
-        $icone = getcwd()."/../client/medias/default/icone.png";
-        $background = getcwd()."/../client/medias/default/background-mail.jpg";
-        $this->email->attach($icone);
-        $this->email->attach($background);
         $this->email->to($email);  // replace it with receiver mail id
         $this->email->subject($subject); // replace it with relevant subject
+
+        $icone = getcwd()."/../client/medias/default/icone.png";
+        $background = getcwd()."/../client/medias/default/background-mail.jpg";
+
+        $this->email->attach($icone);
+        $this->email->attach($background);
+
         $cid_icone = $this->email->attachment_cid($icone);
         $cid_background = $this->email->attachment_cid($background);
 
-        $data = array(
-            'userName'=> $username,
-            'cid_icone' => $cid_icone,
-            'cid_background' => $cid_background
-        );
+        $datas['cid_icone'] = $cid_icone;
+        $datas['cid_background'] = $cid_background;
 
-        $body = $this->load->view('email/template.php',$data,TRUE);
+        if (isset($datas['img_profil'])){
+            $profil_picture = getcwd()."/../client/medias/profils/".$datas['img_profil'];
+            $this->email->attach($profil_picture);
+            $cid_profil = $this->email->attachment_cid($profil_picture);
+            $datas['cid_profil'] = $cid_profil;
+        }
+        if (isset($datas['couverture'])){
+            $couverture = getcwd()."/../client/medias/tomes/".$datas['couverture'];
+            $this->email->attach($couverture);
+            $cid_couverture = $this->email->attachment_cid($couverture);
+            $datas['cid_couverture'] = $cid_couverture;
+        }
+
+        $body = $this->load->view('email/'.$template, $datas, TRUE);
         $this->email->message($body);
         $this->email->send();
     }
@@ -823,6 +843,41 @@ class Api extends MY_Controller {
                 print json_encode(['status' => 200, 'infos' => $calendar]);
             }
 
+        }
+    }
+
+    private function _send_request() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            if ($this->user->check_auth_client()) {
+                $response = $this->user->auth();
+                if($response['status'] == 200) {
+                    $params = json_decode(file_get_contents('php://input'), TRUE);
+
+                    if (!$user_src = $this->user->get_user($params['username_src'], (int)$this->input->get_request_header('User-ID', TRUE), true)) {
+                        print json_encode(array('status' => 403, 'message' => 'User not found.'));
+                        exit;
+                    }
+                    if (!$user_dest = $this->user->get_user($params['username_dest'], (int)$this->input->get_request_header('User-ID', TRUE), true)) {
+                        print json_encode(array('status' => 403, 'message' => 'User not found.'));
+                        exit;
+                    }
+
+                    $datas = array(
+                        'username_src' => $params['username_src'],
+                        'img_profil' => $user_src->img_profil,
+                        'username_dest' => $params['username_dest'],
+                        'title' => $params['title'],
+                        'number' => $params['number'],
+                        'couverture' => $params['couverture']
+                    );
+
+                    $this->htmlmail($user_dest->email, 'Un utilisateur est interessé par votre manga', $datas, 'request.php');
+                    return json_output(200, array('status' => 200, 'message' => $datas));
+                }
+            }
         }
     }
 

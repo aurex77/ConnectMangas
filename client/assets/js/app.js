@@ -980,7 +980,7 @@
 
     });
 
-    app.controller('usersTomeController', function($scope, $routeParams, $cookies, $location, usersTomeService, mangasService, $geolocation, $mdDialog, $timeout, usSpinnerService) {
+    app.controller('usersTomeController', function($scope, $routeParams, $http, $cookies, $location, usersTomeService, mangasService, $geolocation, $mdDialog, $timeout, usSpinnerService, sAlert) {
 
         var user = $cookies.getObject('user');
         if ( user == undefined ) $location.path('/authentification');
@@ -1074,6 +1074,29 @@
                     });
                 });
             }
+        }
+
+        $scope.sendRequest = function(userSelected){
+            console.log($scope.tome);
+            return $http({
+                method: 'POST',
+                url: PATH_MAC+'api/action/send_request',
+                headers: {
+                    'Authorization': user.userToken,
+                    'User-ID': user.userID
+                },
+                data: {
+                    username_src : user.username,
+                    username_dest: userSelected.username,
+                    title: $scope.tome.title,
+                    number: $scope.tome.number,
+                    couverture: ($scope.tome.couverture_fr ? $scope.tome.couverture_fr : $scope.tome.couverture_jp)
+                }
+            }).success(function(data){
+                sAlert.success(data.message).autoRemove();
+            }).error(function(data){
+                sAlert.error(data.message).autoRemove();
+            });
         }
 
     });

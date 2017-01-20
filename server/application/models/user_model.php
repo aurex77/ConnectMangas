@@ -57,7 +57,7 @@ class User_model extends CI_Model {
         }
     }
 
-    public function get_user($username = NULL, $myId) {
+    public function get_user($username = NULL, $myId, $getAllInfos = false) {
 
         $this->db->select("id")
             ->where('username', $username);
@@ -69,7 +69,7 @@ class User_model extends CI_Model {
         else
             $id_user = null;
 
-        if ($id_user == $myId) {
+        if ($id_user == $myId || $getAllInfos) {
             $this->db->select("id, username, email, address, latitude, longitude, img_profil, DATE_FORMAT(date_create, '%d/%m/%Y') as date_create");
         }else{
             $this->db->select("id, username, img_profil, DATE_FORMAT(date_create, '%d/%m/%Y') as date_create");

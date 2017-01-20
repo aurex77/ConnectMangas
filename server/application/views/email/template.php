@@ -18,7 +18,7 @@
         table td { border-collapse: collapse; }
         .yshortcuts a { border-bottom: none !important; }
         img:hover { opacity:0.9 !important;}
-        a { color: #21b6ae; text-decoration: none; }
+        a { color: #f26522; text-decoration: none; }
         .textbutton a { font-family: 'open sans', arial, sans-serif !important; color: #ffffff !important; }
         .text-link a { color: #95a5a6 !important; }
         @media only screen and (max-width: 640px) {
@@ -73,7 +73,7 @@
                                             <td align="center">
                                                 <table width="25" border="0" cellspacing="0" cellpadding="0">
                                                     <tr>
-                                                        <td height="20" style="border-bottom:2px solid #21b6ae;"></td>
+                                                        <td height="20" style="border-bottom:2px solid #f26522;"></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -84,7 +84,7 @@
                                         <!-- content -->
                                         <tr>
                                             <td align="left" style="font-family: \'Open Sans\', Arial, sans-serif; font-size:13px; color:#7f8c8d; line-height:30px;">
-                                                <?php echo $userName; ?>,<br><br>
+                                                <?php echo $username; ?>,<br><br>
                                                 Votre inscription sur ConnectMangas a bien été prise en compte.<br>
                                                 Vous pouvez dès à présent vous rendre sur votre page de profil pour compléter celui-ci !<br><br><br>
                                                 Pour ceci cliquez sur le lien ci-dessous :<br><br>
@@ -95,7 +95,7 @@
                                         </tr>
                                         <tr>
                                             <td align="left" class="textbutton" style="font-family: 'Open Sans', Arial, sans-serif; font-size:13px; color:#7f8c8d;text-align:center;">
-                                                <a style="background-color:#52c9ba;font-size:22px; color:#FFFFFF; font-weight: bold;padding: 15px 25px;" href="http://localhost:8888/connectmangas/#/profil/<?php echo $userName; ?>">Accéder à mon profil ></a>
+                                                <a style="background-color:#f26522;font-size:22px; color:#FFFFFF; font-weight: bold;padding: 15px 25px;" href="http://localhost:8888/connectmangas/#/profil/<?php echo $username; ?>">Accéder à mon profil ></a>
                                             </td>
                                         </tr>
                                         <tr>
