@@ -889,7 +889,10 @@
 
     app.controller('CollectionController', function($scope, $cookies, $location, collectionService) {
         var user = $cookies.getObject('user');
-        if ( user == undefined ) $location.path('/authentification');
+        if ( user == undefined ){
+            $location.path('/authentification');
+            return;
+        }
 
         // Récupère la collection de l'utilisateur
         var promiseCollection = collectionService.getAllCollection(user.userID, user.userToken);
@@ -906,7 +909,10 @@
 
     app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert, Upload) {
       var user = $cookies.getObject('user');
-      if ( user == undefined ) $location.path('/authentification');
+      if ( user == undefined ){
+          $location.path('/authentification');
+          return;
+      }
 
       var promiseProfile = userService.getUserById(user.userID, user.userToken, $routeParams.username);
       promiseProfile.then(function(response) {
@@ -1004,7 +1010,10 @@
     app.controller('usersTomeController', function($scope, $routeParams, $http, $cookies, $location, usersTomeService, mangasService, $geolocation, $mdDialog, $timeout, usSpinnerService, sAlert) {
 
         var user = $cookies.getObject('user');
-        if ( user == undefined ) $location.path('/authentification');
+        if (user == undefined){
+            $location.path('/authentification');
+            return;
+        }
         
         if (user.userAddress){
             $scope.localisation = 'address';
