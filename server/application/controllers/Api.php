@@ -254,9 +254,8 @@ class Api extends MY_Controller {
         $datas['cid_background'] = $cid_background;
 
         if (isset($datas['img_profil'])){
-            $profil_picture = getcwd()."/../client/medias/profils/".$datas['img_profil'];
-            $this->email->attach($profil_picture);
-            $cid_profil = $this->email->attachment_cid($profil_picture);
+            $this->email->attach($datas['img_profil']);
+            $cid_profil = $this->email->attachment_cid($datas['img_profil']);
             $datas['cid_profil'] = $cid_profil;
         }
         if (isset($datas['couverture'])){
@@ -868,7 +867,7 @@ class Api extends MY_Controller {
 
                     $datas = array(
                         'username_src' => $params['username_src'],
-                        'img_profil' => $user_src->img_profil,
+                        'img_profil' => ($user_src->img_profil ? getcwd()."/../client/medias/profils/".$user_src->img_profil : getcwd()."/../client/medias/default/thumbnail.png"),
                         'username_dest' => $params['username_dest'],
                         'title' => $params['title'],
                         'number' => $params['number'],
