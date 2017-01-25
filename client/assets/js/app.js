@@ -63,6 +63,9 @@
         }).when('/calendrier', {
             templateUrl: 'client/pages/calendrier.html',
             controller: 'calendarController'
+        }).when('/suivi', {
+            templateUrl: 'client/pages/suivi.html',
+            controller: 'suiviController'
         }).otherwise({
             redirectTo: '/'
         });
@@ -602,7 +605,27 @@
                     }
                 }).then(function(response) {
                     return response.data;
+                });
+            }
+        }
 
+    });
+
+    app.factory('suiviService', function($http) {
+
+        return {
+            getSuivi: function(id, token) {
+                return $http({
+                    method: 'GET',
+                    url: PATH_MAC+'api/action/suivi',
+                    headers: {
+                        'Client-Service': 'frontend-client',
+                        'Auth-Key': 'simplerestapi',
+                        'Authorization': token,
+                        'User-ID': id
+                    }
+                }).then(function(response) {
+                    return response.data;
                 });
             }
         }
@@ -1147,6 +1170,26 @@
         }
 
         $scope.displayCalendar();
+    });
+
+    app.controller('suiviController', function($scope, $cookies, suiviService) {
+        var user = $cookies.getObject('user');
+        if ( user == undefined ){
+            $location.path('/authentification');
+            return;
+        }
+
+        var suivi = suiviService.getSuivi(user.userID, user.userToken);
+
+        suivi.then(function(response) {
+            if ( response.status == 200 ) {
+                $scope.episodes = response.episodes;
+                $scope.tomes = response.tomes;
+                $scope.animes = response.animes;
+                $scope.mangas = response.mangas;
+            }
+
+        });
     });
 
     /*

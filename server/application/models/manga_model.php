@@ -287,4 +287,38 @@ class Manga_model extends CI_Model {
         return $results;
     }
 
+    public function get_suivi($id_user){
+        $this->db->select("mangas.id_manga, mangas.title as manga_title,
+                            CASE WHEN mangas_tomes.couverture_fr IS NULL THEN mangas_tomes.couverture_jp else mangas_tomes.couverture_fr END as couverture, mangas_tomes.number,
+                            mangas_tomes.title, DATE_FORMAT(mangas_tomes.publication_fr, '%d %M %Y') as publication", false)
+            ->join("mangas", "mangas.id_manga = tomes_collection.id_manga")
+            ->join("mangas_tomes", "tomes_collection.id_manga = mangas_tomes.id_manga
+                AND mangas_tomes.publication_fr <= NOW()
+                AND mangas_tomes.number = (SELECT MAX(ec.number) FROM tomes_collection ec WHERE ec.id_user = tomes_collection.id_user AND ec.id_manga = tomes_collection.id_manga)+1")
+            ->where("tomes_collection.id_user", $id_user)
+            ->group_by('tomes_collection.id_manga');
+
+
+        $query = $this->db->get("tomes_collection");
+
+        return $query->result();
+    }
+
+    public function get_watchlist($id_user){
+        $this->db->select("mangas.id_manga, mangas.title, CASE WHEN mangas_tomes.couverture_fr IS NULL THEN mangas_tomes.couverture_jp else mangas_tomes.couverture_fr END as couverture,
+                        (SELECT COUNT(mangas_tomes.number) FROM mangas_tomes WHERE mangas_tomes.id_manga = mangas.id_manga AND mangas_tomes.publication_fr <= NOW()) as nb_tomes", false)
+            ->join("tomes_collection", "tomes_collection.id_manga = mangas.id_manga", "left")
+            ->join("mangas_tomes", "mangas_tomes.id_manga = mangas.id_manga")
+            ->join("mangas_collection", "mangas.id_manga = mangas_collection.id_manga")
+            ->where("mangas_collection.id_user", $id_user)
+            ->where("tomes_collection.id IS NULL", null, false)
+            ->where("mangas_tomes.number", "1")
+            ->where("mangas_tomes.publication_fr <= NOW()");
+
+
+        $query = $this->db->get($this->table);
+
+        return $query->result();
+    }
+
 }

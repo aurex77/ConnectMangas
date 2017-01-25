@@ -100,6 +100,9 @@ class Api extends MY_Controller {
             case "send_request":
                 $this->_send_request();
                 break;
+            case "suivi":
+                $this->_get_suivi();
+                break;
             default:
                 show_404();
                 break;
@@ -881,6 +884,28 @@ class Api extends MY_Controller {
                     return json_output(200, array('status' => 200, 'message' => $datas));
                 }
             }
+        }
+    }
+
+    private function _get_suivi() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'GET'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            if ($this->user->check_auth_client()) {
+                $response = $this->user->auth();
+                if($response['status'] == 200) {
+                    $id_user = (int)$this->input->get_request_header('User-ID', TRUE);
+
+                    $episodes = $this->anime->get_suivi($id_user);
+                    $tomes = $this->manga->get_suivi($id_user);
+                    $animes = $this->anime->get_watchlist($id_user);
+                    $mangas = $this->manga->get_watchlist($id_user);
+
+                    print json_encode(['status' => 200, 'episodes' => $episodes, 'tomes' => $tomes, 'animes' => $animes, 'mangas' => $mangas]);
+                }
+            }
+
         }
     }
 

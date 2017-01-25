@@ -271,4 +271,37 @@ class Anime_model extends CI_Model {
         return $results;
     }
 
+    public function get_suivi($id_user){
+        $this->db->select("animes.id_anime, animes.title as anime_title, animes.img_affiche, animes_episodes.number,
+                            animes_episodes.title, DATE_FORMAT(animes_episodes.diffusion, '%d %M %Y') as diffusion")
+            ->join("animes", "animes.id_anime = episodes_collection.id_anime")
+            ->join("animes_episodes", "episodes_collection.id_anime = animes_episodes.id_anime
+                AND animes_episodes.diffusion <= NOW()
+                AND animes_episodes.number = (SELECT MAX(ec.number) FROM episodes_collection ec WHERE ec.id_user = episodes_collection.id_user AND ec.id_anime = episodes_collection.id_anime)+1")
+            ->where("episodes_collection.id_user", $id_user)
+            ->group_by('episodes_collection.id_anime');
+
+
+        $query = $this->db->get("episodes_collection");
+
+        return $query->result();
+    }
+
+    public function get_watchlist($id_user){
+        $this->db->select("animes.id_anime, animes.title, animes.img_affiche,
+                        (SELECT COUNT(animes_episodes.number) FROM animes_episodes WHERE animes_episodes.id_anime = animes.id_anime AND animes_episodes.diffusion <= NOW()) as nb_episodes")
+            ->join("episodes_collection", "episodes_collection.id_anime = animes.id_anime", "left")
+            ->join("animes_episodes", "animes_episodes.id_anime = animes.id_anime")
+            ->join("animes_collection", "animes.id_anime = animes_collection.id_anime")
+            ->where("animes_collection.id_user", $id_user)
+            ->where("episodes_collection.id IS NULL", null, false)
+            ->where("animes_episodes.number", "1")
+            ->where("animes_episodes.diffusion <= NOW()");
+
+
+        $query = $this->db->get($this->table);
+
+        return $query->result();
+    }
+
 }
