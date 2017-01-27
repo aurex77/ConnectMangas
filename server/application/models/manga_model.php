@@ -261,7 +261,7 @@ class Manga_model extends CI_Model {
         $this->db->query($sql);
 
         $this->db->select("mangas.id_manga, mangas.title as manga_title,
-                        CASE WHEN mangas_tomes.couverture_fr THEN mangas_tomes.couverture_fr ELSE mangas_tomes.couverture_jp END as couverture,
+                        CASE WHEN mangas_tomes.couverture_fr IS NULL OR mangas_tomes.couverture_fr = '' THEN mangas_tomes.couverture_fr ELSE mangas_tomes.couverture_jp END as couverture,
                         mangas_tomes.number, mangas_tomes.title, DATE_FORMAT(mangas_tomes.publication_fr, '%d %M %Y') as publication_fr,
                         DATEDIFF(mangas_tomes.publication_fr, NOW()) as nb_days", false)
             ->join("mangas", "mangas.id_manga = mangas_tomes.id_manga")
@@ -289,7 +289,7 @@ class Manga_model extends CI_Model {
 
     public function get_suivi($id_user){
         $this->db->select("mangas.id_manga, mangas.title as manga_title,
-                            CASE WHEN mangas_tomes.couverture_fr IS NULL THEN mangas_tomes.couverture_jp else mangas_tomes.couverture_fr END as couverture, mangas_tomes.number,
+                            CASE WHEN mangas_tomes.couverture_fr IS NULL OR mangas_tomes.couverture_fr = '' THEN mangas_tomes.couverture_jp else mangas_tomes.couverture_fr END as couverture, mangas_tomes.number,
                             mangas_tomes.title, DATE_FORMAT(mangas_tomes.publication_fr, '%d %M %Y') as publication", false)
             ->join("mangas", "mangas.id_manga = tomes_collection.id_manga")
             ->join("mangas_tomes", "tomes_collection.id_manga = mangas_tomes.id_manga
@@ -305,8 +305,9 @@ class Manga_model extends CI_Model {
     }
 
     public function get_watchlist($id_user){
-        $this->db->select("mangas.id_manga, mangas.title, CASE WHEN mangas_tomes.couverture_fr IS NULL THEN mangas_tomes.couverture_jp else mangas_tomes.couverture_fr END as couverture,
-                        (SELECT COUNT(mangas_tomes.number) FROM mangas_tomes WHERE mangas_tomes.id_manga = mangas.id_manga AND mangas_tomes.publication_fr <= NOW()) as nb_tomes", false)
+        $this->db->select("mangas.id_manga, mangas.title, CASE WHEN mangas_tomes.couverture_fr IS NULL OR mangas_tomes.couverture_fr = '' THEN mangas_tomes.couverture_jp else mangas_tomes.couverture_fr END as couverture,
+                        (SELECT COUNT(mangas_tomes.number) FROM mangas_tomes WHERE mangas_tomes.id_manga = mangas.id_manga AND mangas_tomes.publication_fr <= NOW()) as nb_tomes,
+                        mangas_tomes.number", false)
             ->join("tomes_collection", "tomes_collection.id_manga = mangas.id_manga", "left")
             ->join("mangas_tomes", "mangas_tomes.id_manga = mangas.id_manga")
             ->join("mangas_collection", "mangas.id_manga = mangas_collection.id_manga")
@@ -319,6 +320,22 @@ class Manga_model extends CI_Model {
         $query = $this->db->get($this->table);
 
         return $query->result();
+    }
+
+    public function get_next_tome($id_manga, $number){
+        $this->db->select("mangas.id_manga, mangas.title as manga_title, mangas_tomes.number, mangas_tomes.title,
+                        CASE WHEN mangas_tomes.couverture_fr IS NULL OR mangas_tomes.couverture_fr = '' THEN mangas_tomes.couverture_jp else mangas_tomes.couverture_fr END as couverture", false)
+            ->join("mangas", "mangas.id_manga = mangas_tomes.id_manga")
+            ->where('mangas_tomes.id_manga', $id_manga)
+            ->where('mangas_tomes.number', $number + 1)
+            ->where('mangas_tomes.publication_fr <= NOW()', null, false);
+
+        $query = $this->db->get("mangas_tomes");
+
+        if (isset($query) && $query->num_rows() > 0)
+            return $query->result();
+
+        return false;
     }
 
 }

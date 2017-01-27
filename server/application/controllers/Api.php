@@ -410,7 +410,8 @@ class Api extends MY_Controller {
                     ];
 
                     $resp = $this->anime->add_collection_episode($data);
-                    json_output($respStatus,$resp);
+                    $resp['next_episode'] = $this->anime->get_next_episode($id_anime, $number);
+                    json_output($respStatus, $resp);
                 }
             }
         }
@@ -478,6 +479,7 @@ class Api extends MY_Controller {
                     ];
 
                     $resp = $this->manga->add_collection_tome($data);
+                    $resp['next_tome'] = $this->manga->get_next_tome($id_manga, $number);
                     json_output($respStatus,$resp);
                 }
             }

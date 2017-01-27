@@ -387,7 +387,6 @@
                     data: {
                         id_anime: id_anime,
                         number: id_episode
-
                     }
                 }).then(function(response) {
 
@@ -1172,7 +1171,14 @@
         $scope.displayCalendar();
     });
 
-    app.controller('suiviController', function($scope, $cookies, suiviService) {
+
+    app.controller('suiviController', function($scope, $cookies, sAlert, suiviService, episodesService, tomesService) {
+
+        $scope.maxHeightEpisodes = 'auto';
+        $scope.maxHeightTomes = 'auto';
+        $scope.maxHeightAnimes = 'auto';
+        $scope.maxHeightMangas = 'auto';
+
         var user = $cookies.getObject('user');
         if ( user == undefined ){
             $location.path('/authentification');
@@ -1187,9 +1193,103 @@
                 $scope.tomes = response.tomes;
                 $scope.animes = response.animes;
                 $scope.mangas = response.mangas;
-            }
 
+                $scope.maxHeightEpisodes = getMaxHeight($scope.episodes, "affiche_episode_");
+                $scope.maxHeightTomes = getMaxHeight($scope.tomes, "affiche_tome_");
+                $scope.maxHeightAnimes = getMaxHeight($scope.animes, "affiche_anime_");
+                $scope.maxHeightMangas = getMaxHeight($scope.mangas, "affiche_manga_");
+            }
         });
+
+        $scope.addEpisode = function(id_anime, id_episode, key) {
+            var user = $cookies.getObject('user');
+
+            var promiseAddEpisode = episodesService.setEpisodeToCollection(id_anime, id_episode, user);
+            promiseAddEpisode.then(function(response) {
+
+                if ( response != undefined && response.status == 201 ) {
+                    if (response.next_episode[0]) {
+                        $scope.episodes[key].number++;
+                        $scope.episodes[key].title = response.next_episode[0].title;
+                    }else{
+                        $scope.episodes.splice(key, 1);
+                        if ($scope.episodes.length > 0){
+                            document.getElementById("episode_" + key).parentNode.remove();
+                        }else{
+                            document.getElementById("episode_" + key).parentNode.parentNode.parentNode.parentNode.remove();
+                        }
+                    }
+                }
+            });
+        };
+
+        $scope.addTome = function(id_manga, id_tome, key) {
+            var promiseAddTome = tomesService.setTomeToCollection(id_manga, id_tome, user);
+            promiseAddTome.then(function(response) {
+                if ( response != undefined && response.status == 201 ) {
+                    if (response.next_tome[0]) {
+                        $scope.tomes[key].number++;
+                        $scope.tomes[key].title = response.next_tome[0].title;
+                        $scope.tomes[key].couverture = response.next_tome[0].couverture;
+                    }else{
+                        $scope.tomes.splice(key, 1);
+                        if ($scope.tomes.length > 0){
+                            document.getElementById("tome_" + key).parentNode.remove();
+                        }else{
+                            document.getElementById("tome_" + key).parentNode.parentNode.parentNode.parentNode.remove();
+                        }
+                    }
+                }
+            });
+        };
+
+        $scope.addAnime = function(id_anime, id_episode, key) {
+            var user = $cookies.getObject('user');
+
+            var promiseAddEpisode = episodesService.setEpisodeToCollection(id_anime, id_episode, user);
+            promiseAddEpisode.then(function(response) {
+
+                if ( response != undefined && response.status == 201 ) {
+                    if (response.next_episode[0]) {
+                        $scope.episodes.push({
+                            'id_anime' : response.next_episode[0].id_anime,
+                            'anime_title' : response.next_episode[0].anime_title,
+                            'img_affiche' : response.next_episode[0].img_affiche,
+                            'number' : response.next_episode[0].number,
+                            'title' : response.next_episode[0].title,
+                            'diffusion' : response.next_episode[0].diffusion });
+                    }
+                    $scope.animes.splice(key, 1);
+                    if ($scope.animes.length > 0) {
+                        document.getElementById("anime_" + key).parentNode.remove();
+                    }else{
+                        document.getElementById("anime_" + key).parentNode.parentNode.parentNode.parentNode.remove();
+                    }
+                }
+            });
+        };
+
+        $scope.addManga = function(id_manga, id_tome, key) {
+            var promiseAddTome = tomesService.setTomeToCollection(id_manga, id_tome, user);
+            promiseAddTome.then(function(response) {
+                if ( response != undefined && response.status == 201 ) {
+                    if (response.next_tome[0]) {
+                        $scope.tomes.push({
+                            'id_manga' : response.next_tome[0].id_manga,
+                            'manga_title' : response.next_tome[0].manga_title,
+                            'number' : response.next_tome[0].number,
+                            'title' : response.next_tome[0].title,
+                            'couverture' : response.next_tome[0].couverture });
+                    }
+                    $scope.mangas.splice(key, 1);
+                    if ($scope.mangas.length > 0) {
+                        document.getElementById("manga_" + key).parentNode.remove();
+                    }else{
+                        document.getElementById("manga_" + key).parentNode.parentNode.parentNode.parentNode.remove();
+                    }
+                }
+            });
+        };
     });
 
     /*
@@ -1202,5 +1302,17 @@
                 return input.replace(/,/g, ', ');
         };
     });
+
+    function getMaxHeight(array, id){
+        var maxHeight = 0;
+
+        angular.forEach(array, function(value, key) {
+            var currentHeight = document.getElementById(id+key).clientHeight;
+            if (currentHeight > maxHeight){
+                maxHeight = currentHeight;
+            }
+        });
+        return maxHeight;
+    }
 
 })(window.angular);
