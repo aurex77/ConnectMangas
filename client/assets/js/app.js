@@ -1194,6 +1194,7 @@
                 $scope.animes = response.animes;
                 $scope.mangas = response.mangas;
 
+                console.log('affiche_episode_');
                 $scope.maxHeightEpisodes = getMaxHeight($scope.episodes, "affiche_episode_");
                 $scope.maxHeightTomes = getMaxHeight($scope.tomes, "affiche_tome_");
                 $scope.maxHeightAnimes = getMaxHeight($scope.animes, "affiche_anime_");
@@ -1305,7 +1306,6 @@
 
     function getMaxHeight(array, id){
         var maxHeight = 0;
-
         angular.forEach(array, function(value, key) {
             var currentHeight = document.getElementById(id+key).clientHeight;
             if (currentHeight > maxHeight){
