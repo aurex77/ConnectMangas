@@ -28,7 +28,7 @@ class ConnectMangasDB {
     /**
      * @var string
      */
-    private $medias = '/Applications/MAMP/htdocs/connectmangas/client/medias/';
+    private $medias = '/Applications/MAMP/htdocs/ConnectMangas/client/medias/';
     /**
      * @var string
      */
