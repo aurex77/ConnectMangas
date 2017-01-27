@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload', 'ngGeolocation', 'chat', 'infinite-scroll', 'ui.bootstrap']);
+    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload', 'ngGeolocation', 'chat', 'infinite-scroll', 'ui.bootstrap', 'pubnub.angular.service']);
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
     const PATH_MAC = "http://localhost:8888/connectmangas/server/";
@@ -635,11 +635,71 @@
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
      */
-    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Messages) {
+    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Messages, Pubnub, $pubnubChannel) {
+
+        $scope.channel = 'messages-channel';
+        // Generating a random uuid between 1 and 100 using an utility function from the lodash library.
+        $scope.uuid = _.random(100).toString();
+        Pubnub.init({
+            publish_key   : "pub-c-e33e9e87-84aa-417d-a31d-46a7c097b72d",
+            subscribe_key : "sub-c-48476bca-c046-11e6-a856-0619f8945a4f",
+            uuid: $scope.uuid
+        });
+
+        $scope.sendMessage = function() {
+            // Don't send an empty message
+            var date = new Date();
+            date = date.getHours()+":"+date.getMinutes();
+            if (!$scope.textbox || $scope.textbox === '') {
+                return;
+            }
+            if(typeof userCookie === "undefined") {
+                var user = 'anonyme';
+            } else {
+                var user = userCookie.username;
+            }
+            Pubnub.publish({
+                channel: $scope.channel,
+                message: {
+                    content: $scope.textbox,
+                    sender_uuid: $scope.uuid,
+                    user : user,
+                    date: date
+                },
+                callback: function(m) {
+                    console.log(m);
+                }
+            });
+            // Reset the messageContent input
+            $scope.textbox = '';
+        };
+        $scope.messages = $pubnubChannel($scope.channel, { autoload: 50 });
+        //$scope.messages = [];
+
+        // Subscribing to the ‘messages-channel’ and trigering the message callback
+        Pubnub.subscribe({
+            channel: $scope.channel,
+            triggerEvents: ['callback']
+        });
+
+        // Listening to the callbacks
+        /*$scope.$on(Pubnub.getMessageEventNameFor($scope.channel), function (ngEvent, m) {
+            $scope.$apply(function () {
+                console.log(m);
+                $scope.messages.push(m);
+                console.log($scope.messages);
+            });
+        });*/
+
+        // A function to display a nice uniq robot avatar
+        $scope.avatarUrl = function(uuid){
+            return 'http://robohash.org/'+uuid+'?set=set2&bgset=bg2&size=70x70';
+        };
 
         // DO SOMETHING
         var userCookie = $cookies.getObject('user');
         $rootScope.userCookie = userCookie;
+        $scope.show = true;
 
         $scope.logout = function() {
             $cookies.remove('user');
@@ -647,35 +707,48 @@
             //$scope.$apply();
         };
 
+        $scope.chat_hide = function() {
+            $scope.show = false;
+            var element = document.getElementById("qnimate");
+            angular.element(element).addClass('chat-off');
+            angular.element(element).removeClass('chat-on');
+        };
+        $scope.chat_show = function() {
+            $scope.show = true;
+            var element = document.getElementById("qnimate");
+            angular.element(element).addClass('chat-on');
+            angular.element(element).removeClass('chat-off');
+        };
+
+
         $scope.searchFunc = function() {
             var search = escape($scope.mySearch.replace(/\//g,"_"));
             $location.path('/recherche/'+search);
         };
 
-        $scope.messages = [];
+        //$scope.messages = [];
 
-        $scope.loadMore = function() {
-        if($scope.messages.length > 0) {
-            var last = $scope.messages[$scope.messages.length - 1];
-            for(var i = 1; i <= 8; i++) {
-                $scope.messages.push(last + i);
+        /*$scope.loadMore = function() {
+            if($scope.messages.length > 0) {
+                var last = $scope.messages[$scope.messages.length - 1];
+                for(var i = 1; i <= 8; i++) {
+                    $scope.messages.push(last + i);
+                }
             }
-        }
-
-        };
+        };*/
 
         if(typeof userCookie === "undefined") {
-            Messages.user({ id: '0' , name : 'anonyme' });
+            Messages.user({ id: '0' , name : 'anonyme'});
         } else {
-            Messages.user({ id: userCookie.userID , name : userCookie.username });
+            Messages.user({ id: userCookie.userID , name : userCookie.username});
         }
         // - - - - - - - - - - - - - - - - - -
         // Receive Messages
         // Push to Message Inbox.
         // - - - - - - - - - - - - - - - - - -
-        Messages.receive(function(message){
+       /* Messages.receive(function(message){
             $scope.messages.push(message);
-        });
+        });*/
 
         // - - - - - - - - - - - - - - - - - -
         // Send Message
@@ -684,11 +757,11 @@
         // Also we expect a model reference
         // ng-model="textbox".
         // - - - - - - - - - - - - - - - - - -
-        $scope.send = function() {
-            Messages.send({ data : $scope.textbox });
-            $scope.textbox = '';
-        };
 
+        /*$scope.send = function() {
+            Messages.send({ data : $scope.textbox});
+            $scope.textbox = '';
+        };*/
 
     });
 

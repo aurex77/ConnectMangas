@@ -18,7 +18,13 @@
       <link rel=stylesheet href="client/assets/css/main.css">
       <link rel=stylesheet href="client/assets/css/connectmangas.css">
       <link rel=stylesheet href="client/assets/css/sAlert.css">
+      <link rel=stylesheet href="client/assets/css/chats.css">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+      <script src="http://cdn.pubnub.com/pubnub-3.16.5.min.js"></script>
+      <script src="https://cdn.pubnub.com/sdk/pubnub-angular/pubnub-angular-3.2.1.js"></script>
+
   </head>
 
   <body>
@@ -44,22 +50,70 @@
                   <li><a href="#/profil/{{ userCookie.username }}" name="profile" ng-show="userCookie">Mon profil</a></li>
                   <li><a href="#/authentification" name="auth" ng-show="!userCookie">Connexion / Inscription</a></li>
                 </ul>
-                  <md-content layout="column" style="height: 50%;">
-                  <div infinite-scroll='loadMore()' infinite-scroll-distance='2'>
-                      <div ng-repeat="message in messages">
-                          {{ message.user.name }}:
-                          {{ message.data }}
-                      </div>
-                  </div>
-                  </md-content>
 
-                  <form ng-submit="send()">
-                              <md-input-container>
-                              <input aria-label="send" ng-model="textbox" class="ng-pristine ng-valid md-input ng-not-empty ng-touched" />
-                              </md-input-container>
-                          </form>
               </div>
-              <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view> </div>
+              <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view>
+              </div>
+                <div  class="popup-box chat-popup" id="qnimate">
+                    <div class="popup-head">
+                        <div class="popup-head-left pull-left" style="margin-top: 13px;"> Chats Général</div>
+                        <div class="popup-head-right pull-right">
+                            <div class="btn-group">
+                                <div ng-if="show">
+                                <button ng-click="chat_hide()" class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
+                                    <i class="glyphicon glyphicon-minus"></i>
+                                </button>
+                                </div>
+                                <div ng-if="!show">
+                                    <button ng-click="chat_show()" class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                    </button>
+                                </div>
+                                <button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-off"></i></button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="popup-messages">
+
+                        <div class="direct-chat-messages">
+
+                            <div class="chat-box-single-line">
+                                <abbr class="timestamp">October 8th, 2015</abbr>
+                            </div>
+                            <div ng-repeat="message in messages"  class="direct-chat-msg doted-border">
+                                <div class="direct-chat-info clearfix">
+                                    <span class="direct-chat-name pull-left">{{ message.user }}</span>
+                                </div>
+                                <!-- /.direct-chat-info -->
+                                <img alt="message user image" src="{{avatarUrl(message.sender_uuid)}}" class="direct-chat-img"><!-- /.direct-chat-img -->
+                                <div class="direct-chat-text">
+                                    {{ message.content }}  {{message.user.date}}
+                                </div>
+                                <div class="direct-chat-info clearfix">
+                                    <span class="direct-chat-timestamp pull-right"> {{message.date}}</span>
+                                </div>
+
+                                <!-- /.direct-chat-text -->
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="popup-messages-footer">
+                        <form ng-submit="sendMessage()">
+                            <input id="status_message" ng-model="textbox" placeholder="Type a message..." rows="10" cols="40" name="message">
+                        </form>
+
+
+                        <div class="btn-footer">
+                            <button class="bg_none"><i class="glyphicon glyphicon-film"></i> </button>
+                            <button class="bg_none"><i class="glyphicon glyphicon-camera"></i> </button>
+                            <button class="bg_none"><i class="glyphicon glyphicon-paperclip"></i> </button>
+                            <button class="bg_none pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> </button>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
