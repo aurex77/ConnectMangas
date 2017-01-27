@@ -1223,18 +1223,43 @@ class ConnectMangasDB {
                         $date = "";
                     }
 
-                    $images = [];
+                    $images = [
+                        "screenshot1" => NULL,
+                        "screenshot2" => NULL,
+                        "screenshot3" => NULL,
+                        "screenshot4" => NULL,
+                        "screenshot5" => NULL,
+                        "screenshot6" => NULL
+
+                    ];
                     for ($i = 1; isset($episode['image'.$i]) && !empty($episode['image'.$i]); $i++){
-                        //$images[] = $this->getBase64ByUrl($episode['image'.$i]);
+                        $file_name = uniqid().".jpg";
+
+                        if (!filter_var($episode['image'.$i], FILTER_VALIDATE_URL) === false) {
+                            $headers = get_headers($episode['image'.$i]);
+
+                            if(substr($headers[0], 9, 3) == "200"){
+                                if (!empty($episode['image'.$i]) && copy($episode['image'.$i], $this->medias . 'episodes/' . $file_name)) {
+                                    $images['screenshot'.$i] = $file_name;
+                                }
+                            }
+                        }
                     }
 
                     $insert = sprintf(
-                        "INSERT INTO animes_episodes (id_anime, number, title, diffusion, synopsis, hs)
-                         VALUES (".$id_anime.", ".(int)$episode['number'].", '%s', '%s', '%s', ".($episode['hs'] == ' ' ? 0 : 1).")
-                         ON DUPLICATE KEY UPDATE title = VALUES(title), diffusion = VALUES(diffusion), synopsis = VALUES(synopsis), hs = VALUES(hs)",
+                        "INSERT INTO animes_episodes (id_anime, number, title, diffusion, synopsis, hs, screenshot1, screenshot2, screenshot3, screenshot4, screenshot5, screenshot6)
+                         VALUES (".$id_anime.", ".(int)$episode['number'].", '%s', '%s', '%s', ".($episode['hs'] == ' ' ? 0 : 1).", '%s', '%s', '%s', '%s', '%s', '%s')
+                         ON DUPLICATE KEY UPDATE title = VALUES(title), diffusion = VALUES(diffusion), synopsis = VALUES(synopsis), hs = VALUES(hs),
+                            screenshot1 = VALUES(screenshot1), screenshot2 = VALUES(screenshot2), screenshot3 = VALUES(screenshot3), screenshot4 = VALUES(screenshot4), screenshot5 = VALUES(screenshot5), screenshot6 = VALUES(screenshot6)",
                         mysqli_real_escape_string($this->cnx, $title),
                         mysqli_real_escape_string($this->cnx, $date),
-                        mysqli_real_escape_string($this->cnx, $synopsis)
+                        mysqli_real_escape_string($this->cnx, $synopsis),
+                        mysqli_real_escape_string($this->cnx, $images['screenshot1']),
+                        mysqli_real_escape_string($this->cnx, $images['screenshot2']),
+                        mysqli_real_escape_string($this->cnx, $images['screenshot3']),
+                        mysqli_real_escape_string($this->cnx, $images['screenshot4']),
+                        mysqli_real_escape_string($this->cnx, $images['screenshot5']),
+                        mysqli_real_escape_string($this->cnx, $images['screenshot6'])
                     );
 
                     if (!mysqli_query($this->cnx, $insert)){
@@ -1266,6 +1291,38 @@ class ConnectMangasDB {
             }
         }else{
             die("Impossible de récupérer les animes des épisodes à mettre à jour : ".mysqli_error($this->cnx)."\n\n"."Requête SQL : ".$sql."\n");
+        }
+
+        $total_animes = count($id_animes);
+        $current_anime = 0;
+        foreach($id_animes as $id_anime){
+            $this->insertAnimeEpisodesWeb($id_anime);
+
+            $current_anime++;
+            echo "$current_anime/$total_animes Anime(s) traité(s).\r";
+        }
+        echo "$current_anime/$total_animes Anime(s) traité(s).\n";
+    }
+
+    public function updateScreenshots(){
+        echo "### Met à jour les screenshots des épisodes ###\n\n";
+
+        // Récupère les animes avec 0 screenshot d'épisode
+        $sql = "SELECT a.id_anime
+                FROM animes a
+                LEFT JOIN animes_episodes ae
+                ON ae.id_anime = a.id_anime
+                AND ae.screenshot1 IS NULL
+                WHERE ae.id_anime IS NOT NULL
+                GROUP BY a.id_anime";
+
+        $id_animes = [];
+        if ($query = mysqli_query($this->cnx, $sql)) {
+            while ($row = mysqli_fetch_assoc($query)){
+                $id_animes[] = $row['id_anime'];
+            }
+        }else{
+            die("Impossible de récupérer les épisodes à mettre à jour : ".mysqli_error($this->cnx)."\n\n"."Requête SQL : ".$sql."\n");
         }
 
         $total_animes = count($id_animes);
