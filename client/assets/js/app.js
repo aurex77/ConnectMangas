@@ -1194,11 +1194,12 @@
                 $scope.animes = response.animes;
                 $scope.mangas = response.mangas;
 
-                console.log('affiche_episode_');
-                $scope.maxHeightEpisodes = getMaxHeight($scope.episodes, "affiche_episode_");
-                $scope.maxHeightTomes = getMaxHeight($scope.tomes, "affiche_tome_");
-                $scope.maxHeightAnimes = getMaxHeight($scope.animes, "affiche_anime_");
-                $scope.maxHeightMangas = getMaxHeight($scope.mangas, "affiche_manga_");
+                angular.element(document).ready(function () {
+                    $scope.maxHeightEpisodes = getMaxHeight($scope.episodes, "affiche_episode_");
+                    $scope.maxHeightTomes = getMaxHeight($scope.tomes, "affiche_tome_");
+                    $scope.maxHeightAnimes = getMaxHeight($scope.animes, "affiche_anime_");
+                    $scope.maxHeightMangas = getMaxHeight($scope.mangas, "affiche_manga_");
+                });
             }
         });
 
@@ -1308,11 +1309,11 @@
         var maxHeight = 0;
         angular.forEach(array, function(value, key) {
             var currentHeight = document.getElementById(id+key).clientHeight;
-            if (currentHeight > maxHeight){
+            if (currentHeight > maxHeight) {
                 maxHeight = currentHeight;
             }
         });
-        return maxHeight;
+        return maxHeight+'px';
     }
 
 })(window.angular);
