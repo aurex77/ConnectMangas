@@ -635,21 +635,21 @@
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
      */
-    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Messages, Pubnub, $pubnubChannel) {
+    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel) {
 
         $scope.channel = 'messages-channel';
         // Generating a random uuid between 1 and 100 using an utility function from the lodash library.
         $scope.uuid = _.random(100).toString();
         Pubnub.init({
-            publish_key   : "pub-c-e33e9e87-84aa-417d-a31d-46a7c097b72d",
-            subscribe_key : "sub-c-48476bca-c046-11e6-a856-0619f8945a4f",
+            publishKey   : "pub-c-e33e9e87-84aa-417d-a31d-46a7c097b72d",
+            subscribeKey : "sub-c-48476bca-c046-11e6-a856-0619f8945a4f",
             uuid: $scope.uuid
         });
 
         $scope.sendMessage = function() {
-            // Don't send an empty message
             var date = new Date();
             date = date.getHours()+":"+date.getMinutes();
+            // Don't send an empty message
             if (!$scope.textbox || $scope.textbox === '') {
                 return;
             }
@@ -725,43 +725,6 @@
             var search = escape($scope.mySearch.replace(/\//g,"_"));
             $location.path('/recherche/'+search);
         };
-
-        //$scope.messages = [];
-
-        /*$scope.loadMore = function() {
-            if($scope.messages.length > 0) {
-                var last = $scope.messages[$scope.messages.length - 1];
-                for(var i = 1; i <= 8; i++) {
-                    $scope.messages.push(last + i);
-                }
-            }
-        };*/
-
-        if(typeof userCookie === "undefined") {
-            Messages.user({ id: '0' , name : 'anonyme'});
-        } else {
-            Messages.user({ id: userCookie.userID , name : userCookie.username});
-        }
-        // - - - - - - - - - - - - - - - - - -
-        // Receive Messages
-        // Push to Message Inbox.
-        // - - - - - - - - - - - - - - - - - -
-       /* Messages.receive(function(message){
-            $scope.messages.push(message);
-        });*/
-
-        // - - - - - - - - - - - - - - - - - -
-        // Send Message
-        // This is a controller method used
-        // when a user action occurs.
-        // Also we expect a model reference
-        // ng-model="textbox".
-        // - - - - - - - - - - - - - - - - - -
-
-        /*$scope.send = function() {
-            Messages.send({ data : $scope.textbox});
-            $scope.textbox = '';
-        };*/
 
     });
 
