@@ -16,7 +16,7 @@
                                 <img class="img-thumbnail img-hover img-center" ng-src="client/medias/default/thumbnail.png">
                             </div>
                             <p style="text-align: center;">
-                                <a href="#/anime/{{ episode.id_anime }}">{{ episode.anime_title }}</a>
+                                <a href="anime/{{ episode.id_anime }}">{{ episode.anime_title }}</a>
                             </p>
                             <p style="text-align: center; margin-top: 10px;" id="episode_{{ key }}">Épisode {{ episode.number }}{{ episode.title ? ' - '+episode.title : '' }}</p>
                             <p style="margin-top: 40px;">
@@ -41,7 +41,7 @@
                                 <img class="img-thumbnail img-hover img-center" ng-src="client/medias/default/thumbnail.png">
                             </div>
                             <p style="text-align: center;">
-                                <a href="#/manga/{{ tome.id_manga }}">{{ tome.manga_title }}</a>
+                                <a href="manga/{{ tome.id_manga }}">{{ tome.manga_title }}</a>
                             </p>
                             <p style="text-align: center; margin-top: 10px;" id="tome_{{ key }}">Tome {{ tome.number }}{{ tome.title ? ' - '+tome.title : '' }}</p>
                             <p style="margin-top: 40px;">
@@ -66,7 +66,7 @@
                                 <img class="img-thumbnail img-hover img-center" ng-src="client/medias/default/thumbnail.png">
                             </div>
                             <p style="text-align: center;">
-                                <a href="#/anime/{{ anime.id_anime }}">{{ anime.title }}</a>
+                                <a href="anime/{{ anime.id_anime }}">{{ anime.title }}</a>
                             </p>
                             <p style="text-align: center; margin-top: 10px;">{{ anime.nb_episodes }}{{ anime.nb_episodes > 1 ? ' épisodes' : ' épisode' }}</p>
                             <p style="text-align: center; margin-top: 10px;" id="anime_{{ key }}">Épisode {{ anime.number }}{{ anime.episode_title ? ' - '+anime.episode_title : '' }}</p>
@@ -92,7 +92,7 @@
                                 <img class="img-thumbnail img-hover img-center" ng-src="client/medias/default/thumbnail.png">
                             </div>
                             <p style="text-align: center;">
-                                <a href="#/manga/{{ manga.id_manga }}">{{ manga.title }}</a>
+                                <a href="manga/{{ manga.id_manga }}">{{ manga.title }}</a>
                             </p>
                             <p style="text-align: center; margin-top: 10px;">{{ manga.nb_tomes }}{{ manga.nb_tomes > 1 ? ' tomes' : ' tome' }}</p>
                             <p style="text-align: center; margin-top: 10px;" id="manga_{{ key }}">Tome {{ manga.number }}{{ manga.title ? ' - '+manga.title : '' }}</p>

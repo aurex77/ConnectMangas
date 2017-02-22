@@ -10,7 +10,7 @@
             <img class="img-thumbnail img-hover img-center" ng-src="client/medias/animes/{{ anime.img_affiche }}">
           </div>
           <ul>
-            <li style="text-align: center;"><a href="#/anime/{{ anime.id_anime }}">{{ anime.title }}</a></li>
+            <li style="text-align: center;"><a href="anime/{{ anime.id_anime }}">{{ anime.title }}</a></li>
             <br>
             <div class="progress">
               <div class="progress-bar" role="progressbar" aria-valuenow="{{ anime.progression }}"
@@ -40,7 +40,7 @@
             <img ng-src="client/medias/default/thumbnail.png" class="img-thumbnail img-hover" style="height: 200px !important;">
           </div>
           <ul>
-            <li style="text-align: center;"><a href="#/manga/{{ manga.id_manga }}">{{ manga.title }}</a></li>
+            <li style="text-align: center;"><a href="manga/{{ manga.id_manga }}">{{ manga.title }}</a></li>
             <br>
             <div class="progress">
               <div class="progress-bar" role="progressbar" aria-valuenow="{{ manga.progression }}"

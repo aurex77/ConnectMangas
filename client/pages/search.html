@@ -13,7 +13,7 @@
             <img class="img-thumbnail img-hover img-center" ng-src="client/medias/default/thumbnail.png">
           </div>
           <ul >
-            <li style="text-align: center;"><a href="#/anime/{{ anime.id_anime }}">{{ anime.title }}</a></li>
+            <li style="text-align: center;"><a href="anime/{{ anime.id_anime }}">{{ anime.title }}</a></li>
             <li style="text-align: center;" ng-if="anime.year > 0">Année : {{ anime.year }}</li>
           </ul>
         </li>
@@ -37,7 +37,7 @@
             <img ng-src="client/medias/default/thumbnail.png" class="img-thumbnail img-hover img-center" style="height: 200px !important;">
           </div>
           <ul>
-            <li style="text-align: center;"><a href="#/manga/{{ manga.id_manga }}">{{ manga.title }}</a></li>
+            <li style="text-align: center;"><a href="manga/{{ manga.id_manga }}">{{ manga.title }}</a></li>
             <li style="text-align: center;" ng-if="manga.year > 0">Année : {{ manga.year }}</li>
           </ul>
         </li>

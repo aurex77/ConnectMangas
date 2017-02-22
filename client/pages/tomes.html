@@ -27,7 +27,7 @@
                     <div ng-if="tome.synopsis">
                         <p ng-bind-html="tome.synopsis"></p>
                     </div>
-                    <a href="#/manga/{{ tome.id_manga }}/tome/{{ tome.number }}">Voir les utilisateurs possédant ce tome</a>
+                    <a href="manga/{{ tome.id_manga }}/tome/{{ tome.number }}">Voir les utilisateurs possédant ce tome</a>
                 </md-card-content>
 
                 <md-card-actions layout="row" layout-align="center" ng-show="tome.inCollection == 0">

@@ -24,7 +24,7 @@
                             <img class="img-thumbnail img-hover img-center" ng-src="client/medias/default/thumbnail.png">
                         </div>
                         <p style="text-align: center;">
-                            <a href="#/{{ info.type }}/{{ info.id }}">{{ info.title_oeuvre }}</a>
+                            <a href="{{ info.type }}/{{ info.id }}">{{ info.title_oeuvre }}</a>
                         </p>
                         <p style="text-align: center; margin-top: 10px;">{{ info.type == "manga" ? 'Tome' : 'Épisode' }} {{ info.number }}{{ info.title ? ' - '+info.title : '' }}</p>
                     </li>

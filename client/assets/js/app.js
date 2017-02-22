@@ -22,7 +22,7 @@
      * Gestion des routes
      * @param $routeProvider
      */
-    app.config(function($routeProvider, $httpProvider) {
+    app.config(function($routeProvider, $httpProvider, $locationProvider) {
 
         $httpProvider.defaults.headers.post['Client-Service'] = 'frontend-client';
         $httpProvider.defaults.headers.post['Auth-Key'] = 'simplerestapi';
@@ -68,6 +68,10 @@
             controller: 'suiviController'
         }).otherwise({
             redirectTo: '/'
+        });
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
         });
 
     });
@@ -674,22 +678,11 @@
             $scope.textbox = '';
         };
         $scope.messages = $pubnubChannel($scope.channel, { autoload: 50 });
-        //$scope.messages = [];
-
         // Subscribing to the ‘messages-channel’ and trigering the message callback
         Pubnub.subscribe({
             channel: $scope.channel,
             triggerEvents: ['callback']
         });
-
-        // Listening to the callbacks
-        /*$scope.$on(Pubnub.getMessageEventNameFor($scope.channel), function (ngEvent, m) {
-            $scope.$apply(function () {
-                console.log(m);
-                $scope.messages.push(m);
-                console.log($scope.messages);
-            });
-        });*/
 
         // A function to display a nice uniq robot avatar
         $scope.avatarUrl = function(uuid){
@@ -698,13 +691,13 @@
 
         // DO SOMETHING
         var userCookie = $cookies.getObject('user');
+        console.log(userCookie);
         $rootScope.userCookie = userCookie;
         $scope.show = true;
 
         $scope.logout = function() {
             $cookies.remove('user');
             $window.location.reload();
-            //$scope.$apply();
         };
 
         $scope.chat_hide = function() {
@@ -718,6 +711,11 @@
             var element = document.getElementById("qnimate");
             angular.element(element).addClass('chat-on');
             angular.element(element).removeClass('chat-off');
+        };
+
+        $scope.chat_remove = function() {
+            var element = document.getElementById("qnimate");
+            angular.element(element).addClass('chat-hide');
         };
 
 
@@ -901,14 +899,16 @@
                         'username' : userData.infos.username,
                         'userEmail': userData.infos.email,
                         'userAddress': userData.infos.address,
-                        'userToken': loginData.data.token
+                        'userToken': loginData.data.token,
+                        'userImage': userData.infos.img_profil
                     });
                     $rootScope.userCookie = {
                         'userID': userData.infos.id,
                         'username' : userData.infos.username,
                         'userEmail': userData.infos.email,
                         'userAddress': userData.infos.address,
-                        'userToken': loginData.data.token
+                        'userToken': loginData.data.token,
+                        'userImage': userData.infos.img_profil
                     };
                 });
             });
@@ -923,19 +923,22 @@
                     var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
                     user.then(function(userData) {
                         // On set le cookie avec quelques infos potentiellement utiles
+
                         $cookies.putObject('user', {
                             'userID': userData.infos.id,
                             'username' : userData.infos.username,
                             'userEmail': userData.infos.email,
                             'userAddress': userData.infos.address,
-                            'userToken': loginData.data.token
+                            'userToken': loginData.data.token,
+                            'userImage': userData.infos.img_profil
                         });
                         $rootScope.userCookie = {
                             'userID': userData.infos.id,
                             'username' : userData.infos.username,
                             'userEmail': userData.infos.email,
                             'userAddress': userData.infos.address,
-                            'userToken': loginData.data.token
+                            'userToken': loginData.data.token,
+                            'userImage': userData.infos.img_profil
                         };
                     });
                 }
