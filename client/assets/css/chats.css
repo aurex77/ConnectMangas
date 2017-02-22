@@ -1,5 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Oswald:400,300);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);
 body
 {
     font-family: 'Open Sans', sans-serif;
@@ -49,7 +47,6 @@ body
     padding: 7px 10px;
     padding-bottom: 15px;
     width: 100%;
-    font-family: Oswald;
 }
 .bg_none i {
     border: 1px solid #ff6701;
@@ -76,8 +73,7 @@ body
 .popup-box .popup-head .popup-head-right {
     margin: 11px 7px 0;
 }
-.popup-box .popup-messages {
-}
+
 .popup-head-left img {
     border: 1px solid #7b7b7b;
     border-radius: 50%;
@@ -89,7 +85,7 @@ body
     margin: 7px;
     padding: 5px !important;
     border: medium none;
-    width: 95% !important;
+    width: 80% !important
 }
 .popup-messages-footer {
     background: #fff none repeat scroll 0 0;
@@ -110,13 +106,9 @@ body
     width: 21px;
 }
 
-
-
-
-
 .popup-box .popup-messages {
     background: #3f9684 none repeat scroll 0 0;
-    height: 275px;
+    height: 300px;
     overflow: auto;
 }
 .direct-chat-messages {
@@ -313,4 +305,8 @@ body
 
 .chat-off {
     height: 68px;
+}
+
+.chat-hide {
+    display: none;
 }
