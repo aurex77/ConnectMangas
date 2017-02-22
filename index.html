@@ -9,7 +9,7 @@
       <title>ConnectMangas</title>
       <link rel="stylesheet" href="client/assets/css/prod/screen.css"/>
       <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' type='text/css'>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
       <link rel="stylesheet" href="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css">
       <!--[if IE]>
@@ -65,7 +65,9 @@
                                         <i class="glyphicon glyphicon-plus"></i>
                                     </button>
                                 </div>
-                                <button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-off"></i></button>
+                                <button ng-click="chat_remove()" class="chat-header-button pull-right" type="button">
+                                    <i class="glyphicon glyphicon-off"></i>
+                                </button>
                             </div>
 
                         </div>
@@ -82,7 +84,8 @@
                                     <span class="direct-chat-name pull-left">{{ message.user }}</span>
                                 </div>
                                 <!-- /.direct-chat-info -->
-                                <img alt="message user image" src="{{avatarUrl(message.sender_uuid)}}" class="direct-chat-img"><!-- /.direct-chat-img -->
+                                <!--<img alt="message user image" ng-show="userCookie"  src="client/medias/profils/{{ userCookie.img_profil }}" class="direct-chat-img"> -->
+                                <img alt="message user image"  src="{{avatarUrl(message.sender_uuid)}}" class="direct-chat-img"><!-- /.direct-chat-img -->
                                 <div class="direct-chat-text">
                                     {{ message.content }}  {{message.user.date}}
                                 </div>
@@ -99,15 +102,10 @@
                     <div class="popup-messages-footer">
                         <form ng-submit="sendMessage()">
                             <input id="status_message" ng-model="textbox" placeholder="Type a message..." rows="10" cols="40" name="message">
+                            <button type="submit" class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false" style="margin-left: 0;margin-top: 0;">
+                                <i class="glyphicon glyphicon-send"></i>
+                            </button>
                         </form>
-
-
-                        <div class="btn-footer">
-                            <button class="bg_none"><i class="glyphicon glyphicon-film"></i> </button>
-                            <button class="bg_none"><i class="glyphicon glyphicon-camera"></i> </button>
-                            <button class="bg_none"><i class="glyphicon glyphicon-paperclip"></i> </button>
-                            <button class="bg_none pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> </button>
-                        </div>
                     </div>
                 </div>
             </div>
