@@ -465,34 +465,21 @@
     });
 
     app.factory('authenticationService', function($http, sAlert, $location) {
-        return {
-            register: function(username, password, email){
-                return $http({
-                    method: 'POST',
-                    url: PATH_MAC+'api/action/register',
-                    data: {username: username, password: password, email: email}
-                }).success(function(){
-                    sAlert.success("Compte enregistré avec succès.").autoRemove();
-                    $location.path('/');
-                }).error(function(data){
-                    sAlert.error(data.message).autoRemove();
-                });
-
-            },
-            login : function(username, password){
-                return $http({
-                    method: 'POST',
-                    url: PATH_MAC+'api/action/login',
-                    data: {username: username, password: password}
-                }).success(function(data){
-                    sAlert.success(data.message).autoRemove();
-                    $location.path('/');
-                }).error(function(data){
-                    sAlert.error(data.message).autoRemove();
-                });
-
-            }
+        var register = function (username, password, email) {
+            return $http({
+                method: 'POST',
+                url: PATH_MAC + 'api/action/register',
+                data: {username: username, password: password, email: email}
+            });
         };
+        var login = function (username, password) {
+            return $http({
+                method: 'POST',
+                url: PATH_MAC + 'api/action/login',
+                data: {username: username, password: password}
+            });
+        };
+        return {register: register, login: login};
 
     });
 
@@ -889,7 +876,7 @@
 
         $scope.register = function() {
             var login = authenticationService.register($scope.register.username, $scope.register.password, $scope.register.email);
-            login.then(function(loginData){
+            login.then(function mySuccess(loginData){
                 // On récupère les infos du user à partir de l'ID retourné par le header
                 var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
                 user.then(function(userData) {
@@ -911,14 +898,18 @@
                         'userImage': userData.infos.img_profil
                     };
                 });
+            },function Error(error){
+                console.log(error);
+                sAlert.error(error.data.message).autoRemove();
             });
+
         };
 
         $scope.login = function() {
             var login = authenticationService.login($scope.login.username, $scope.login.password);
             login.then(function(loginData) {
                 // Si la connexion est OK
-                if ( loginData.status == 200 ) {
+                sAlert.success(loginData.data.message).autoRemove();
                     // On récupère les infos du user à partir de l'ID retourné par le header
                     var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
                     user.then(function(userData) {
@@ -941,9 +932,10 @@
                             'userImage': userData.infos.img_profil
                         };
                     });
-                }
+                $location.path('/');
+            },function Error(error){
+                sAlert.error(error.data.message).autoRemove();
             });
-            $location.path('/');
         }
 
     });
@@ -1075,7 +1067,7 @@
             $location.path('/authentification');
             return;
         }
-        
+
         if (user.userAddress){
             $scope.localisation = 'address';
 
