@@ -9,6 +9,7 @@
     "angular-aria": "^1.5.9",
     "angular-chat": "^1.0.9",
     "angular-cookies": "^1.6.2",
+    "angular-loading-bar": "^0.9.0",
     "angular-material": "^1.1.1",
     "angular-messages": "^1.6.2",
     "angular-route": "^1.6.2",
