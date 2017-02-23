@@ -1,13 +1,17 @@
 (function(angular) {
     'use strict';
 
-    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload', 'ngGeolocation', 'chat', 'infinite-scroll', 'ui.bootstrap', 'pubnub.angular.service']);
+    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload', 'ngGeolocation', 'chat', 'infinite-scroll', 'ui.bootstrap', 'pubnub.angular.service', 'angular-loading-bar', 'cfp.loadingBar']);
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
     const PATH_MAC = "http://localhost:8888/connectmangas/server/";
     const PATH_PROD = "http://connectmangas.com/server/";
 
-
+    app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.includeSpinner = false; // Show the spinner.
+        cfpLoadingBarProvider.includeBar = true; // Show the bar.
+        cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+    }]);
     app.constant( 'config', {
         //
         // Get your PubNub API Keys in the link above.
@@ -98,14 +102,10 @@
                         'User-ID': userID
                     }
                 }).then(function(response) {
-
                     var manga = response.data.infos;
                     return manga;
-
                 }, function errorCallback(response) {
-
                     console.log(response);
-
                 });
             },
             setMangaToCollection: function(id_manga, user) {
@@ -856,10 +856,14 @@
 
     });
 
-    app.controller('SearchController', function($scope, $routeParams, searchService, usSpinnerService, $timeout) {
+    app.controller('SearchController', function($scope, $routeParams, searchService, usSpinnerService, $timeout, cfpLoadingBar) {
         $timeout(function() {
             usSpinnerService.spin('spinner-1');
         }, 100);
+        cfpLoadingBar.start(); // Start loading.
+        setTimeout( function() {
+            cfpLoadingBar.complete(); // End loading.
+        }, 1000);
         var promiseSearch = searchService.getSearchResult($routeParams.searchParam);
         promiseSearch.then(function(searchResult) {
             usSpinnerService.stop('spinner-1');
@@ -898,6 +902,7 @@
                         'userImage': userData.infos.img_profil
                     };
                 });
+                $location.path('/');
             },function Error(error){
                 console.log(error);
                 sAlert.error(error.data.message).autoRemove();
@@ -1157,7 +1162,7 @@
                     });
                 });
             }
-        }
+        };
 
         $scope.sendRequest = function(userSelected){
             return $http({
@@ -1175,7 +1180,7 @@
                     number: $scope.tome.number,
                     couverture: ($scope.tome.couverture_fr ? $scope.tome.couverture_fr : $scope.tome.couverture_jp)
                 }
-            }).success(function(data){
+            }).then(function(data){
                 sAlert.success("Demande envoyé avec succès !").autoRemove();
             }).error(function(data){
                 sAlert.error(data.message).autoRemove();

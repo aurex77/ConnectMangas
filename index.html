@@ -10,6 +10,7 @@
       <base href="/ConnectMangas/">
       <link rel="stylesheet" href="client/assets/css/prod/screen.css"/>
       <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
+      <link rel="stylesheet" href="node_modules/angular-loading-bar/build/loading-bar.min.css">
       <!--[if IE]>
       <link href="client/assets/css/prod/ie.css" rel="stylesheet" />
       <![endif]-->
@@ -47,6 +48,7 @@
               </div>
               <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view>
               </div>
+                <div id="loading-bar-container"></div>
                 <div  class="popup-box chat-popup" id="qnimate">
                     <div class="popup-head">
                         <div class="popup-head-left pull-left" style="margin-top: 13px;"> Chats Général</div>
@@ -132,6 +134,7 @@
     <script src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
     <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
     <script src="client/assets/js/libs/ngGeolocation.min.js"></script>
+    <script src="node_modules/angular-loading-bar/build/loading-bar.min.js"></script>
 
   </body>
 </html>
