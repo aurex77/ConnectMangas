@@ -6,6 +6,7 @@
 .dashboard-page .sidebar {
     background-color: #f26522;
 }
+
 .dashboard-page .nav>li>a:hover, .dashboard-page .nav>li>a:focus {
     background: #ecf0f1;
     color: #f26522;
@@ -32,4 +33,93 @@
 
 #loading-bar .bar {
     position: relative;
+}
+
+@media screen and (max-width: 670px){
+
+    .resize{
+        display: none;
+    }
+
+    nav li {
+        float:none;
+        border: 0 !important;
+        width:12%;
+        height: 100%;
+        text-align: center;
+        display: inline;
+    }
+
+
+    .nav-inner {
+        position: absolute;
+        transform: translateX(-400%) translateZ(0);
+        transition: transform .2s;
+        will-change: transform;
+    }
+    /* here's goes the slide effect */
+    input:checked ~ .nav-inner {
+        transform: translateX(0);
+        z-index: 10000;
+    }
+
+    input:checked ~ .col-xs-offset-3 {
+        margin-left: 25%;
+    }
+
+    input:checked ~ .col-xs-9 {
+        width: 75%;
+    }
+
+    input:checked ~ .nav-button {
+        left: 145px;
+    }
+
+    .col-xs-offset-3 {
+        margin-left: 0;
+    }
+
+    .col-xs-9 {
+        width: 100%;
+    }
+    /* Button deco */
+    .nav-button {
+        left: 5px;
+        position: absolute;
+        top: 1rem; right: 1rem;
+        z-index: 99999;
+        height: 2.1rem; width: 2.1rem;
+        background-color: transparent;
+        background-image: linear-gradient(to right, #ffffff, #ffffff),
+        linear-gradient(to right, #ffffff, #ffffff),
+        linear-gradient(to right, #ffffff, #ffffff);
+        background-position: center top, center, center bottom;
+        background-repeat: no-repeat;
+        background-size: 2.5rem .5rem;
+        padding: 0;
+        outline: 0;
+        border: 0;
+        cursor: pointer;
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
+
+    nav ul li a {
+        height: 30px !important;
+    }
+    nav{
+        width: 1% !important;
+    }
+
+    .country2{
+        width: 33% !important;
+    }
+    .age2{
+        width: 33% !important;
+    }
+    .age{
+        width: 33%;
+    }
+    .country{
+        width: 33% !important;
+    }
 }

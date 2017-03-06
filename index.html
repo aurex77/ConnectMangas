@@ -27,7 +27,9 @@
         <div class="dashboard-page">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-sm-3 col-md-2 sidebar">
+                <input checked type="checkbox" id="toggle-nav" style="visibility: hidden; display: none">
+                <label for="toggle-nav" class="nav-button" aria-label="open/close navigation"></label>
+              <div class=" col-sm-3 col-md-2 sidebar nav-inner">
                 <div class="text-center">
                   <h2 class="brand"><small>ConnectMangas</small></h2>
                   <img src="client/medias/default/icone.png" class="user-avatar"><br>
@@ -43,13 +45,14 @@
                   <li><a href="collection" name="collection" ng-show="userCookie">Collection</a></li>
                   <li><a href="profil/{{ userCookie.username }}" name="profile" ng-show="userCookie">Mon profil</a></li>
                   <li><a href="authentification" name="auth" ng-show="!userCookie">Connexion / Inscription</a></li>
+
                 </ul>
 
               </div>
-              <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view>
+              <div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view>
               </div>
                 <div id="loading-bar-container"></div>
-                <div  class="popup-box chat-popup" id="qnimate">
+                <div  class="popup-box chat-popup" style="display: none;" id="qnimate">
                     <div class="popup-head">
                         <div class="popup-head-left pull-left" style="margin-top: 13px;"> Chats Général</div>
                         <div class="popup-head-right pull-right">
