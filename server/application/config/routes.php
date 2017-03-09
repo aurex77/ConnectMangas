@@ -79,3 +79,6 @@ $route['profil_update']['put'] = 'profil_update';
 
 $route['address']['get'] = 'address';
 $route['users_tome']['get'] = 'users_tome';
+
+$route['add_notification']['post'] = 'add_notification';
+$route['get_notification/(:id)']['get'] = 'get_notification/$1';

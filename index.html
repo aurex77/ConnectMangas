@@ -38,6 +38,14 @@
                   <md-input-container>
                       <input type="search" placeholder="Recherche..." ng-change="searchFunc()" ng-model="mySearch" class="ng-pristine ng-valid md-input ng-not-empty ng-touched"/>
                   </md-input-container>
+                  <button type="button" ng-show="userCookie" class="btn btn-info" ng-click="isCollapsed = !isCollapsed">
+                      Notifications <span class="badge">{{notif_count}}</span>
+                  </button>
+                  <div uib-collapse="isCollapsed" ng-show="userCookie"ng-repeat="notif in notifications">
+                      <div>
+                          {{ notif.content }}
+                      </div>
+                  </div>
                 <ul class="nav nav-sidebar">
                   <li><a href="home" name="home">Accueil</a></li>
                     <li><a href="calendrier" name="calendrier">Calendrier</a></li>
@@ -47,12 +55,11 @@
                   <li><a href="authentification" name="auth" ng-show="!userCookie">Connexion / Inscription</a></li>
 
                 </ul>
-
               </div>
               <div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view>
               </div>
                 <div id="loading-bar-container"></div>
-                <div  class="popup-box chat-popup" style="display: none;" id="qnimate">
+                <div  class="popup-box chat-popup" style="" id="qnimate">
                     <div class="popup-head">
                         <div class="popup-head-left pull-left" style="margin-top: 13px;"> Chats Général</div>
                         <div class="popup-head-right pull-right">
@@ -74,6 +81,10 @@
 
                         </div>
                     </div>
+
+
+
+
                     <div class="popup-messages">
 
                         <div class="direct-chat-messages">

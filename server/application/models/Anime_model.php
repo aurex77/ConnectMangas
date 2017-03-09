@@ -12,7 +12,7 @@ class Anime_model extends CI_Model {
         if ( $query->num_rows() > 0 )
             return $query->result();
 
-        return FALSE;
+        return false;
 
     }
 
@@ -54,7 +54,7 @@ class Anime_model extends CI_Model {
         if ( $query->num_rows() > 0 )
             return $query->row();
 
-        return FALSE;
+        return false;
 
     }
 
@@ -84,7 +84,7 @@ class Anime_model extends CI_Model {
         if ( $query->num_rows() > 0 )
             return $query->result();
 
-        return FALSE;
+        return false;
 
     }
 
@@ -112,7 +112,7 @@ class Anime_model extends CI_Model {
 
         }
 
-        return FALSE;
+        return false;
     }
 
     public function add_collection_anime($data)
@@ -207,7 +207,7 @@ class Anime_model extends CI_Model {
         if ( $query->num_rows() > 0 )
             return $query->result();
 
-        return FALSE;
+        return false;
     }
 
     public function get_anime_collection_search($id_user, $name = NULL) {
@@ -236,7 +236,7 @@ class Anime_model extends CI_Model {
         if ( $query->num_rows() > 0 )
             return $query->result();
 
-        return FALSE;
+        return false;
     }
 
     public function get_animes_calendar() {

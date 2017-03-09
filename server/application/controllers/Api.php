@@ -9,6 +9,7 @@ class Api extends MY_Controller {
         $this->load->model('user_model', 'user');
         $this->load->model('anime_model', 'anime');
         $this->load->model('manga_model', 'manga');
+        $this->load->model('notifications_model', 'notif');
     }
 
     /*
@@ -102,6 +103,12 @@ class Api extends MY_Controller {
                 break;
             case "suivi":
                 $this->_get_suivi();
+                break;
+            case "add_notification":
+                $this->_add_notification();
+                break;
+            case "get_notification":
+                $this->_get_notification_user($param);
                 break;
             default:
                 show_404();
@@ -830,7 +837,7 @@ class Api extends MY_Controller {
         }
     }
 
-    private function _get_calendar($type = null) {
+    private function _get_calendar() {
         $method = $_SERVER['REQUEST_METHOD'];
         if($method != 'GET'){
             json_output(400,array('status' => 400,'message' => 'Bad request.'));
@@ -905,6 +912,41 @@ class Api extends MY_Controller {
                     $mangas = $this->manga->get_watchlist($id_user);
 
                     print json_encode(['status' => 200, 'episodes' => $episodes, 'tomes' => $tomes, 'animes' => $animes, 'mangas' => $mangas]);
+                }
+            }
+
+        }
+    }
+
+    private function _get_notification_user($id) {
+
+        $notif = $this->notif->get_notifictions_user($id);
+        if($notif != false) {
+            $number = count($notif);
+        } else {
+            $number = 0;
+        }
+        print json_encode(array('status' => 200, 'infos' => $notif, 'number' => $number));
+
+    }
+
+    private function _add_notification() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            if ($this->user->check_auth_client()) {
+                $response = $this->user->auth();
+                if($response['status'] == 200) {
+                    $respStatus = $response['status'];
+                    $params = json_decode(file_get_contents('php://input'), TRUE);
+                    $id_user = (int)$params['id_user'];
+                    $data = [
+                        'id_user' => $id_user,
+                        'content' => $params['content']
+                    ];
+                    $resp = $this->notif->add_notifications($data);
+                    json_output($respStatus, $resp);
                 }
             }
 

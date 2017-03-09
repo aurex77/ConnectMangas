@@ -12,15 +12,6 @@
         cfpLoadingBarProvider.includeBar = true; // Show the bar.
         cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
     }]);
-    app.constant( 'config', {
-        //
-        // Get your PubNub API Keys in the link above.
-        //
-        "pubnub": {
-            "publish-key"   : "pub-c-e33e9e87-84aa-417d-a31d-46a7c097b72d",
-            "subscribe-key" : "sub-c-48476bca-c046-11e6-a856-0619f8945a4f"
-        }
-    } );
 
     /*
      * Gestion des routes
@@ -464,7 +455,31 @@
 
     });
 
-    app.factory('authenticationService', function($http, sAlert, $location) {
+
+    app.factory('requestService', function($http) {
+        var sendRequest = function (userSelected, user, tome, routeParams) {
+            return $http({
+                method: 'POST',
+                url: PATH_MAC+'api/action/send_request',
+                headers: {
+                    'Authorization': user.userToken,
+                    'User-ID': user.userID
+                },
+                data: {
+                    id_manga: routeParams.mangaID,
+                    username_src: user.username,
+                    username_dest: userSelected.username,
+                    title: tome.title,
+                    number: tome.number,
+                    couverture: (tome.couverture_fr ? tome.couverture_fr : tome.couverture_jp)
+                }
+            });
+        };
+        return {sendRequest: sendRequest};
+
+    });
+
+    app.factory('authenticationService', function($http) {
         var register = function (username, password, email) {
             return $http({
                 method: 'POST',
@@ -481,6 +496,38 @@
         };
         return {register: register, login: login};
 
+    });
+
+    app.factory('notificationService', function($http) {
+        var addNotification = function(id_user, user) {
+            var content = "Vous avez reçu une demande d'échange de la part de l'utilisateur " + user.username;
+            return $http({
+                method: 'POST',
+                url: PATH_MAC+'api/action/add_notification',
+                headers: {
+                    'Client-Service': 'frontend-client',
+                    'Auth-Key': 'simplerestapi',
+                    'Authorization': user.userToken,
+                    'User-ID': user.userID
+                },
+                data: {
+                    id_user: id_user,
+                    content : content
+                }
+            });
+        };
+        var getNotification = function(id) {
+            return $http({
+                method: 'GET',
+                url: PATH_MAC+'api/action/get_notification/'+id,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Client-Service': 'frontend-client',
+                    'Auth-Key': 'simplerestapi'
+                }
+            });
+        };
+        return {addNotification: addNotification, getNotification: getNotification};
     });
 
     app.factory('userService', function($http) {
@@ -622,12 +669,14 @@
 
     });
 
+
+
     /*
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
      */
-    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel) {
-
+    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel, notificationService) {
+        $scope.isCollapsed = true;
         $scope.channel = 'messages-channel';
         // Generating a random uuid between 1 and 100 using an utility function from the lodash library.
         $scope.uuid = _.random(100).toString();
@@ -636,6 +685,30 @@
             subscribeKey : "sub-c-48476bca-c046-11e6-a856-0619f8945a4f",
             uuid: $scope.uuid
         });
+
+        Pubnub.addListener({
+            status: function(statusEvent){
+                if (statusEvent.category === "PNConnectedCategory") {
+                    var newState = {
+                        name: 'presence-tutorial-user',
+                        timestamp: new Date()
+                    };
+                    Pubnub.setState(
+                        {
+                            channels: ["demo_tutorial"],
+                            state: newState
+                        }
+                    );
+                }
+            },
+            message: function(message){
+                console.log(message)
+            },
+            presence: function(presenceEvent){
+                console.log(presenceEvent);
+            }
+        });
+
 
         $scope.sendMessage = function() {
             var date = new Date();
@@ -660,16 +733,23 @@
                 callback: function(m) {
                     console.log(m);
                 }
+            }, function(status, response){
+                console.log(response);
             });
             // Reset the messageContent input
             $scope.textbox = '';
         };
         $scope.messages = $pubnubChannel($scope.channel, { autoload: 50 });
         // Subscribing to the ‘messages-channel’ and trigering the message callback
-        Pubnub.subscribe({
+       /* Pubnub.subscribe({
             channel: $scope.channel,
-            triggerEvents: ['callback']
-        });
+            presence: function(data) {
+                console.log(data);
+            },
+            withPresence: true,
+            triggerEvents: ['callback', 'presence', 'status']
+        }); */
+
 
         // A function to display a nice uniq robot avatar
         $scope.avatarUrl = function(uuid){
@@ -681,6 +761,16 @@
         console.log(userCookie);
         $rootScope.userCookie = userCookie;
         $scope.show = true;
+        if(userCookie) {
+            var notif = notificationService.getNotification(userCookie.userID);
+            notif.then(function mySuccess(result) {
+                var data = [result.data.infos];
+                $scope.notifications = data;
+                $scope.notif_count = result.data.number;
+            },function Error(error) {
+                console.log(error);
+            });
+        }
 
         $scope.logout = function() {
             $cookies.remove('user');
@@ -880,7 +970,7 @@
 
         $scope.register = function() {
             var login = authenticationService.register($scope.register.username, $scope.register.password, $scope.register.email);
-            login.then(function mySuccess(loginData){
+            login.then(function mySuccess(loginData) {
                 // On récupère les infos du user à partir de l'ID retourné par le header
                 var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
                 user.then(function(userData) {
@@ -1065,7 +1155,7 @@
 
     });
 
-    app.controller('usersTomeController', function($scope, $routeParams, $http, $cookies, $location, usersTomeService, mangasService, $geolocation, $mdDialog, $timeout, usSpinnerService, sAlert) {
+    app.controller('usersTomeController', function($scope, $routeParams, $http, $cookies, $location, usersTomeService, mangasService, notificationService, requestService, $geolocation, $mdDialog, $timeout, usSpinnerService, sAlert) {
 
         var user = $cookies.getObject('user');
         if (user == undefined){
@@ -1153,7 +1243,6 @@
                     var promiseUsersTome = usersTomeService.getUsersByTome($routeParams.mangaID, $routeParams.tomeNumber, latitude, longitude);
 
                     promiseUsersTome.then(function(response) {
-
                         if ( response.status == 200 ) {
                             usSpinnerService.stop('spinner-1');
                             $scope.users = response.infos;
@@ -1164,26 +1253,13 @@
             }
         };
 
-        $scope.sendRequest = function(userSelected){
-            return $http({
-                method: 'POST',
-                url: PATH_MAC+'api/action/send_request',
-                headers: {
-                    'Authorization': user.userToken,
-                    'User-ID': user.userID
-                },
-                data: {
-                    id_manga: $routeParams.mangaID,
-                    username_src : user.username,
-                    username_dest: userSelected.username,
-                    title: $scope.tome.title,
-                    number: $scope.tome.number,
-                    couverture: ($scope.tome.couverture_fr ? $scope.tome.couverture_fr : $scope.tome.couverture_jp)
-                }
-            }).then(function(data){
+        $scope.sendRequest = function(userSelected) {
+            var request = requestService.sendRequest(userSelected, user, $scope.tome, $routeParams);
+            request.then(function mySuccess() {
                 sAlert.success("Demande envoyé avec succès !").autoRemove();
-            }).error(function(data){
-                sAlert.error(data.message).autoRemove();
+                notificationService.addNotification(userSelected.id, user);
+            },function Error(error) {
+                sAlert.error(error.data.message).autoRemove();
             });
         }
 
@@ -1202,7 +1278,7 @@
                 }
 
             });
-        }
+        };
 
         $scope.displayCalendar();
     });
