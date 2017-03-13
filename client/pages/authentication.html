@@ -16,11 +16,11 @@
                 <md-card-content style="height: 262px;">
                   <md-input-container class="md-block">
                     <label>Username</label>
-                    <input type="text" ng-model="login.username" />
+                    <input ng-required="required" type="text" ng-model="login.username" />
                   </md-input-container>
                   <md-input-container class="md-block">
                     <label>Password</label>
-                    <input type="password" ng-model="login.password" />
+                    <input ng-required="required" type="password" ng-model="login.password" />
                   </md-input-container>
                 </md-card-content>
 
@@ -39,15 +39,15 @@
                 <md-card-content>
                   <md-input-container class="md-block">
                     <label>Username</label>
-                    <input type="text" ng-model="register.username" />
+                    <input ng-required="required" type="text" ng-model="register.username" />
                   </md-input-container>
                   <md-input-container class="md-block">
                     <label>Password</label>
-                    <input type="password" ng-model="register.password" />
+                    <input ng-required="required" type="password" ng-model="register.password" />
                   </md-input-container>
                   <md-input-container class="md-block">
                     <label>Email</label>
-                    <input type="email" ng-model="register.email" />
+                    <input ng-required="required" type="email" ng-model="register.email" />
                   </md-input-container>
                 </md-card-content>
 

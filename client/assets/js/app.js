@@ -669,8 +669,6 @@
 
     });
 
-
-
     /*
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
@@ -749,8 +747,6 @@
             withPresence: true,
             triggerEvents: ['callback', 'presence', 'status']
         }); */
-
-
         // A function to display a nice uniq robot avatar
         $scope.avatarUrl = function(uuid){
             return 'http://robohash.org/'+uuid+'?set=set2&bgset=bg2&size=70x70';
@@ -758,10 +754,10 @@
 
         // DO SOMETHING
         var userCookie = $cookies.getObject('user');
-        console.log(userCookie);
         $rootScope.userCookie = userCookie;
+        console.log($rootScope.userCookie);
         $scope.show = true;
-        if(userCookie) {
+        if($rootScope.userCookie) {
             var notif = notificationService.getNotification(userCookie.userID);
             notif.then(function mySuccess(result) {
                 var data = [result.data.infos];
@@ -811,10 +807,9 @@
 
         var promiseManga = mangasService.getMangaById($routeParams.mangaID);
         promiseManga.then(function(manga) {
-            manga.synopsis = manga.synopsis;
             $scope.manga = manga;
 
-            if ( manga.inCollection == '1' )
+            if(manga.inCollection == '1')
               $scope.isMangaInCollection = true;
             else
               $scope.isMangaInCollection = false;
@@ -969,42 +964,44 @@
         if ( user != undefined ) $location.path('/');
 
         $scope.register = function() {
-            var login = authenticationService.register($scope.register.username, $scope.register.password, $scope.register.email);
-            login.then(function mySuccess(loginData) {
-                // On récupère les infos du user à partir de l'ID retourné par le header
-                var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
-                user.then(function(userData) {
-                    // On set le cookie avec quelques infos potentiellement utiles
-                    $cookies.putObject('user', {
-                        'userID': userData.infos.id,
-                        'username' : userData.infos.username,
-                        'userEmail': userData.infos.email,
-                        'userAddress': userData.infos.address,
-                        'userToken': loginData.data.token,
-                        'userImage': userData.infos.img_profil
+            if($scope.register.username && $scope.register.password && $scope.register.email) {
+                var register = authenticationService.register($scope.register.username, $scope.register.password, $scope.register.email);
+                register.then(function mySuccess(registerData) {
+                    // On récupère les infos du user à partir de l'ID retourné par le header
+                    var user = userService.getUserById(registerData.data.id, registerData.data.token, registerData.data.username);
+                    user.then(function(userData) {
+                        // On set le cookie avec quelques infos potentiellement utiles
+                        $cookies.putObject('user', {
+                            'userID': userData.infos.id,
+                            'username' : userData.infos.username,
+                            'userEmail': userData.infos.email,
+                            'userAddress': userData.infos.address,
+                            'userToken': registerData.data.token,
+                            'userImage': userData.infos.img_profil
+                        });
+                        $rootScope.userCookie = {
+                            'userID': userData.infos.id,
+                            'username' : userData.infos.username,
+                            'userEmail': userData.infos.email,
+                            'userAddress': userData.infos.address,
+                            'userToken': registerData.data.token,
+                            'userImage': userData.infos.img_profil
+                        };
                     });
-                    $rootScope.userCookie = {
-                        'userID': userData.infos.id,
-                        'username' : userData.infos.username,
-                        'userEmail': userData.infos.email,
-                        'userAddress': userData.infos.address,
-                        'userToken': loginData.data.token,
-                        'userImage': userData.infos.img_profil
-                    };
+                    $location.path('/');
+                },function Error(error){
+                    console.log(error);
+                    sAlert.error(error.data.message).autoRemove();
                 });
-                $location.path('/');
-            },function Error(error){
-                console.log(error);
-                sAlert.error(error.data.message).autoRemove();
-            });
-
+            }
         };
 
         $scope.login = function() {
-            var login = authenticationService.login($scope.login.username, $scope.login.password);
-            login.then(function(loginData) {
-                // Si la connexion est OK
-                sAlert.success(loginData.data.message).autoRemove();
+            if($scope.login.username && $scope.login.password ) {
+                var login = authenticationService.login($scope.login.username, $scope.login.password);
+                login.then(function(loginData) {
+                    // Si la connexion est OK
+                    sAlert.success(loginData.data.message).autoRemove();
                     // On récupère les infos du user à partir de l'ID retourné par le header
                     var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
                     user.then(function(userData) {
@@ -1027,10 +1024,13 @@
                             'userImage': userData.infos.img_profil
                         };
                     });
-                $location.path('/');
-            },function Error(error){
-                sAlert.error(error.data.message).autoRemove();
-            });
+                    //$window.location.reload();
+                    $location.path('/');
+                },function Error(error){
+                    sAlert.error(error.data.message).autoRemove();
+                });
+            }
+
         }
 
     });
