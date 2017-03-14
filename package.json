@@ -24,7 +24,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "img-optim": "jpegoptim --strip-all client/medias/mangas/*.jpg; jpegoptim --strip-all client/medias/profils/*.jpg; jpegoptim --strip-all client/medias/tomes/*.jpg; jpegoptim --strip-all client/medias/default/*.jpg;jpegoptim --strip-all client/medias/animes/*.jpg;jpegoptim --strip-all client/medias/actu/*.jpg;"
+
   },
   "repository": {
     "type": "git",
