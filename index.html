@@ -35,8 +35,8 @@
                   <img src="client/medias/default/icone.png" class="user-avatar"><br>
                     <a ui-sref=login class="btn btn-white btn-outline btn-rounded btn-sm" ng-show="userCookie" ng-click="logout()">Déconnexion</a>
                 </div>
-                  <md-input-container>
-                      <input type="search" placeholder="Recherche..." ng-change="searchFunc()" ng-model="mySearch" class="ng-pristine ng-valid md-input ng-not-empty ng-touched"/>
+                  <md-input-container style="width: 100%;">
+                      <input  type="search" placeholder="Recherche..." ng-change="searchFunc()" ng-model="mySearch" class="ng-pristine ng-valid md-input ng-not-empty ng-touched"/>
                   </md-input-container>
                   <button type="button" ng-show="userCookie" class="btn btn-info" ng-click="isCollapsed = !isCollapsed">
                       Notifications <span class="badge">{{notif_count}}</span>

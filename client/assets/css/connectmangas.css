@@ -18,6 +18,11 @@
     height: 200px !important;
 }
 
+.img-center-calendrier {
+    display: block;
+    margin: 0 auto;
+}
+
 .img-hover {
     -webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
@@ -73,7 +78,7 @@
     }
 
     input:checked ~ .nav-button {
-        left: 145px;
+        left: 285px;
     }
 
     .col-xs-offset-3 {

@@ -1,7 +1,7 @@
 <section id="section-profil" ng-controller="ProfileController">
     <div class="inner">
         <s-alert></s-alert>
-        <div  flex-offset="15" flex-gt-md="55" layout="row">
+        <div flex-offset-gt-sm="15" flex-gt-md="55" layout="row">
             <md-card>
 
                 <md-card-content>
@@ -54,7 +54,7 @@
             </h1>
 
             <ul uib-collapse="isCollapsed">
-                <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="anime in animes">
+                <li class=" col-lg-3 col-md-3 col-sm-11 col-xs-11 well well-height" ng-repeat="anime in animes">
                     <div ng-if="anime.img_affiche" style="padding-top: 20px;padding-bottom: 20px;">
                         <img class="img-thumbnail img-hover" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/animes/{{ anime.img_affiche }}">
                     </div>
@@ -82,7 +82,7 @@
             </h1>
 
             <ul uib-collapse="isCollapsed2">
-                <li class=" col-lg-3 col-md-3 col-sm-12 col-xs-12 well well-height" ng-repeat="manga in mangas">
+                <li class=" col-lg-3 col-md-3 col-sm-11 col-xs-11 well well-height" ng-repeat="manga in mangas">
                     <div ng-if="manga.img_tome_fr" style="padding-top: 20px;padding-bottom: 20px;">
                         <img class="img-thumbnail img-hover" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/tomes/{{ manga.img_tome_fr }}" height="200px">
                     </div>
