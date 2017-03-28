@@ -29,7 +29,7 @@
             <div class="row">
                 <input checked type="checkbox" id="toggle-nav" style="visibility: hidden; display: none">
                 <label for="toggle-nav" class="nav-button" aria-label="open/close navigation"></label>
-              <div class=" col-sm-3 col-md-2 sidebar nav-inner">
+              <div class="col-xs-9 col-sm-3 col-md-2 sidebar nav-inner">
                 <div class="text-center">
                   <h2 class="brand"><small>ConnectMangas</small></h2>
                   <img src="client/medias/default/icone.png" class="user-avatar"><br>
@@ -41,9 +41,16 @@
                   <button type="button" ng-show="userCookie" class="btn btn-info" ng-click="isCollapsed = !isCollapsed">
                       Notifications <span class="badge">{{notif_count}}</span>
                   </button>
-                  <div uib-collapse="isCollapsed" ng-show="userCookie"ng-repeat="notif in notifications">
-                      <div>
-                          {{ notif.content }}
+                  <div uib-collapse="isCollapsed"  ng-repeat="notif in notifications">
+                      <div ng-show="notif_count > 0">
+                          <span style="float: right;">
+                              <a style="cursor: pointer;" ng-click="closeNotif(notif.id)">
+                                  <i class="material-icons" style="color: white;">close</i>
+                              </a>
+                          </span>
+                          <p style="margin-right: 20px;text-align: left;">
+                              {{ notif.content }}
+                          </p>
                       </div>
                   </div>
                 <ul class="nav nav-sidebar">

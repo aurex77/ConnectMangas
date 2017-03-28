@@ -25,7 +25,7 @@ class User_model extends CI_Model {
         if($client_service == $this->client_service && $auth_key == $this->auth_key){
             return true;
         } else {
-            return json_output(401,array('status' => 401,'message' => 'Unauthorized.'));
+            return json_output(401,array('status' => 401,'message' => 'Unauthorized (check_auth_client) .'));
         }
     }
 
@@ -92,7 +92,7 @@ class User_model extends CI_Model {
         $token     = $this->input->get_request_header('Authorization', TRUE);
         $q  = $this->db->select('date_expired')->from('users_authentication')->where('id_user',$id_user)->where('token',$token)->get()->row();
         if($q == ""){
-            return json_output(401,array('status' => 401,'message' => 'Unauthorized.'));
+            return json_output(401,array('status' => 401,'message' => 'Unauthorized (auth).'));
         } else {
             if($q->date_expired < date('Y-m-d H:i:s')){
                 return json_output(401,array('status' => 401,'message' => 'Your session has been expired.'));

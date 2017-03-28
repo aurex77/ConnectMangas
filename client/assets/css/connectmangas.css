@@ -6,6 +6,8 @@
 .dashboard-page .sidebar {
     background-color: #f26522;
     height: 100%;
+    border-color: #f26522;
+    box-shadow: 2px 0 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
 }
 
 .dashboard-page .nav>li>a:hover, .dashboard-page .nav>li>a:focus {
@@ -78,7 +80,7 @@
     }
 
     input:checked ~ .nav-button {
-        left: 285px;
+        left: 65%;
     }
 
     .col-xs-offset-3 {

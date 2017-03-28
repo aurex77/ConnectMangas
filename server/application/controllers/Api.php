@@ -10,6 +10,7 @@ class Api extends MY_Controller {
         $this->load->model('anime_model', 'anime');
         $this->load->model('manga_model', 'manga');
         $this->load->model('notifications_model', 'notif');
+        $this->load->model('friends_model', 'friends');
     }
 
     /*
@@ -107,8 +108,14 @@ class Api extends MY_Controller {
             case "add_notification":
                 $this->_add_notification();
                 break;
+            case "close_notification":
+                $this->_close_notification();
+                break;
             case "get_notification":
                 $this->_get_notification_user($param);
+                break;
+            case "add_friends":
+                $this->_add_friends();
                 break;
             default:
                 show_404();
@@ -946,6 +953,48 @@ class Api extends MY_Controller {
                         'content' => $params['content']
                     ];
                     $resp = $this->notif->add_notifications($data);
+                    json_output($respStatus, $resp);
+                }
+            }
+        }
+    }
+
+    private function _close_notification() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            if ($this->user->check_auth_client()) {
+                $response = $this->user->auth();
+                if($response['status'] == 200) {
+                    $respStatus = $response['status'];
+                    $params = json_decode(file_get_contents('php://input'), TRUE);
+                    $id_notif = (int)$params['id_notif'];
+                    $resp = $this->notif->close_notifictions_user($id_notif);
+                    json_output($respStatus, $resp);
+                }
+            }
+        }
+    }
+
+
+    private function _add_friends() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            if ($this->user->check_auth_client()) {
+                $response = $this->user->auth();
+                if($response['status'] == 200) {
+                   $respStatus = $response['status'];
+                    $params = json_decode(file_get_contents('php://input'), TRUE);
+                    $UserID1 = (int)$params['UserID1'];
+                    $UserID2 = (int)$params['UserID2'];
+                    $data = [
+                        'UserID1' => $UserID1,
+                        'UserID2' => $UserID2
+                    ];
+                    $resp = $this->friends->add_friends($data);
                     json_output($respStatus, $resp);
                 }
             }

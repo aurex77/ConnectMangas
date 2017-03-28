@@ -498,9 +498,8 @@
 
     });
 
-    app.factory('notificationService', function($http) {
-        var addNotification = function(id_user, user) {
-            var content = "Vous avez reçu une demande d'échange de la part de l'utilisateur " + user.username;
+    app.factory('notificationService', function($http, $rootScope) {
+        var addNotification = function(id_user, user, content) {
             return $http({
                 method: 'POST',
                 url: PATH_MAC+'api/action/add_notification',
@@ -527,7 +526,32 @@
                 }
             });
         };
-        return {addNotification: addNotification, getNotification: getNotification};
+        var closeNotification = function(user, id_notif) {
+            return $http({
+                method: 'POST',
+                url: PATH_MAC+'api/action/close_notification',
+                headers: {
+                    'Client-Service': 'frontend-client',
+                    'Auth-Key': 'simplerestapi',
+                    'Authorization': user.userToken,
+                    'User-ID': user.userID
+                },
+                data: {
+                    id_notif: id_notif
+                }
+            });
+        };
+        var update = function(id) {
+            var notif = getNotification(id);
+            notif.then(function mySuccess(result) {
+                var data = [result.data.infos];
+                $rootScope.notifications = data;
+                $rootScope.notif_count = result.data.number;
+            },function Error(error) {
+                console.log(error);
+            });
+        };
+        return {addNotification: addNotification, getNotification: getNotification, closeNotification: closeNotification, update: update};
     });
 
     app.factory('userService', function($http) {
@@ -773,6 +797,13 @@
             $window.location.reload();
         };
 
+        $scope.closeNotif = function(id_notif) {
+             notificationService.closeNotification(userCookie, id_notif);
+            notificationService.update(userCookie.userID);
+
+
+        };
+
         $scope.chat_hide = function() {
             $scope.show = false;
             var element = document.getElementById("qnimate");
@@ -808,7 +839,6 @@
         var promiseManga = mangasService.getMangaById($routeParams.mangaID);
         promiseManga.then(function(manga) {
             $scope.manga = manga;
-
             if(manga.inCollection == '1')
               $scope.isMangaInCollection = true;
             else
@@ -873,7 +903,6 @@
 
         var promiseAnime = animesService.getAnimeById($routeParams.animeID);
         promiseAnime.then(function(anime) {
-            anime.synopsis = anime.synopsis;
             $scope.anime = anime;
             if (anime.inCollection > 0){
                 $scope.isAnimeInCollection = true;
@@ -958,7 +987,7 @@
 
     });
 
-    app.controller('AuthenticationController', function($rootScope, $scope, $location, $cookies, $route, $window, authenticationService, userService, sAlert) {
+    app.controller('AuthenticationController', function($rootScope, $scope, $location, $cookies, $route, $window, authenticationService, userService, sAlert, notificationService) {
 
         var user = $cookies.getObject('user');
         if ( user != undefined ) $location.path('/');
@@ -1006,7 +1035,6 @@
                     var user = userService.getUserById(loginData.data.id, loginData.data.token, loginData.data.username);
                     user.then(function(userData) {
                         // On set le cookie avec quelques infos potentiellement utiles
-
                         $cookies.putObject('user', {
                             'userID': userData.infos.id,
                             'username' : userData.infos.username,
@@ -1023,8 +1051,8 @@
                             'userToken': loginData.data.token,
                             'userImage': userData.infos.img_profil
                         };
+                        notificationService.update(userData.infos.id);
                     });
-                    //$window.location.reload();
                     $location.path('/');
                 },function Error(error){
                     sAlert.error(error.data.message).autoRemove();
@@ -1055,32 +1083,27 @@
 
     });
 
-    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert, Upload) {
-      var user = $cookies.getObject('user');
-      if ( user == undefined ){
-          $location.path('/authentification');
-          return;
-      }
-
-      var promiseProfile = userService.getUserById(user.userID, user.userToken, $routeParams.username);
-      promiseProfile.then(function(response) {
-
-        if ( response.status == 200 ) {
-            $scope.user = response.infos;
-            $scope.animes = response.animes;
-            $scope.mangas = response.mangas;
-        } else {
-            $location.path('/');
+    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert, Upload, notificationService) {
+        var user = $cookies.getObject('user');
+        if ( user == undefined ){
+            $location.path('/authentification');
+            return;
         }
-
-      });
+        var promiseProfile = userService.getUserById(user.userID, user.userToken, $routeParams.username);
+        promiseProfile.then(function(response) {
+            if (response.status == 200) {
+                $scope.user = response.infos;
+                $scope.animes = response.animes;
+                $scope.mangas = response.mangas;
+            } else {
+                $location.path('/');
+            }
+        });
 
         $scope.updateProfile = function(address, file) {
-
             if (!address){
                 address = undefined;
             }
-
             if (!file){
                 file = {};
             }
@@ -1118,7 +1141,6 @@
                 sAlert.error(response.data.message).autoRemove();
             });
         };
-
         $scope.googlePlaces = function() {
             if ($scope.user.address.length > 10) {
                 return $http({
@@ -1141,18 +1163,36 @@
                         console.log(response.data.message);
 
                 }, function errorCallback(response) {
-
                     console.log(response);
-
                 });
             }
         };
-
         $scope.selectAddress = function(address) {
             $scope.user.address = address;
             $scope.addressList = {};
+        };
+        $scope.addFriend = function(id) {
+            var content = "Vous avez reçu une demande d'amis de la part de l'utilisateur " + user.username;
+            notificationService.addNotification(id, user, content);
+           /* return $http({
+                method: 'POST',
+                url: PATH_MAC + 'api/action/add_friends',
+                headers: {
+                    'Client-Service': 'frontend-client',
+                    'Auth-Key': 'simplerestapi',
+                    'Authorization': user.userToken,
+                    'User-ID': user.userID
+                },
+                data: {
+                    UserID1: user.userID,
+                    UserID2: id
+                }
+            }).then(function (response) {
+                console.log(response.data.message);
+            }, function errorCallback(response) {
+                console.log(response);
+            });*/
         }
-
     });
 
     app.controller('usersTomeController', function($scope, $routeParams, $http, $cookies, $location, usersTomeService, mangasService, notificationService, requestService, $geolocation, $mdDialog, $timeout, usSpinnerService, sAlert) {
@@ -1257,7 +1297,8 @@
             var request = requestService.sendRequest(userSelected, user, $scope.tome, $routeParams);
             request.then(function mySuccess() {
                 sAlert.success("Demande envoyé avec succès !").autoRemove();
-                notificationService.addNotification(userSelected.id, user);
+                var content = "Vous avez reçu une demande d'échange de la part de l'utilisateur " + user.username;
+                notificationService.addNotification(userSelected.id, user, content);
             },function Error(error) {
                 sAlert.error(error.data.message).autoRemove();
             });
@@ -1284,7 +1325,7 @@
     });
 
 
-    app.controller('suiviController', function($scope, $cookies, sAlert, suiviService, episodesService, tomesService) {
+    app.controller('suiviController', function($scope, $cookies, sAlert, suiviService, episodesService, tomesService, $location) {
 
         $scope.maxHeightEpisodes = 'auto';
         $scope.maxHeightTomes = 'auto';
