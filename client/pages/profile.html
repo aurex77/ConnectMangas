@@ -2,7 +2,7 @@
     <div class="inner">
         <s-alert></s-alert>
         <div flex-offset-gt-sm="15" flex-gt-md="55" layout="row">
-            <md-card>
+            <md-card style="padding: 15px;">
 
                 <md-card-content>
                     <div class="row">
@@ -15,6 +15,9 @@
                             </div>
                             <div ng-if="user.date_create">
                                 <p>Inscrit le : {{ user.date_create }}</p>
+                            </div>
+                            <div ng-show="userCookie.username != user.username">
+                                <md-button style='margin: 0;' class="md-raised md-primary" ng-if="userCookie.username != user.username" type="submit" ng-click="addFriend(user.id)">Ajouter en amis</md-button>
                             </div>
                         </div>
 
@@ -59,7 +62,7 @@
                         <img class="img-thumbnail img-hover" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/animes/{{ anime.img_affiche }}">
                     </div>
                     <ul>
-                        <li style="text-align: center;"><a href="#/anime/{{ anime.id_anime }}">{{ anime.title }}</a></li>
+                        <li style="text-align: center;"><a href="anime/{{ anime.id_anime }}">{{ anime.title }}</a></li>
                         <br>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="{{ anime.progression }}"
@@ -82,7 +85,7 @@
             </h1>
 
             <ul uib-collapse="isCollapsed2">
-                <li class=" col-lg-3 col-md-3 col-sm-11 col-xs-11 well well-height" ng-repeat="manga in mangas">
+                <li class="col-lg-3 col-md-3 col-sm-11 col-xs-11 well well-height" ng-repeat="manga in mangas">
                     <div ng-if="manga.img_tome_fr" style="padding-top: 20px;padding-bottom: 20px;">
                         <img class="img-thumbnail img-hover" style="display: block;margin: 0 auto;height: 200px !important;" ng-src="client/medias/tomes/{{ manga.img_tome_fr }}" height="200px">
                     </div>
@@ -93,7 +96,7 @@
                         <img ng-src="client/medias/default/thumbnail.png" class="img-thumbnail" style="height: 200px !important;">
                     </div>
                     <ul>
-                        <li style="text-align: center;"><a href="#/manga/{{ manga.id_manga }}">{{ manga.title }}</a></li>
+                        <li style="text-align: center;"><a href="manga/{{ manga.id_manga }}">{{ manga.title }}</a></li>
                         <br>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="{{ manga.progression }}"
