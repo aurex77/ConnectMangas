@@ -527,6 +527,7 @@
             });
         };
         var closeNotification = function(user, id_notif) {
+            console.log("close");
             return $http({
                 method: 'POST',
                 url: PATH_MAC+'api/action/close_notification',
@@ -542,11 +543,14 @@
             });
         };
         var update = function(id) {
+            console.log("update");
             var notif = getNotification(id);
             notif.then(function mySuccess(result) {
                 var data = [result.data.infos];
-                $rootScope.notifications = data;
+                $rootScope.notifications = data[0];
+                console.log($rootScope.notifications);
                 $rootScope.notif_count = result.data.number;
+                console.log($rootScope.notif_count);
             },function Error(error) {
                 console.log(error);
             });
@@ -697,8 +701,23 @@
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
      */
-    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel, notificationService) {
-        $scope.isCollapsed = true;
+    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel, notificationService, $mdSidenav, $mdComponentRegistry) {
+
+        // for mdSideNav right
+        $scope.toggleRight = buildToggler('right');
+        $scope.isOpenRight = function() {
+            if ( !$mdComponentRegistry.get('right') ) return;
+
+            return $mdSidenav('right').isOpen();
+        };
+
+        function buildToggler(navID) {
+            return function() {
+                // Component lookup should always be available since we are not using `ng-if`
+                $mdSidenav(navID).toggle();
+            }
+        }
+
         $scope.channel = 'messages-channel';
         // Generating a random uuid between 1 and 100 using an utility function from the lodash library.
         $scope.uuid = _.random(100).toString();
@@ -785,8 +804,10 @@
             var notif = notificationService.getNotification(userCookie.userID);
             notif.then(function mySuccess(result) {
                 var data = [result.data.infos];
-                $scope.notifications = data;
-                $scope.notif_count = result.data.number;
+                $rootScope.notifications = data[0];
+                console.log($rootScope.notifications);
+                $rootScope.notif_count = result.data.number;
+                console.log($rootScope.notif_count);
             },function Error(error) {
                 console.log(error);
             });
@@ -798,10 +819,10 @@
         };
 
         $scope.closeNotif = function(id_notif) {
-             notificationService.closeNotification(userCookie, id_notif);
-            notificationService.update(userCookie.userID);
-
-
+            var result = notificationService.closeNotification(userCookie, id_notif);
+            result.then(function() {
+                notificationService.update(userCookie.userID);
+            });
         };
 
         $scope.chat_hide = function() {
@@ -853,7 +874,6 @@
 
               if ( response != undefined && response.status == 201 && response.message == "Data has been created." )
                 $scope.isMangaInCollection = true;
-
 
           });
         };
@@ -926,7 +946,6 @@
         $scope.removeAnime = function(id_anime) {
             var promiseRemoveAnime = animesService.removeAnimeFromCollection(id_anime, user);
             promiseRemoveAnime.then(function(response) {
-
                 if ( response != undefined && response.status == 201 )
                     $scope.isAnimeInCollection = false;
 
@@ -1246,13 +1265,12 @@
             $scope.title = manga.title;
         });
 
-        $scope.changeLocalisation = function(ev){
+        $scope.changeLocalisation = function(){
             if ($scope.localisation == 'address'){
                 if (user.userAddress){
                     var promiseUsersTome = usersTomeService.getUsersByTome($routeParams.mangaID, $routeParams.tomeNumber, '', '');
 
                     promiseUsersTome.then(function(response) {
-
                         if ( response.status == 200 ) {
                             $scope.users = response.infos;
                             $scope.tome = response.tome;

@@ -15,7 +15,7 @@ class Notifications_model extends CI_Model {
         $query = $this->db->get($this->table);
 
         if ($query->num_rows() > 0) {
-            return $query->row();
+            return $query->result();
         }
 
         return false;

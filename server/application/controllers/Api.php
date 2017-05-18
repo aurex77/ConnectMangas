@@ -928,6 +928,7 @@ class Api extends MY_Controller {
     private function _get_notification_user($id) {
 
         $notif = $this->notif->get_notifictions_user($id);
+        //var_dump($notif);
         if($notif != false) {
             $number = count($notif);
         } else {
