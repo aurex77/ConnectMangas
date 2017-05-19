@@ -131,7 +131,7 @@
 }
 
 .fixed-header .app-header {
-        width: auto !important;
+    width: auto !important;
     z-index: 58;
 }
 /*
@@ -155,6 +155,11 @@
     padding: 0;
 }
 */
+
+.dashboard-page .nav-sidebar {
+    margin-top: 0;
+}
+
 .dashboard-page .main {
     padding: 70px;
 }

@@ -1,11 +1,34 @@
 (function(angular) {
     'use strict';
 
-    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload', 'ngGeolocation', 'chat', 'infinite-scroll', 'ui.bootstrap', 'pubnub.angular.service', 'angular-loading-bar', 'cfp.loadingBar']);
+    var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload',
+                                                    'ngGeolocation', 'chat', 'infinite-scroll', 'ui.bootstrap',
+                                                    'pubnub.angular.service', 'angular-loading-bar', 'cfp.loadingBar', 'ConnectMangasConfig']);
     const PATH_JG_HOME = "http://localhost/connectmangas/";
     const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
     const PATH_MAC = "http://localhost:8888/connectmangas/server/";
     const PATH_PROD = "http://connectmangas.com/server/";
+
+    var env = {};
+
+// Import variables if present (from env.js)
+    if(window){
+        Object.assign(env, window.__env);
+    }
+
+
+// Register environment in AngularJS as constant
+    app.constant('__env', env);
+
+
+    function disableLogging($logProvider, __env){
+        $logProvider.debugEnabled(__env.enableDebug);
+    }
+
+// Inject dependencies
+    disableLogging.$inject = ['$logProvider', '__env'];
+
+    app.config(disableLogging);
 
     app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
         cfpLoadingBarProvider.includeSpinner = false; // Show the spinner.
@@ -455,7 +478,6 @@
 
     });
 
-
     app.factory('requestService', function($http) {
         var sendRequest = function (userSelected, user, tome, routeParams) {
             return $http({
@@ -701,8 +723,12 @@
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
      */
-    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel, notificationService, $mdSidenav, $mdComponentRegistry) {
-
+    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel, notificationService, $mdSidenav, $mdComponentRegistry, globalsetting, __env) {
+        //$scope.name = globalsetting.appName;
+        //$scope.baseUrl = globalsetting.baseUrl;
+        //console.log($scope.baseUrl);
+        console.log(__env.baseUrl);
+        $scope.baseUrl = __env.baseUrl;
         // for mdSideNav right
         $scope.toggleRight = buildToggler('right');
         $scope.isOpenRight = function() {

@@ -2,12 +2,13 @@
 <!--[if lte IE 7]> <html class="ie7" lang="fr"> <![endif]-->
 <!--[if IE 8]> <html class="ie8" lang="fr"> <![endif]-->
 <!--[if IE 9]> <html class="ie9" lang="fr"> <![endif]-->
-<html lang="fr" ng-app="ConnectMangasApp">
+<html lang="fr" ng-app="ConnectMangasApp" ng-controller="AppCtrl" ng-cloak>
   <head>
+      <script src="client/assets/js/env.js"></script>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
       <title>ConnectMangas</title>
-      <base href="/ConnectMangas/">
+      <script>document.write('<base href="' + document.location + '" />');</script>
       <link rel="stylesheet" href="client/assets/css/prod/screen.css"/>
       <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
       <link rel="stylesheet" href="node_modules/angular-loading-bar/build/loading-bar.min.css">
@@ -18,18 +19,94 @@
       <link rel=stylesheet href="client/assets/css/connectmangas.css">
       <link rel=stylesheet href="client/assets/css/sAlert.css">
       <link rel=stylesheet href="client/assets/css/chats.css">
+      <link rel=stylesheet href="client/assets/css/app.css">
+      <link rel=stylesheet href="client/assets/css/layout.css">
+      <link rel=stylesheet href="client/assets/css/loader.css">
+      <link rel=stylesheet href="client/assets/css/theme.css">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+
   </head>
 
-  <body>
-    <div id="content"  class="topnav" ng-controller="AppCtrl" ng-cloak>
+  <body class="fixed-header">
+  <div ui-preloader></div>
+  <div class="full-height" ui-view>
+      <section ng-include=" 'client/pages/sidebar-right.html'" style="height: 100%;"></section>
+
+  </div>
+    <div id="content"  class="topnav">
       <md-content>
         <div class="dashboard-page">
           <div class="container-fluid">
             <div class="row">
                 <input checked type="checkbox" id="toggle-nav" style="visibility: hidden; display: none">
-                <label for="toggle-nav" class="nav-button" aria-label="open/close navigation"></label>
-              <div class="col-xs-9 col-sm-3 col-md-2 sidebar nav-inner">
+                <label for="toggle-nav" class="material-icons hidden-lg hidden-md  nav-button" aria-label="open/close navigation">
+                    menu
+                </label>
+                <div class="app-header col-md-offset-2 col-xs-10 col-sm-10 col-md-10">
+                    <div class="app-header-inner">
+                        <div class="top-nav-left hidden-xs hidden-sm">
+                            <ul class="list-unstyled list-inline">
+                                <li><md-button class="header-btn" open-search-overlay><i class="material-icons">search</i></md-button></li>
+                                <li>
+                                    <md-menu md-position-mode="left bottom">
+                                        <md-button class="header-btn" aria-label="menu" ng-click="$mdMenu.open($event)">
+                                            <i class="material-icons">notifications_none</i>
+                                            <span class="badge" ng-bind="$root.notif_count"></span>
+                                        </md-button>
+                                        <md-menu-content ng-show="notif_count > 0" width="4">
+                                            <md-list class="ui-md-list" ng-repeat="notif in $root.notifications">
+                                                <md-list-item class="md-2-line" ng-click="closeNotif(notif.id)">
+                                                    <md-icon class="material-icons">mail_outline</md-icon>
+                                                    <div class="md-list-item-text">
+                                                        <h3>{{ notif.content }}</h3>
+                                                    </div>
+                                                </md-list-item>
+                                            </md-list>
+                                        </md-menu-content>
+                                    </md-menu>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="top-nav-right">
+                            <ul class="list-unstyled pull-right">
+                                <li><a href="" class="header-btn hidden-md hidden-lg" md-button open-search-overlay><i class="material-icons">search</i></a></li>
+                                <li>
+                                    <md-menu md-position-mode="right bottom">
+                                        <md-button class="header-btn" aria-label="menu" ng-click="$mdMenu.open($event)">
+                                            <i class="material-icons">face</i>
+                                        </md-button>
+                                        <md-menu-content width="4">
+                                            <md-menu-item>
+                                                <md-button aria-label="menu" ng-href="#/app/app/task">
+                                                    <md-icon class="material-icons">assignment</md-icon>
+                                                    <span>TASK {{app}}</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button aria-label="menu" ng-href="#/lock-screen">
+                                                    <md-icon class="material-icons">lock_outline</md-icon>
+                                                    <span data-translate="LOCK">LOCK</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button aria-label="menu" ng-href="#/signin">
+                                                    <md-icon class="material-icons">keyboard_tab</md-icon>
+                                                    <span data-translate="LOG_OUT">LOG_OUT</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                </li>
+                                <li><a href="" class="header-btn" md-button ng-click="toggleRight()" ng-hide="isOpenRight()"><i class="material-icons">more_vert</i></a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-xs-9 col-sm-3 col-md-2 sidebar nav-inner">
                 <div class="text-center">
                   <h2 class="brand"><small>ConnectMangas</small></h2>
                   <img src="client/medias/default/icone.png" class="user-avatar"><br>
@@ -38,21 +115,6 @@
                   <md-input-container style="width: 100%;">
                       <input  type="search" placeholder="Recherche..." ng-change="searchFunc()" ng-model="mySearch" class="ng-pristine ng-valid md-input ng-not-empty ng-touched"/>
                   </md-input-container>
-                  <button type="button" ng-show="userCookie" class="btn btn-info" ng-click="isCollapsed = !isCollapsed">
-                      Notifications <span class="badge">{{notif_count}}</span>
-                  </button>
-                  <div uib-collapse="isCollapsed"  ng-repeat="notif in notifications">
-                      <div ng-show="notif_count > 0">
-                          <span style="float: right;">
-                              <a style="cursor: pointer;" ng-click="closeNotif(notif.id)">
-                                  <i class="material-icons" style="color: white;">close</i>
-                              </a>
-                          </span>
-                          <p style="margin-right: 20px;text-align: left;">
-                              {{ notif.content }}
-                          </p>
-                      </div>
-                  </div>
                 <ul class="nav nav-sidebar">
                   <li><a href="home" name="home">Accueil</a></li>
                     <li><a href="calendrier" name="calendrier">Calendrier</a></li>
@@ -63,7 +125,7 @@
 
                 </ul>
               </div>
-              <div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view>
+                <div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view>
               </div>
                 <div id="loading-bar-container"></div>
                 <div  class="popup-box chat-popup" style="display:none;" id="qnimate">
@@ -88,8 +150,6 @@
 
                         </div>
                     </div>
-
-
 
 
                     <div class="popup-messages">
@@ -151,11 +211,11 @@
     <script src="node_modules/angular-messages/angular-messages.min.js"></script>
     <script src="node_modules/angular-cookies/angular-cookies.min.js"></script>
     <script src="client/assets/js/libs/sAlert.js"></script>
+    <script type="text/javascript" src="client/assets/js/libs/config.js"></script>
     <script type="text/javascript" src="client/assets/js/app.js"></script>
     <script src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
     <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
     <script src="client/assets/js/libs/ngGeolocation.min.js"></script>
     <script src="node_modules/angular-loading-bar/build/loading-bar.min.js"></script>
-
   </body>
 </html>
