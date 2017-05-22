@@ -4,11 +4,11 @@
 <!--[if IE 9]> <html class="ie9" lang="fr"> <![endif]-->
 <html lang="fr" ng-app="ConnectMangasApp" ng-controller="AppCtrl" ng-cloak>
   <head>
-      <script src="client/assets/js/env.js"></script>
+      <!--<script src="client/assets/js/env.js"></script>-->
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
       <title>ConnectMangas</title>
-      <script>document.write('<base href="' + document.location + '" />');</script>
+      <script>document.write('<base href="' + document.location.origin + '" />');</script>
       <link rel="stylesheet" href="client/assets/css/prod/screen.css"/>
       <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
       <link rel="stylesheet" href="node_modules/angular-loading-bar/build/loading-bar.min.css">
@@ -211,7 +211,6 @@
     <script src="node_modules/angular-messages/angular-messages.min.js"></script>
     <script src="node_modules/angular-cookies/angular-cookies.min.js"></script>
     <script src="client/assets/js/libs/sAlert.js"></script>
-    <script type="text/javascript" src="client/assets/js/libs/config.js"></script>
     <script type="text/javascript" src="client/assets/js/app.js"></script>
     <script src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
     <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>

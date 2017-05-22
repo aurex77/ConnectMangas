@@ -3,11 +3,7 @@
 
     var app = angular.module('ConnectMangasApp', ['ngRoute', 'ngMaterial', 'ngCookies', 'sAlert', 'angularSpinner', 'ngSanitize', 'ngFileUpload',
                                                     'ngGeolocation', 'chat', 'infinite-scroll', 'ui.bootstrap',
-                                                    'pubnub.angular.service', 'angular-loading-bar', 'cfp.loadingBar', 'ConnectMangasConfig']);
-    const PATH_JG_HOME = "http://localhost/connectmangas/";
-    const PATH_JG_TAF = "http://localhost/jg/test-fusion-connectmangas_v2/server/";
-    const PATH_MAC = "http://localhost:8888/connectmangas/server/";
-    const PATH_PROD = "http://connectmangas.com/server/";
+                                                    'pubnub.angular.service', 'angular-loading-bar', 'cfp.loadingBar']);
 
     var env = {};
 
@@ -19,7 +15,6 @@
 
 // Register environment in AngularJS as constant
     app.constant('__env', env);
-
 
     function disableLogging($logProvider, __env){
         $logProvider.debugEnabled(__env.enableDebug);
@@ -98,7 +93,7 @@
      * Gestion des Factory
      * @param $http
      */
-    app.factory('mangasService', function($http, $cookies, sAlert) {
+    app.factory('mangasService', function($http, $cookies, sAlert, __env) {
 
         return {
             getMangaById: function(id) {
@@ -111,7 +106,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/manga/'+id,
+                    url: __env.apiUrl+'api/action/manga/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -125,7 +120,7 @@
             setMangaToCollection: function(id_manga, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH_MAC+'api/action/add_collection_manga',
+                    url: __env.apiUrl+'api/action/add_collection_manga',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -153,7 +148,7 @@
             removeMangaFromCollection: function(id_manga, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_MAC+'api/action/delete_collection_manga',
+                    url: __env.apiUrl+'api/action/delete_collection_manga',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -182,7 +177,7 @@
 
     });
 
-    app.factory('tomesService', function($http, $cookies, sAlert) {
+    app.factory('tomesService', function($http, $cookies, sAlert,__env) {
 
         return {
             getTomesById: function(id) {
@@ -195,7 +190,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/tomes/'+id,
+                    url: __env.apiUrl+'api/action/tomes/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -213,7 +208,7 @@
             setTomeToCollection: function(id_manga, id_tome, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH_MAC+'api/action/add_collection_tome',
+                    url: __env.apiUrl+'api/action/add_collection_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -246,7 +241,7 @@
             removeTomeFromCollection: function(id_manga, id_tome, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_MAC+'api/action/delete_collection_tome',
+                    url: __env.apiUrl+'api/action/delete_collection_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -278,7 +273,7 @@
 
     });
 
-    app.factory('animesService', function($http, $cookies, sAlert) {
+    app.factory('animesService', function($http, $cookies, sAlert, __env) {
 
         return {
             getAnimeById: function(id) {
@@ -291,7 +286,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/anime/'+id,
+                    url: __env.apiUrl+'api/action/anime/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -309,7 +304,7 @@
             setAnimeToCollection: function(id_anime, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH_MAC+'api/action/add_collection_anime',
+                    url: __env.apiUrl+'api/action/add_collection_anime',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -337,7 +332,7 @@
             removeAnimeFromCollection: function(id_anime, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_MAC+'api/action/delete_collection_anime',
+                    url: __env.apiUrl+'api/action/delete_collection_anime',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -366,7 +361,7 @@
 
     });
 
-    app.factory('episodesService', function($http, $cookies, sAlert) {
+    app.factory('episodesService', function($http, $cookies, sAlert, __env) {
 
         return {
             getEpisodesById: function(id) {
@@ -379,7 +374,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/episodes/'+id,
+                    url: __env.apiUrl+'api/action/episodes/'+id,
                     headers: {
                         'User-ID': userID
                     }
@@ -395,7 +390,7 @@
             setEpisodeToCollection: function(id_anime, id_episode, user) {
                 return $http({
                     method: 'POST',
-                    url: PATH_MAC+'api/action/add_collection_episode',
+                    url: __env.apiUrl+'api/action/add_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -424,7 +419,7 @@
             removeEpisodeFromCollection: function(id_anime, id_episode, user) {
                 return $http({
                     method: 'DELETE',
-                    url: PATH_MAC+'api/action/delete_collection_episode',
+                    url: __env.apiUrl+'api/action/delete_collection_episode',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -455,13 +450,13 @@
 
     });
 
-    app.factory('searchService', function($http) {
+    app.factory('searchService', function($http, __env) {
 
         return {
             getSearchResult: function(param) {
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/search/'+param,
+                    url: __env.apiUrl+'api/action/search/'+param,
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'Client-Service': 'frontend-client',
@@ -478,11 +473,11 @@
 
     });
 
-    app.factory('requestService', function($http) {
+    app.factory('requestService', function($http, __env) {
         var sendRequest = function (userSelected, user, tome, routeParams) {
             return $http({
                 method: 'POST',
-                url: PATH_MAC+'api/action/send_request',
+                url: __env.apiUrl+'api/action/send_request',
                 headers: {
                     'Authorization': user.userToken,
                     'User-ID': user.userID
@@ -501,18 +496,18 @@
 
     });
 
-    app.factory('authenticationService', function($http) {
+    app.factory('authenticationService', function($http, __env) {
         var register = function (username, password, email) {
             return $http({
                 method: 'POST',
-                url: PATH_MAC + 'api/action/register',
+                url: __env.apiUrl + 'api/action/register',
                 data: {username: username, password: password, email: email}
             });
         };
         var login = function (username, password) {
             return $http({
                 method: 'POST',
-                url: PATH_MAC + 'api/action/login',
+                url: __env.apiUrl + 'api/action/login',
                 data: {username: username, password: password}
             });
         };
@@ -520,11 +515,11 @@
 
     });
 
-    app.factory('notificationService', function($http, $rootScope) {
+    app.factory('notificationService', function($http, $rootScope, __env) {
         var addNotification = function(id_user, user, content) {
             return $http({
                 method: 'POST',
-                url: PATH_MAC+'api/action/add_notification',
+                url: __env.apiUrl+'api/action/add_notification',
                 headers: {
                     'Client-Service': 'frontend-client',
                     'Auth-Key': 'simplerestapi',
@@ -540,7 +535,7 @@
         var getNotification = function(id) {
             return $http({
                 method: 'GET',
-                url: PATH_MAC+'api/action/get_notification/'+id,
+                url: __env.apiUrl+'api/action/get_notification/'+id,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Client-Service': 'frontend-client',
@@ -552,7 +547,7 @@
             console.log("close");
             return $http({
                 method: 'POST',
-                url: PATH_MAC+'api/action/close_notification',
+                url: __env.apiUrl+'api/action/close_notification',
                 headers: {
                     'Client-Service': 'frontend-client',
                     'Auth-Key': 'simplerestapi',
@@ -580,13 +575,13 @@
         return {addNotification: addNotification, getNotification: getNotification, closeNotification: closeNotification, update: update};
     });
 
-    app.factory('userService', function($http) {
+    app.factory('userService', function($http, __env) {
 
         return {
             getUserById: function(id, token, username) {
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/profil/'+username,
+                    url: __env.apiUrl+'api/action/profil/'+username,
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -604,13 +599,13 @@
 
     });
 
-    app.factory('collectionService', function($http) {
+    app.factory('collectionService', function($http, __env) {
 
         return {
             getAllCollection: function(id, token) {
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/collection',
+                    url: __env.apiUrl+'api/action/collection',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -629,7 +624,7 @@
 
     });
 
-    app.factory('usersTomeService', function($http, $cookies) {
+    app.factory('usersTomeService', function($http, $cookies, __env) {
 
         return {
             getUsersByTome: function (id_manga, number, latitude, longitude) {
@@ -656,7 +651,7 @@
 
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC + 'api/action/users_tome',
+                    url: __env.apiUrl + 'api/action/users_tome',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -676,13 +671,13 @@
         }
     });
 
-    app.factory('calendarService', function($http) {
+    app.factory('calendarService', function($http, __env) {
 
         return {
             getCalendar: function(type) {
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/calendar',
+                    url: __env.apiUrl+'api/action/calendar',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi'
@@ -698,13 +693,13 @@
 
     });
 
-    app.factory('suiviService', function($http) {
+    app.factory('suiviService', function($http, __env) {
 
         return {
             getSuivi: function(id, token) {
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC+'api/action/suivi',
+                    url: __env.apiUrl+'api/action/suivi',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -723,12 +718,8 @@
      * Gestion des controllers
      * @params $scope, $routeParams, factoryService
      */
-    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel, notificationService, $mdSidenav, $mdComponentRegistry, globalsetting, __env) {
-        //$scope.name = globalsetting.appName;
-        //$scope.baseUrl = globalsetting.baseUrl;
-        //console.log($scope.baseUrl);
-        console.log(__env.baseUrl);
-        $scope.baseUrl = __env.baseUrl;
+    app.controller('AppCtrl', function($scope, $cookies, $location, $window, $rootScope, Pubnub, $pubnubChannel, notificationService, $mdSidenav, $mdComponentRegistry, __env) {
+
         // for mdSideNav right
         $scope.toggleRight = buildToggler('right');
         $scope.isOpenRight = function() {
@@ -842,6 +833,7 @@
         $scope.logout = function() {
             $cookies.remove('user');
             $window.location.reload();
+            $window.location.href = __env.baseUrl;
         };
 
         $scope.closeNotif = function(id_notif) {
@@ -878,7 +870,6 @@
     });
 
     app.controller('HomeController', function($scope) {
-        $scope.message = "This is the home page";
     });
 
     app.controller('MangaController', function($scope, $routeParams, $cookies, mangasService) {
@@ -1128,7 +1119,7 @@
 
     });
 
-    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert, Upload, notificationService) {
+    app.controller('ProfileController', function($scope, $routeParams, $cookies, $location, userService, $http, sAlert, Upload, notificationService,__env) {
         var user = $cookies.getObject('user');
         if ( user == undefined ){
             $location.path('/authentification');
@@ -1155,7 +1146,7 @@
 
             file.upload = Upload.upload({
                 method: 'POST',
-                url: PATH_MAC+'api/action/update_user',
+                url: __env.apiUrl+'api/action/update_user',
                 headers: {
                     'Client-Service': 'frontend-client',
                     'Auth-Key': 'simplerestapi',
@@ -1190,7 +1181,7 @@
             if ($scope.user.address.length > 10) {
                 return $http({
                     method: 'GET',
-                    url: PATH_MAC + 'api/action/address',
+                    url: __env.apiUrl + 'api/action/address',
                     headers: {
                         'Client-Service': 'frontend-client',
                         'Auth-Key': 'simplerestapi',
@@ -1221,7 +1212,7 @@
             notificationService.addNotification(id, user, content);
            /* return $http({
                 method: 'POST',
-                url: PATH_MAC + 'api/action/add_friends',
+                url: __env.apiUrl + 'api/action/add_friends',
                 headers: {
                     'Client-Service': 'frontend-client',
                     'Auth-Key': 'simplerestapi',
